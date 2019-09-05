@@ -1,3 +1,9 @@
+# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
+
+# Created by https://www.gitignore.io/api/ruby,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=ruby,visualstudiocode
+
+### Ruby ###
 *.gem
 *.rbc
 /.config
@@ -13,6 +19,9 @@
 # Used by dotenv library to load environment variables.
 # .env
 
+# Ignore Byebug command history file.
+.byebug_history
+
 ## Specific to RubyMotion:
 .dat*
 .repl_history
@@ -26,7 +35,6 @@ build-iPhoneSimulator/
 # We recommend against adding the Pods directory to your .gitignore. However
 # you should judge for yourself, the pros and cons are mentioned at:
 # https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
 # vendor/Pods/
 
 ## Documentation cache and generated files:
@@ -48,3 +56,19 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/ruby,visualstudiocode
+
+# Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
+
