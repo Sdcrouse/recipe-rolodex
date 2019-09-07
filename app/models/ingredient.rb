@@ -4,7 +4,7 @@ class Ingredient < ActiveRecord::Base
   UNITS_LIST = {
     :us => ["cup", "cups", "fl oz", "gal", "lb", "oz", "pt", "qt", "tbsp", "tsp"],
     :si => ["g", "kg", "kL", "L", "mg", "mL"],
-    :other => ["dash", "drop", "drops", "handful", "handfuls", "piece", "pieces", "pinch", "scoop", "scoops"]
+    :other => ["dash", "dollop", "dollops", "drop", "drops", "handful", "handfuls", "piece", "pieces", "pinch", "scoop", "scoops", "slice", "slices"]
   }
   # Note: When the user chooses a unit from the :other hash, that unit should have the word "of" after it in the view.
   # That, or just have "of" after EVERY unit.
