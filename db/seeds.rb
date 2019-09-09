@@ -1,56 +1,107 @@
 #-------- Users ----------------------------------
 ramsay = User.create(username: "gordon.ramsay", email: "gramsay@topchef.uk", password: "glasgowchef")
 bilbo_baggins = User.create(username: "bbaggins", email: "hobbitburglar@shire.net", password: "thereandbackagain")
-egghead = User.create(name: "Egghead", email: "eggcitingvillain@scrambled.com", password: "Eggcellent!")
-winco = User.create(name: "Winco Foods", email: "winningstore@winco.com", password: "groc3Rie$")
+egghead = User.create(username: "Egghead", email: "eggcitingvillain@scrambled.com", password: "Eggcellent!")
+winco = User.create(username: "Winco Foods", email: "winningstore@winco.com", password: "groc3Rie$")
 
 #-------- Gordon Ramsay's recipe(s) -----------------
-sliced_bread = Ingredient.create(name: "Bread", quantity: "2", units: "slices")
-raw_meat = Ingredient.create(name: "Raw Meat", quantity: "1", units: "slab")
+sliced_bread = Ingredient.create(quantity: "2", units: "slices", name: "Bread")
+raw_meat = Ingredient.create(quantity: "1", units: "slab", name: "Raw Meat")
 
 idiot_sandwich = Recipe.create(
   name: "Idiot Sandwich", 
   description: "My least favorite sandwich in the world", 
-  serving_size: "1 sandwich", servings: "1", 
-  instructions: "Place raw meat between slices of bread. Avoid serving it at all costs!"
+  serving_size: "1 sandwich", servings: "1",
+  ingredients: [sliced_bread, raw_meat],
+  instructions: "Place raw meat between slices of bread.",
+  notes: "Avoid serving this at all costs!"
 )
 
-idiot_sandwich.ingredients << sliced_bread
-idiot_sandwich.ingredients << raw_meat
 ramsay.recipes << idiot_sandwich
 
 #----------- Bilbo's recipe(s) ----------------------
-tea = Ingredient.create(name: "tea", quantity: "one", units: "cup")
-sausages = Ingredient.create(name: "sausage links", quantity: "5")
-pancakes = Ingredient.create(name: "pancakes", quantity: "3")
+tea = Ingredient.create(quantity: "one", units: "cup", name: "tea")
+sausages = Ingredient.create(quantity: "5", name: "sausage links")
+pancakes = Ingredient.create(quantity: "3", name: "pancakes")
 
 second_breakfast = Recipe.create(
   name: "Second Breakfast",
   description: "The meal every hobbit worth his weight should know how to make!",
   image_url: "https://example.com",
+  ingredients: [tea, sausages, pancakes],
   instructions: "Prepare all dishes mid-morning. Serve warm at any time between breakfast and lunch."
 )
 
-second_breakfast.ingredients << tea
-second_breakfast.ingredients << sausages
-second_breakfast.ingredients << pancakes
 bilbo_baggins.recipes << second_breakfast
 
 #-------- Egghead's recipe(s) -------------------------
-eggs = Ingredient.create(name: "eggs", quantity: "3")
-salt = Ingredient.create(name: "salt", quantity: "A dash")
-pepper = Ingredient.create(name: "pepper", quantity: "A dash")
-chipotle_sauce = Ingredient.create(name: "Chipotle Tabasco Sauce", quantity: "10-15", units: "drops")
+eggs = Ingredient.create(quantity: "3", name: "eggs")
+salt = Ingredient.create(quantity: "A dash", name: "salt")
+pepper = Ingredient.create(quantity: "A dash", name: "pepper")
+chipotle_sauce = Ingredient.create(quantity: "10-15", units: "drops", name: "Chipotle Tabasco Sauce")
 
 smokey_eggs = Recipe.create(
   name: "Smokey Scrambled Eggs",
   description: "A great kind of scrambled eggs. You get the smokey flavor of the Tabasco Sauce without the heat!",
-  serving_size: "One plateful", servings: "1", 
+  serving_size: "One plateful", servings: "1",
+  ingredients: [eggs, salt, pepper, chipotle_sauce],
   instructions: "Beat all ingredients in a bowl with a whisk or fork, about two minutes. Place a frying pan on a stove at low to medium heat. Pour eggs into frying pan. Stir constantly for about three minutes, or until eggs begin to turn brown. Serve immediately."
 )
 
-smokey_eggs.ingredients << eggs
-smokey_eggs.ingredients << salt
-smokey_eggs.ingredients << pepper
-smokey_eggs.ingredients << chipotle_sauce
 egghead.recipes << smokey_eggs
+
+#----------- Winco's Recipes ----------------------------
+winco_ingredients = {
+  chicken_cacciatore: [
+    {quantity: "1", name: "3 lb. frying chicken"},
+    {quantity: "1/2", units: "cup", name: "olive oil"},
+    {quantity: "2", units: "tbs.", name: "bell pepper flakes"},
+    {quantity: "1/8", units: "tsp.", name: "all spice"},
+    {quantity: "1/4", units: "tsp.", name: "black pepper"}
+  ],
+  fun_taco_cups: [
+    {quantity: "1", units: "pound", name: "ground beef"},
+    {quantity: "1 1/4", units: "oz.", name: "taco seasoning"},
+    {quantity: "1", units: "(10 oz.) can", name: "refrigerated buttermilk biscuits"},
+    {quantity: "1/2", units: "cup", name: "shredded cheddar cheese"}
+  ],
+  egg_drop_soup: [
+    {quantity: "4", units: "cups", name: "water"},
+    {quantity: "4", units: "cubes", name: "chicken bouillon"},
+    {quantity: "2", name: "eggs"},
+    {quantity: "1", units: "teaspoon", name: "dried parsley"},
+    {quantity: "1", units: "tablespoon", name: "dried minced onion"}
+  ]
+}
+
+winco_recipes = {
+  chicken_cacciatore: {
+    name: "Chicken Cacciatore",
+    servings: "4",
+    ingredients: winco_ingredients[:chicken_cacciatore].collect{|ingredient| Ingredient.create(ingredient)},
+    additional_ingredients: "1/4 tsp. crushed red pepper, 1/2 cup white wine or water, 1/4 cup flour, 2 tbs. instant minced onion, 1/8 tsp. instant minced garlic, 1 tbs. season-all, 1 tsp. Italian seasoning, 3 1/2 cups tomatoes",
+    instructions: "Cut chicken in pieces. Dredge with flour. Brown in oil until golden on all sides. Drain off oil. Add seasonings, tomatoes, and wine or water. Cover and simmer slowly 45 minutes, or until chicken is tender.",
+    notes: "Good, but spicy. Needs rice. We used chopped bell peppers, since we couldn't find bell pepper flakes."
+  },
+
+  fun_taco_cups: {
+    name: "Fun Taco Cups",
+    ingredients: winco_ingredients[:fun_taco_cups].collect{|ingredient| Ingredient.create(ingredient)},
+    instructions: "Brown meat; drain. Add seasoning mix; prepare as directed on package. Press biscuits onto bottoms and up sides of medium muffin pan. Fill biscuits with seasoned meat. Bake at 400°F for 15 minutes. Sprinkle with cheese. Bake an additional 2 to 3 minutes or until cheese is melted. Serve with salsa, if desired.",
+    notes: "A 12 oz. can of 10 biscuits works as well. Add more cheese next time. Opinions: 'Good Food', '7 out of 10', 'Easy to eat & prepare'."
+  },
+
+  egg_drop_soup: {
+    name: "Egg Drop Soup",
+    ingredients: winco_ingredients[:egg_drop_soup].collect{|ingredient| Ingredient.create(ingredient)},
+    additional_ingredients: "1 tablespoon cornstarch",
+    instructions: "In a medium saucepan, combine water, bouillon, and parsley and onion flakes. Bring to a boil. Lightly beat eggs together. Gradually stir into soup. Remove about half a cup of the soup. Stir in cornstarch until there are no lumps, and return to the soup. Boil until soup thickens."
+  }
+}
+
+winco_recipes_array = winco_recipes.collect do |recipe_name, recipe_hash|
+  Recipe.create(recipe_hash)
+end
+
+winco_recipes_array.each{|recipe| winco.recipes << recipe} # This isn't working, somehow.
+# Either that ^^^, or set winco.recipes = winco_recipes_array, then save winco
