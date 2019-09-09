@@ -1,3 +1,17 @@
 <h2>Welcome, <%= @user.username %>!</h2>
 
-<p><a>Click here to view your recipes</a></p>
+<p>
+  <ul>
+    <li>Username: <%= @user.username %></li>
+    <li>E-mail: <%= @user.email %></li>
+  </ul>
+</p>
+
+<p>
+  <ul>Your recipes:
+    <!-- List the user's recipes here. Be sure to account for NO recipes. -->
+    <!-- <%# @user.recipes.each do |recipe| %> -->
+    <!-- <li><a><%#= recipe.name %></a></li> -->
+    <!-- <%# end %> -->
+  </ul>
+</p>
