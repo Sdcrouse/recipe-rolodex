@@ -16,3 +16,13 @@ I would also like to make sure the user enters a valid e-mail address (i.e. does
 It would also be good to let the current_user delete his/her profile and edit its information.
 
 Remember to put a link to the user's recipes on his/her profile page. On their recipes page, have a link to go back to their profile page. And have a flash message if they don't have any recipes.
+
+I thought about writing a #slug method for usernames, but that would prove problematic - "first.last", "first&last", and "first last" would return the same slug of "first-last". I don't want that.
+
+**I don't want the login link to be visible on the login page; that makes no sense to me.**
+
+**For convention, I think I should change profile.erb to index.erb, since there isn't much difference between the two.**
+
+Is there a way to add a **default route** in my ApplicationController, for when the user enters an invalid URL?
+
+**When displaying an ordered list of recipes, I should probably override that "list-style: none;" rule in the CSS file. Look up the list-style-type property.**

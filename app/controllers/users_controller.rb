@@ -43,6 +43,7 @@ class UsersController < ApplicationController
 
   get '/users/:id' do
     # Users can only access this when they're logged in; also, the current_user should see more info than anyone else.
+    # Be sure to account for logged out people (and people who aren't the owner of this profile) who type in the URL directly.
     @user = User.find_by_id(params[:id])
     erb :"users/profile"
   end
