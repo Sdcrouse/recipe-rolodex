@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   get '/users/signup' do
-    binding.pry
+    # The user should ONLY be able to access this when logged out, not when logged in.
     erb :"users/signup"
   end
 
@@ -10,25 +10,39 @@ class UsersController < ApplicationController
     new_user.save
 
     session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
+    # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
 
-    # I want to use a #slug method here, and redirect to '/users/slug' (or something similar)
+    # I want to use a #slug method here, and redirect to '/users/slug' (or something similar). Edit: That may not work; see NOTES.md.
     redirect to "/users/#{new_user.id}"
   end
 
   get '/users/login' do
+    # The user should ONLY be able to access this when logged out, not logged in.
     erb :"users/login"
   end
 
   post '/users/login' do
-    "You are now logged in!" # Use this as a flash message.
+    # Log the user in if the user exists and has the correct password.
+    # Otherwise, redirect them to the login page, with a flash message.
+
+    user = User.find_by(username: params[:username])
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      # "You have successfully logged in!" # Use this as a flash message.
+      redirect to "/users/#{user.id}"
+    else
+      redirect to "/users/login" # Use a flash message here.
+    end
   end
 
   get '/users/logout' do
+    # Users should ONLY be able to access this when logged in, not when they're logged out.
     session.clear
-    redirect to "/"
+    redirect to "/" # Maybe redirect to the login page instead.
   end
 
   get '/users/:id' do
+    # Users can only access this when they're logged in; also, the current_user should see more info than anyone else.
     @user = User.find_by_id(params[:id])
     erb :"users/profile"
   end
