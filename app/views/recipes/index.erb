@@ -1,9 +1,10 @@
 <h2>Here are all the recipes! Click on a recipe to view more information about it.</h2>
 
-<ol>
-  <% @recipes.sort_by{|recipe| recipe.name}.each do |recipe| %>
+<ol> 
+  <!-- The following Ruby syntax sorts the recipes, first by name, then by username. -->
+  <% @recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
     <p>
-      <li><%= recipe.name %></li>
+      <li><%= recipe.name %>, posted by <%= recipe.user.username %></li>
     </p>
   <% end %>
 </ol>
