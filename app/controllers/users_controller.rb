@@ -15,6 +15,14 @@ class UsersController < ApplicationController
     redirect to "/users/#{new_user.id}"
   end
 
+  get '/users/login' do
+    erb :"users/login"
+  end
+
+  post '/users/login' do
+    "You are now logged in!" # Use this as a flash message.
+  end
+
   get '/users/logout' do
     session.clear
     redirect to "/"
