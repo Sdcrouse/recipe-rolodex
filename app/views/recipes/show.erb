@@ -33,19 +33,25 @@
       <% if @recipe.additional_ingredients %>
         <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
           <li><%= ingredient %></li>
-          <br />
         <% end %>
       <% end %> <!-- end of @recipe.additional_ingredients iterator -->
     </ul>
   <% end %> <!-- end of #unless -->
-
   <br />
 
-  <p>
-    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p") if @recipe.created_at %><br />
-    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p") if @recipe.updated_at %>
-  </p>
+  <% if @recipe.instructions %>
+    <h3>Instructions:</h3>
+    <p><%= @recipe.instructions %></p>
+  <% end %>
 
-<% else %>
+  <% if @recipe.notes %>
+    <p><strong>Notes:</strong> <%= @recipe.notes %></p>
+  <% end %>
+
+  <h5>
+    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") if @recipe.created_at %>
+    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") if @recipe.updated_at %>
+  </h5>
+<% else %> <!-- This is connected with "if @recipe" at the top. -->
   <h3>Uh-Oh! This recipe doesn't exist. Click <a href="/recipes">here</a> to go back to the recipes.</h3>
 <% end %> <!-- end of "if @recipe" -->
