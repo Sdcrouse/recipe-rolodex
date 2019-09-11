@@ -13,7 +13,11 @@
     Serving Size: <%= @recipe.serving_size %><br />
   <% end %>
   <% if @recipe.servings %>
-    Servings: <%= @recipe.servings %>
+    Servings: <%= @recipe.servings %><br /><br />
+  <% end %>
+
+  <% if @recipe.description %>
+    <p>Description: <%= @recipe.description %></p>
   <% end %>
 
   <% unless @recipe.ingredients.empty? %>
@@ -22,15 +26,26 @@
       <% @recipe.ingredients.each do |ingredient| %>
         <li>
           <%= ingredient.quantity if ingredient.quantity %>
-          <% if ingredient.units %>
-            <%= ingredient.units %> of
-          <% end %>
+          <%= ingredient.units if ingredient.units %>
           <%= ingredient.name if ingredient.name %>
         </li>
-        <br />
-      <% end %> <!-- end of #each -->
+      <% end %> <!-- end of @recipe.ingredients iterator -->
+      <% if @recipe.additional_ingredients %>
+        <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
+          <li><%= ingredient %></li>
+          <br />
+        <% end %>
+      <% end %> <!-- end of @recipe.additional_ingredients iterator -->
     </ul>
-  <% end %>
+  <% end %> <!-- end of #unless -->
+
+  <br />
+
+  <p>
+    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p") if @recipe.created_at %><br />
+    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p") if @recipe.updated_at %>
+  </p>
+
 <% else %>
   <h3>Uh-Oh! This recipe doesn't exist. Click <a href="/recipes">here</a> to go back to the recipes.</h3>
-<% end %>
+<% end %> <!-- end of "if @recipe" -->
