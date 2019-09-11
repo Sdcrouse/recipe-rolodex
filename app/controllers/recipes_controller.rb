@@ -7,6 +7,15 @@ class RecipesController < ApplicationController
     erb :"recipes/index"
   end
 
+  get '/recipes/new' do
+    erb :"/recipes/new" # Only the current_user should be able to do this!
+  end
+
+  post '/recipes' do
+    binding.pry
+    "You have successfully created a new recipe!" # Use this as a flash message. This should only happen to the current_user.
+  end
+
   get '/recipes/:id' do
     @recipe = Recipe.find_by_id(params[:id])
 
