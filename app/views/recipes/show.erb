@@ -8,6 +8,29 @@
   <% if @recipe.image_url %>
     <p><img src="<%= @recipe.image_url %>" alt="<%= @recipe.name %>" /></p>
   <% end %>
+
+  <% if @recipe.serving_size %>
+    Serving Size: <%= @recipe.serving_size %><br />
+  <% end %>
+  <% if @recipe.servings %>
+    Servings: <%= @recipe.servings %>
+  <% end %>
+
+  <% unless @recipe.ingredients.empty? %>
+    <h3>Ingredients:</h3>
+    <ul>
+      <% @recipe.ingredients.each do |ingredient| %>
+        <li>
+          <%= ingredient.quantity if ingredient.quantity %>
+          <% if ingredient.units %>
+            <%= ingredient.units %> of
+          <% end %>
+          <%= ingredient.name if ingredient.name %>
+        </li>
+        <br />
+      <% end %> <!-- end of #each -->
+    </ul>
+  <% end %>
 <% else %>
   <h3>Uh-Oh! This recipe doesn't exist. Click <a href="/recipes">here</a> to go back to the recipes.</h3>
 <% end %>
