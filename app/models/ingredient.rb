@@ -1,5 +1,5 @@
 class Ingredient < ActiveRecord::Base
-  belongs_to :recipe
+  has_many :recipes, through: :recipe_ingredients
 end
 
 # Save this for later (I might make an Amount model with quantity and units and seed the DB)
