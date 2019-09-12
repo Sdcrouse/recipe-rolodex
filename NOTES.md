@@ -1,3 +1,7 @@
+**Now that the RecipeIngredient model has an ingredient_amount, I can't access it with an Ingredient instance OR a Recipe instance. I have to access the RecipeIngredient instance itself.**
+
+**I have to pay close attention to how this affects one's ability to CRUD recipes and ingredients, especially with the RecipeIngredient model.**
+
 **Erase this after implementing it:** I am creating a recipe AND its ingredients in one form, so the params hash should look like this:
 params = {
   :recipe => {
@@ -21,10 +25,22 @@ params = {
   ]
 }
 **Don't forget to add the recipe to the User! Also, remember that I wanted a drop-down list for each ingredient's units (see Ingredient model).**
+**Update: That plan has changed.** 
+The units and quantity now belong to RecipeIngredients, possibly as a separate Amount class later on. Maybe I should have the User choose a unit from a drop-down or radio list (organized by unit system).
+For now, RecipeIngredients will have an "amounts" attribute that combines quantity and units.
+
+In addition to names, Ingredients could have food groups (fruits, veggies, minerals, meat, dairy, etc.), which can be chosen through a radio or drop-down list.
+
+Question: Do I now want to give Users many Ingredients through Recipes? (Like when showing what Ingredients a User has used, e.g.?)
+
+**What I could also do now is make a (sorted-by-name) drop-down list of ingredient names, along with a "create your own" option.**
+**This would be next to the "amount" option.**
+**The "create your own" option should validate against blank values, but ONLY if selected.**
+**Same thing with "amount" (sorted drop-down list AND validations).**
 
 **Make sure that any user-uploaded image shows up!**
 
-**Attributes I could add to the User model:** description, favorite_recipes (This could be displayed as links to the user's favorite recipes, with the option to "Add to Favorite Recipes" option on each recipe),...
+**Attributes I could add to the User model:** description, **favorite_recipes** (This could be displayed as links to the user's favorite recipes, with the option to "Add to Favorite Recipes" option on each recipe),...
 
 **Attributes I could add to the Recipe model:** prep_time, description, utensils, calories_per_serving, total_calories,...
 
@@ -34,7 +50,7 @@ With all of those different ingredients and recipes out there, I might wind up i
 
 **The user should be able to search for a recipe by name and/or ingredient name.**
 
-**Refactor the seeds.rb file when there's time. See https://github.com/learn-co-curriculum/nyc-sinatra/blob/solution/db/seeds.rb Make sure that the recipes belong to the right users, and the ingredients to the right recipes.**
+**Refactor the seeds.rb file when there's time. See https://github.com/learn-co-curriculum/nyc-sinatra/blob/solution/db/seeds.rb Make sure that the user-recipe-recipe_ingredient-ingredient relationships are all correct.**
 
 Later on, I want to implement the "Confirm Password" functionality. 
 I would also like to make sure the user enters a valid e-mail address (i.e. does it take the form "name@somewhere.com"?)
@@ -43,7 +59,7 @@ It would also be good to let the current_user delete his/her profile and edit it
 
 Remember to put a link to the user's recipes on his/her profile page. On their recipes page, have a link to go back to their profile page. And have a flash message if they don't have any recipes.
 
-I thought about writing a #slug method for usernames, but that would prove problematic - "first.last", "first&last", and "first last" would return the same slug of "first-last". I don't want that.
+I thought about writing a #slug method for usernames, but that would prove problematic - "first.last", "first&last", and "first last" would return the same slug of "first-last". I don't want that. **Update:** That could work if I use the correct validations for usernames (i.e. no blank spaces, and "userName" and "Username" would be treated as the same username.)
 
 **I don't want the login link to be visible on the login page; that makes no sense to me.**
 
@@ -60,3 +76,5 @@ I could also write a /users index page and call it the User Directory.
 
 I could make a drop-down list for recipes on the Recipes link. I will need to fiddle with the HTML and CSS.
 The Recipes drop-down list could have a Search feature, or list them alphabetically, or have a sub-list of users and their recipes.
+
+**Maybe a recipe and its ingredients should be dropped when a user is deleted; so, write a dependency.**
