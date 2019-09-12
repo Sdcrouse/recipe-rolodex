@@ -1,3 +1,71 @@
+This may help with my problem below: https://stackoverflow.com/questions/4381154/rails-migration-for-has-and-belongs-to-many-join-table/4381282#4381282
+
+My troubles with my new models:
+
+**What works:**
+>> egg_salad = Recipe.new(name: "Egg Salad")
+=> #<Recipe id: nil, name: "Egg Salad", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: nil, updated_at: nil, description: nil, notes: nil>
+
+>> eggs = Ingredient.new(name: "Eggs")
+=> #<Ingredient id: nil, name: "Eggs">
+
+>> RecipeIngredient.create(recipe: egg_salad, ingredient: eggs, ingredient_amount: "2")
+D, [2019-09-12T14:48:00.884526 #141] DEBUG -- :    (0.1ms)  begin transaction
+D, [2019-09-12T14:48:00.892661 #141] DEBUG -- :   SQL (1.6ms)  INSERT INTO "recipes" ("name", "created_at", "updated_at") VALUES (?, ?, ?)  [["name", "Egg Salad"], ["created_at", "2019-09-12 21:48:00.890390"], ["updated_at", "2019-09-12 21:48:00.890390"]]
+D, [2019-09-12T14:48:00.897658 #141] DEBUG -- :   SQL (0.2ms)  INSERT INTO "ingredients" ("name") VALUES (?)  [["name", 
+"Eggs"]]
+D, [2019-09-12T14:48:00.899305 #141] DEBUG -- :   SQL (0.2ms)  INSERT INTO "recipe_ingredients" ("ingredient_amount", "recipe_id", "ingredient_id") VALUES (?, ?, ?)  [["ingredient_amount", "2"], ["recipe_id", 70], ["ingredient_id", 237]]   
+D, [2019-09-12T14:48:00.902433 #141] DEBUG -- :    (1.8ms)  commit transaction
+=> #<RecipeIngredient id: 5, recipe_id: 70, ingredient_id: 237, ingredient_amount: "2">
+
+>> eggs.recipes
+D, [2019-09-12T14:48:23.622049 #141] DEBUG -- :   Recipe Load (0.2ms)  SELECT "recipes".* FROM "recipes" INNER JOIN "recipe_ingredients" ON "recipes"."id" = "recipe_ingredients"."recipe_id" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 237]]
+=> #<ActiveRecord::Associations::CollectionProxy [#<Recipe id: 70, name: "Egg Salad", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: "2019-09-12 21:48:00", updated_at: "2019-09-12 21:48:00", description: nil, notes: nil>]>
+
+>> egg_salad.ingredients
+D, [2019-09-12T14:49:09.792074 #141] DEBUG -- :   Ingredient Load (0.5ms)  SELECT "ingredients".* FROM "ingredients" INNER JOIN "recipe_ingredients" ON "ingredients"."id" = "recipe_ingredients"."ingredient_id" WHERE "recipe_ingredients"."recipe_id" = ?  [["recipe_id", 70]]
+=> #<ActiveRecord::Associations::CollectionProxy [#<Ingredient id: 237, name: "Eggs">]>
+
+>> eggs.recipes.include?(egg_salad)
+=> true
+>> egg_salad.ingredients.include?(eggs)
+=> true
+
+**What does *not* work:**
+>> mustard = Ingredient.new(name: "mustard")
+=> #<Ingredient id: nil, name: "mustard">
+
+>> RecipeIngredient.create(recipe: egg_salad, ingredient: mustard, ingredient_amount: "2 tsp")
+D, [2019-09-12T14:51:25.030980 #141] DEBUG -- :    (0.1ms)  begin transaction
+D, [2019-09-12T14:51:25.035027 #141] DEBUG -- :   SQL (2.2ms)  INSERT INTO "ingredients" ("name") VALUES (?)  [["name", 
+"mustard"]]
+D, [2019-09-12T14:51:25.048115 #141] DEBUG -- :   SQL (0.2ms)  INSERT INTO "recipe_ingredients" ("recipe_id", "ingredient_amount", "ingredient_id") VALUES (?, ?, ?)  [["recipe_id", 70], ["ingredient_amount", "2 tsp"], ["ingredient_id", 238]]
+D, [2019-09-12T14:51:25.053364 #141] DEBUG -- :    (3.1ms)  commit transaction
+=> #<RecipeIngredient id: 6, recipe_id: 70, ingredient_id: 238, ingredient_amount: "2 tsp">
+
+>> mustard.recipes
+D, [2019-09-12T14:52:22.344145 #141] DEBUG -- :   Recipe Load (0.2ms)  SELECT "recipes".* FROM "recipes" INNER JOIN "recipe_ingredients" ON "recipes"."id" = "recipe_ingredients"."recipe_id" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 238]]
+=> #<ActiveRecord::Associations::CollectionProxy [#<Recipe id: 70, name: "Egg Salad", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: "2019-09-12 21:48:00", updated_at: "2019-09-12 21:48:00", description: nil, notes: nil>]>
+
+>> egg_salad.ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<Ingredient id: 237, name: "Eggs">]>
+
+>> mustard.recipes.include?(egg_salad)
+=> true
+>> egg_salad.ingredients.include?(mustard)
+=> false
+
+**The mustard has egg_salad in its recipes, but the egg_salad does NOT have mustard in its ingredients.**
+
+**I also tried making a recipe, building an ingredient into it, saving the recipe, and adding the recipe to the ingredient's recipes (because up until then, the recipe was NOT there). However, that creates two distinct RecipeIngredient objects; I only want ONE.**
+
+So, this works: creating a recipe (my_recipe), creating an ingredient (ingred1), and creating a recipe_ingredient (with an amount) that associates my_recipe with ingred1.
+However, when I then create a second ingredient (ingred2), then create a recipe_ingredient that associates ingred2 with the original recipe (my_recipe), ingred2's recipes include my_recipe, BUT my_recipe's ingredients only have ingred1, and NOT ingred2.
+
+This is one complex set of parent-child relationships: The Recipe and Ingredient are parents, and the RecipeIngredient is the child, which is probably what's causing (a) problem.
+
+
+
 **Now that the RecipeIngredient model has an ingredient_amount, I can't access it with an Ingredient instance OR a Recipe instance. I have to access the RecipeIngredient instance itself.**
 
 **I have to pay close attention to how this affects one's ability to CRUD recipes and ingredients, especially with the RecipeIngredient model.**
