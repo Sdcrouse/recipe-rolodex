@@ -239,3 +239,5 @@ jelly = pbj.ingredients.create(name: "Jelly")
 
 >> RecipeIngredient.last
 => #<RecipeIngredient id: 24, recipe_id: 78, ingredient_id: 254, ingredient_amount: "1 tbsp">
+
+Here's why (I think) #update didn't work as expected when used on RecipeIngredient.last: RecipeIngredient instances are children of Recipe and Ingredient instances. If you update the parent, you update the child (and other parents, evidently). BUT if you update the child (as you would with RecipeIngredient.last.update), you do NOT update the parent!
