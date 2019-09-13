@@ -152,6 +152,9 @@ If they don't provide a Name, then address them by username.
 Caveat: This may confuse Users: name vs. username
 Maybe label the field something like "Name you want to be called by". New feature to try out later.
 
+
+Example inputs and params hash:
+
 <input type="text" name="recipe[name]"> 
 <input type="text" name="ingredients[][name]">
 
@@ -169,7 +172,9 @@ pbj.recipe_ingredients.last.ingredient_amount =
 pbj.ingredients.create(:name => params[:ingredients][:name])
 
 
+
 Test code:
+
 >> pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
 => #<Recipe id: 76, name: "Peanut Butter and Jelly Sandwich", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: "2019-09-13 17:17:51", updated_at: "2019-09-13 17:17:51", description: nil, notes: nil>
 
@@ -216,3 +221,21 @@ Test code:
 
 >> pbj.recipe_ingredients
 => #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 23, recipe_id: 77, ingredient_id: 253, ingredient_amount: nil>]>
+
+
+**UPDATE: Here is what works:**
+
+pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
+jelly = pbj.ingredients.create(name: "Jelly")
+
+>> pbj.recipe_ingredients.last.update(ingredient_amount: "1 tbsp")
+=> true
+
+>> pbj.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 24, recipe_id: 78, ingredient_id: 254, ingredient_amount: "1 tbsp">]>
+
+>> jelly.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 24, recipe_id: 78, ingredient_id: 254, ingredient_amount: "1 tbsp">]>
+
+>> RecipeIngredient.last
+=> #<RecipeIngredient id: 24, recipe_id: 78, ingredient_id: 254, ingredient_amount: "1 tbsp">
