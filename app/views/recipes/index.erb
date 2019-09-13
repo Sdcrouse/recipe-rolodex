@@ -4,11 +4,15 @@
   <input type="submit" value="New Recipe">
 </form>
 
-<ol> 
-  <!-- The following Ruby syntax sorts the recipes, first by name, then by username. -->
-  <% @recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
-    <p>
-      <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a>, posted by <%= recipe.user.username %></li>
-    </p>
-  <% end %>
-</ol>
+<% if Recipe.all.empty? %>
+  <br /><strong>No recipes yet. Please feel free to make a new one, Chef!</strong>
+<% else %>
+  <ol> 
+    <!-- The following Ruby syntax sorts the recipes, first by name, then by username. -->
+    <% @recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
+      <p>
+        <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a>, posted by <a href="/users/<%= recipe.user.id %>"><%= recipe.user.username %></a></li>
+      </p>
+    <% end %>
+  </ol>
+<% end %> <!-- End of "if Recipe.all.empty?" -->
