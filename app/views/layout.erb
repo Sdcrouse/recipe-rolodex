@@ -30,12 +30,15 @@
 
       <nav>
         <a href="/">Home</a>
-        <a href="/users/<%= current_user.id %>">Your Profile</a> <!-- Only show this if they are logged in. -->
-        <a href="/recipes">Recipes</a>
-        <a href="/recipes/new">New Recipe</a>
-        <a href="/users/signup">Sign Up</a>
-        <a href="/users/login">Login</a>
-        <a href="/users/logout">Logout</a>
+        <% if logged_in? %>
+          <a href="/users/<%= current_user.id %>">Your Profile</a>
+          <a href="/recipes">Recipes</a>
+          <a href="/recipes/new">New Recipe</a>
+          <a href="/users/logout">Logout</a>
+        <% else %>
+          <a href="/users/signup">Sign Up</a>
+          <a href="/users/login">Login</a>        
+        <% end %>
       </nav>
 
       <%= yield %>
