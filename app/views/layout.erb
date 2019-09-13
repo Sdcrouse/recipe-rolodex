@@ -22,13 +22,17 @@
       
       <!-- <nav>
         <a>About</a> <!-- Not sure about this one.
-        <a>Users</a>
-        <a>Your Profile</a> <!-- Only show this if they are logged in.
+        <a>Users</a> <!-- Not sure about this, either. It should only be shown when users are logged in.
+        <a>Search Recipes</a> <!-- Again, only show this when users are logged in. This is a feature for later.
+        
+        <!-- It may be best to put the Recipes, Search Recipes, and New Recipe links in one drop-down list.
       </nav> -->
 
       <nav>
         <a href="/">Home</a>
+        <a href="/users/<%= current_user.id %>">Your Profile</a> <!-- Only show this if they are logged in. -->
         <a href="/recipes">Recipes</a>
+        <a href="/recipes/new">New Recipe</a>
         <a href="/users/signup">Sign Up</a>
         <a href="/users/login">Login</a>
         <a href="/users/logout">Logout</a>
