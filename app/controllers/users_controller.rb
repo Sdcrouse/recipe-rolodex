@@ -44,9 +44,13 @@ class UsersController < ApplicationController
   end
 
   get '/users/logout' do
-    # Users should ONLY be able to access this when logged in, not when they're logged out.
-    session.clear
-    redirect to "/" # Maybe redirect to the login page instead.
+    if logged_in?
+      session.clear
+      redirect to "/users/login" # Have a flash message that tells users that they have logged out.
+      # Later, I may instead render a separate logout.erb page to confirm the user's choice; see comments below.
+    else
+      redirect to "/" # Have a flash message that tells users that they can only log out if logged in.
+    end
   end
 
   get '/users/:id' do
