@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
   get '/users/signup' do
-    # The user should ONLY be able to access this when logged out, not when logged in.
-    erb :"users/signup"
+    if !logged_in?
+      erb :"users/signup"
+    else
+      redirect to "/users/#{current_user.id}"
+      # I could have a Flash message telling users that they have already signed up and logged in.
+    end
   end
 
   post '/users' do
@@ -17,8 +21,12 @@ class UsersController < ApplicationController
   end
 
   get '/users/login' do
-    # The user should ONLY be able to access this when logged out, not logged in.
-    erb :"users/login"
+    if !logged_in?
+      erb :"users/login"
+    else
+      redirect to "/users/#{current_user.id}"
+      # Have a Flash message here that tells users that they are already logged in.
+    end
   end
 
   post '/users/login' do
