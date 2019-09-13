@@ -1,18 +1,37 @@
-<h2>Welcome, Chef <%= @user.username %>!</h2>
-<!-- Add a Flash message here, for when the chef has successfully signed in. -->
+<% if logged_in? %>
+  <% if @user == current_user %>
+    <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
+    <!-- Add a Flash message here, for when the chef has successfully signed in. -->
+  <% else %>
+    <h2>Chef <%= @user.username %>'s kitchen</h2>
+  <% end %>
 
-<p>
-  <ul>
-    <li>Username: <%= @user.username %></li>
-    <li>E-mail: <%= @user.email %></li>
-  </ul>
-</p>
+  <% if @user == current_user %>
+    <p>
+      <ul>
+        <li>Username: <%= @user.username %></li>
+        <li>E-mail: <%= @user.email %></li>
+      </ul>
+    </p>
+  <% end %>
 
-<p>
-  <ul>Your recipes:
-    <!-- List the user's recipes here. Be sure to account for NO recipes. -->
-    <!-- <%# @user.recipes.each do |recipe| %> -->
-    <!-- <li><a><%#= recipe.name %></a></li> -->
-    <!-- <%# end %> -->
-  </ul>
-</p>
+  <p>
+    <ul>
+      <% if @user == current_user %>
+        Your recipes:
+      <% else %>
+        Chef <%= @user.username %>'s recipes:
+      <% end %>
+
+      <% if @user.recipes.empty? %>
+        No recipes yet
+      <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
+        <% @user.recipes.each do |recipe| %>
+          <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </p>
+<% else %> <!-- This is an edge case. -->
+  <h2>Oops! You are not signed in. <a href="/users/login">Click here to log in.</a></h2>
+<% end %> <!-- End of "if logged_in?" -->

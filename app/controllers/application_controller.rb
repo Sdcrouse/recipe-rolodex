@@ -18,7 +18,7 @@ class ApplicationController < Sinatra::Base
       # The user who is currently logged in, i.e. the user whose id is also the session's user_id.
       # The "@user ||=" avoids unnecessary database queries that slow down the website.
 
-      @user ||= User.find_by_id(session[:user_id])
+      @logged_in_user ||= User.find_by_id(session[:user_id])
     end
 
     def logged_in? 
