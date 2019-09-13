@@ -151,3 +151,68 @@ Maybe I should add a Name input field when creating a User. It is optional, of c
 If they don't provide a Name, then address them by username.
 Caveat: This may confuse Users: name vs. username
 Maybe label the field something like "Name you want to be called by". New feature to try out later.
+
+<input type="text" name="recipe[name]"> 
+<input type="text" name="ingredients[][name]">
+
+"recipe": {
+
+  
+  "name": "value", 
+}
+  "ingredients": {[
+    "name": "some name", honey
+    "ingredient_amount" 2tbsp
+  ]}
+new_ingredient = pbj.cr
+pbj.recipe_ingredients.last.ingredient_amount =
+pbj.ingredients.create(:name => params[:ingredients][:name])
+
+
+Test code:
+>> pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
+=> #<Recipe id: 76, name: "Peanut Butter and Jelly Sandwich", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: "2019-09-13 17:17:51", updated_at: "2019-09-13 17:17:51", description: nil, notes: nil>
+
+>> jelly = pbj.ingredients.create(name: "Jelly")
+=> #<Ingredient id: 251, name: "Jelly">
+
+>> pbj.recipe_ingredients.last.ingredient_amount = "1 tbsp"
+=> "1 tbsp"
+
+>> pbj.recipe_ingredients.last.ingredient_amount
+=> "1 tbsp"
+
+>> jelly.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 21, recipe_id: 76, ingredient_id: 251, ingredient_amount: nil>]>
+
+>> RecipeIngredient.all
+=> #<ActiveRecord::Relation [#<RecipeIngredient id: 21, recipe_id: 76, ingredient_id: 251, ingredient_amount: nil>]>
+
+>> bread = pbj.ingredients.create(name: "Bread")
+=> #<Ingredient id: 252, name: "Bread">
+
+>> RecipeIngredient.all
+=> #<ActiveRecord::Relation [#<RecipeIngredient id: 21, recipe_id: 76, ingredient_id: 251, ingredient_amount: nil>, #<RecipeIngredient id: 22, recipe_id: 76, ingredient_id: 252, ingredient_amount: nil>]>
+
+>> RecipeIngredient.last.update(ingredient_amount: "2 slices")
+=> true
+
+>> RecipeIngredient.all
+=> #<ActiveRecord::Relation [#<RecipeIngredient id: 21, recipe_id: 76, ingredient_id: 251, ingredient_amount: nil>, #<RecipeIngredient id: 22, recipe_id: 76, ingredient_id: 252, ingredient_amount: "2 slices">]>
+
+>> pbj.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 21, recipe_id: 76, ingredient_id: 251, ingredient_amount: "1 tbsp">, #<RecipeIngredient id: 22, recipe_id: 76, ingredient_id: 252, ingredient_amount: nil>]>
+
+>> bread.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 22, recipe_id: 76, ingredient_id: 252, ingredient_amount: "2 slices">]>
+
+(After clearing Recipe.all, Ingredient.all, and RecipeIngredient.all):
+
+>> pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
+>> jelly = pbj.ingredients.create(name: "Jelly")
+
+>> pbj.recipe_ingredients.last.ingredient_amount = "1 tbsp"
+>> pbj.save
+
+>> pbj.recipe_ingredients
+=> #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 23, recipe_id: 77, ingredient_id: 253, ingredient_amount: nil>]>
