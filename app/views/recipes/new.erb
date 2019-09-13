@@ -1,4 +1,4 @@
-<h2>Chef <%= @current_user %>, please create your new recipe here.</h2>
+<h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 <!-- I should put a flash message here if there is no current_user. -->
 
 <form method="post" action="/recipes">
