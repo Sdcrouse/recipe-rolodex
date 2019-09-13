@@ -54,10 +54,12 @@ class UsersController < ApplicationController
   end
 
   get '/users/:id' do
-    # Users can only access this when they're logged in; also, the current_user should see more info than anyone else.
-    # Be sure to account for logged out people (and people who aren't the owner of this profile) who type in the URL directly.
-    @user = User.find_by_id(params[:id])
-    erb :"users/profile"
+    # Show users this user's profile, but ONLY if they are logged in and that user exists.
+    if logged_in? && @user = User.find_by_id(params[:id])
+      erb :"users/profile"
+    else
+      redirect to "/" # Have two different flash messages here: one for when the user is logged out, and one for when @user is nil.
+    end
   end
 
   # Later on, I want to render a logout.erb page that confirms the user's choice to log out.
