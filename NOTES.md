@@ -146,3 +146,8 @@ I could make a drop-down list for recipes on the Recipes link. I will need to fi
 The Recipes drop-down list could have a Search feature, or list them alphabetically, or have a sub-list of users and their recipes.
 
 **Maybe a recipe and its ingredients should be dropped when a user is deleted; so, write a dependency.**
+
+Maybe I should add a Name input field when creating a User. It is optional, of course, but then I'd be able to make custom messages that address the user by name (by default) instead of by username.
+If they don't provide a Name, then address them by username.
+Caveat: This may confuse Users: name vs. username
+Maybe label the field something like "Name you want to be called by". New feature to try out later.
