@@ -64,7 +64,7 @@ However, when I then create a second ingredient (ingred2), then create a recipe_
 
 This is one complex set of parent-child relationships: The Recipe and Ingredient are parents, and the RecipeIngredient is the child, which is probably what's causing (a) problem.
 
-
+**UPDATE:** This was solved by creating a recipe, then calling `recipe.ingredients.create(name: "New Ingredient")`. The ingredient and recipe are now correctly associated with each other.
 
 **Now that the RecipeIngredient model has an ingredient_amount, I can't access it with an Ingredient instance OR a Recipe instance. I have to access the RecipeIngredient instance itself.**
 
@@ -170,7 +170,6 @@ Example inputs and params hash:
 new_ingredient = pbj.cr
 pbj.recipe_ingredients.last.ingredient_amount =
 pbj.ingredients.create(:name => params[:ingredients][:name])
-
 
 
 Test code:
@@ -379,6 +378,8 @@ However, the class would have its own attributes: location, start and end times,
 Would I encounter the same bug? If a class location hasn't been determined yet, then teacher.class.update(location: "Room 101") would work (it would update the teacher, class, AND student).
 **But would I encounter this bug: teacher.class.update(location: "Room 203") (when its value was "Room 101") updates the teacher and class, but NOT the student?**
 
+**FINAL UPDATE FOR ABOVE:** This problem may only be with Tux, or it's an ActiveRecord fluke; it seems to work fine in Pry, when used from the recipes/show.erb file. **But watch for this down the line, especially in the PATCH requests.**
+
 
 **Alternative code for recipes/show.erb. Should I use this or the code I have now?**
 
@@ -403,3 +404,6 @@ Would I encounter the same bug? If a class location hasn't been determined yet, 
 <% end %> <!-- End of #unless -->
 
 Is there a way to prevent users from filling out the "Additional Ingredients" field before filling out the first five Ingredient fields? Is that even a good idea, even if it were possible?
+
+Give the user an option of what information to display to the public (a boolean in the users table).
+Button or checkbox: Display this attribute (put in User profile form). **Add this later.**
