@@ -9,6 +9,11 @@ User.create(username: "roadrunner", email:"vroom@acme.com", password: "meepmeep!
 User.create(username: "musicman", email: "music.meister@dc.com", password: "do-re-mi")
 
 #-------- Gordon Ramsay's recipe(s) -----------------
+sandwich_ingredients = [
+  {amount: "2 slices of", name: "bread"},
+  {amount: "1 slab of", name: "raw meat"}
+]
+
 idiot_sandwich = Recipe.create(
   name: "Idiot Sandwich", 
   description: "My least favorite sandwich in the world", 
@@ -17,11 +22,16 @@ idiot_sandwich = Recipe.create(
   notes: "Avoid serving this at all costs!"
 )
 
-idiot_sandwich.ingredients.create(name: "bread")
-idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: "2 slices of")
+sandwich_ingredients.each do |ingred|
+  idiot_sandwich.ingredients.create(name: ingred[:name])
+  idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
+end
 
-idiot_sandwich.ingredients.create(name: "raw meat")
-idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: "1 slab of")
+# idiot_sandwich.ingredients.create(name: "bread")
+# idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: "2 slices of")
+# 
+# idiot_sandwich.ingredients.create(name: "raw meat")
+# idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: "1 slab of")
 
 ramsay.recipes << idiot_sandwich
 
