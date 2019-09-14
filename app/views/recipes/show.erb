@@ -20,14 +20,17 @@
     <p>Description: <%= @recipe.description %></p>
   <% end %>
 
-  <% if !@ingredients.empty? %> <!-- This should not be empty, even if the user specifies additional_ingredients. -->
+  <% if !@recipe_ingredients.empty? %> <!-- This should not be empty, even if the user specifies additional_ingredients. -->
     <h3>Ingredients:</h3>
     <ul>
-      <% @ingredients.each do |ingredient| %>
+      <% @recipe.ingredients.each do |ingredient| %>
         <li>
           <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+          <!-- There may be another way to do this, but I do not (yet) know what it is. -->
+          <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
+
           <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
-          
+
           <%= recip_ingred.ingredient_amount if recip_ingred && recip_ingred.ingredient_amount %>
           <%= ingredient.name if ingredient.name %>
         </li>

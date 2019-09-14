@@ -25,7 +25,6 @@ class RecipesController < ApplicationController
     # I also accounted for this in the recipes/show.erb file.
 
     @recipe_ingredients = @recipe.recipe_ingredients
-    @ingredients = @recipe.ingredients
     
     erb :'recipes/show'
   end
