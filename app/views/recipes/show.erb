@@ -1,4 +1,3 @@
-<% binding.pry %>
 <% if @recipe %>
   <h2><%= @recipe.name if @recipe.name %></h2>
 
@@ -21,23 +20,28 @@
     <p>Description: <%= @recipe.description %></p>
   <% end %>
 
-  <% unless @recipe.ingredients.empty? %>
+  <% if !@ingredients.empty? %> <!-- This should not be empty, even if the user specifies additional_ingredients. -->
     <h3>Ingredients:</h3>
     <ul>
-      <% @recipe.ingredients.each do |ingredient| %>
+      <% @ingredients.each do |ingredient| %>
         <li>
-          <%= ingredient.quantity if ingredient.quantity %>
-          <%= ingredient.units if ingredient.units %>
+          <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+          <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+          
+          <%= recip_ingred.ingredient_amount if recip_ingred && recip_ingred.ingredient_amount %>
           <%= ingredient.name if ingredient.name %>
         </li>
       <% end %> <!-- end of @recipe.ingredients iterator -->
+
       <% if @recipe.additional_ingredients %>
         <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
           <li><%= ingredient %></li>
         <% end %>
       <% end %> <!-- end of @recipe.additional_ingredients iterator -->
     </ul>
-  <% end %> <!-- end of #unless -->
+  <% else %>
+    <h3>Uh-Oh! This recipe doesn't appear to have any ingredients! <a href="/recipes">Click here to go back to the recipes.</a></h3>
+  <% end %> <!-- End of "if !@ingredients.empty?" -->
   <br />
 
   <% if @recipe.instructions %>

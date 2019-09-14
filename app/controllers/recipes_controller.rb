@@ -21,9 +21,11 @@ class RecipesController < ApplicationController
 
   get '/recipes/:id' do
     @recipe = Recipe.find_by_id(params[:id])
-
     # Redirect to an error page (or somewhere else, with a flash message), if there is no recipe.
     # I also accounted for this in the recipes/show.erb file.
+
+    @recipe_ingredients = @recipe.recipe_ingredients
+    @ingredients = @recipe.ingredients
     
     erb :'recipes/show'
   end

@@ -378,3 +378,28 @@ In this case, the teacher would have many students through classes, a student wo
 However, the class would have its own attributes: location, start and end times, etc.
 Would I encounter the same bug? If a class location hasn't been determined yet, then teacher.class.update(location: "Room 101") would work (it would update the teacher, class, AND student).
 **But would I encounter this bug: teacher.class.update(location: "Room 203") (when its value was "Room 101") updates the teacher and class, but NOT the student?**
+
+
+**Alternative code for recipes/show.erb. Should I use this or the code I have now?**
+
+<% unless @recipe.recipe_ingredients.empty? %>
+  <h3>Ingredients:</h3>
+  <ul>
+    <!-- <%# @recipe.ingredients.each do |ingredient| %> -->
+    <% @recipe.recipe_ingredients.each do |recip_ingred| %>
+      <li>
+        <%= recip_ingred.ingredient_amount if recip_ingred.ingredient_amount %> 
+        <%= recip_ingred.ingredient.name if recip_ingred.ingredient && recip_ingred.ingredient.name %>
+        <!-- Is this even needed? There should be an ingredient if recipe_ingredients is not empty. -->
+      </li>
+    <% end %> <!-- end of @recipe.recipe_ingredients iterator -->
+    <% if @recipe.additional_ingredients %>
+      <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
+        <li><%= ingredient %></li>
+      <% end %>
+    <% end %> <!-- end of @recipe.additional_ingredients iterator -->
+  </ul>
+  <!-- I should have an error message here. @recipe.recipe_ingredients should NEVER be empty, even if the user specifies additional_ingredients. -->
+<% end %> <!-- End of #unless -->
+
+Is there a way to prevent users from filling out the "Additional Ingredients" field before filling out the first five Ingredient fields? Is that even a good idea, even if it were possible?
