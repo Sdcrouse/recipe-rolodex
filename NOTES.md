@@ -248,3 +248,133 @@ One thing I still don't understand is why
 >> pbj.save
 ```
 didn't seem to work. But I can explore that later.
+
+Update: I tried this code later:
+```
+steven = User.find_by(username: "scrouse")
+pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich", user: steven)
+jelly = pbj.ingredients.create(name: "Jelly")
+pbj.recipe_ingredients.last.ingredient_amount = "1 tbsp"
+pbj.save
+pbj.ingredients.create(name: "Peanut Butter")
+```
+Which produced this output:
+
+```
+[1] pry(#<RecipesController>)> @recipe
+=> #<Recipe:0x00007fffe677d920
+=> #<Recipe:0x00007fffe677d920
+=> #<Recipe:0x00007fffe677d920
+ id: 81,
+ name: "Peanut Butter and Jelly Sandwich",
+ image_url: nil,
+ serving_size: nil,
+ servings: nil,
+ additional_ingredients: nil,
+ instructions: nil,
+ user_id: 49,
+ created_at: 2019-09-13 21:48:58 UTC,
+ updated_at: 2019-09-13 21:48:58 UTC,
+ description: nil,
+ notes: nil>
+[2] pry(#<RecipesController>)> @recipe.ingredients
+D, [2019-09-13T14:50:58.412699 #231] DEBUG -- :   Ingredient Load (0.6ms)  SELECT "ingredients".* FROM "ingredients" INNER JOIN "recipe_ingredients" ON "ingredients"."id" = "recipe_ingredients"."ingredient_id" WHERE "recipe_ingredients"."recipe_id" = ?  [["recipe_id", 81]]
+=> [#<Ingredient:0x00007fffe7ed6b08 id: 259, name: "Jelly">,
+ #<Ingredient:0x00007fffe7ed69c8 id: 260, name: "Peanut Butter">]
+[3] pry(#<RecipesController>)> @recipe.ingredients.first
+=> #<Ingredient:0x00007fffe7ed6b08 id: 259, name: "Jelly">
+[4] pry(#<RecipesController>)> @recipe.ingredients.first.recipe
+NoMethodError: undefined method `recipe' for #<Ingredient id: 259, name: "Jelly">
+Did you mean?  recipes
+               recipes=
+from /home/stevendc/.rvm/gems/ruby-2.6.1/gems/activemodel-4.2.11.1/lib/active_model/attribute_methods.rb:433:in `method_missing'
+[5] pry(#<RecipesController>)> @recipe.ingredients.first.recipes
+D, [2019-09-13T14:51:11.152266 #231] DEBUG -- :   Recipe Load (0.4ms)  SELECT "recipes".* FROM "recipes" INNER JOIN "recipe_ingredients" ON "recipes"."id" = "recipe_ingredients"."recipe_id" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 259]]
+=> [#<Recipe:0x00007fffe7fbfe20
+  id: 81,
+  name: "Peanut Butter and Jelly Sandwich",
+  image_url: nil,
+  serving_size: nil,
+  servings: nil,
+  additional_ingredients: nil,
+  instructions: nil,
+  user_id: 49,
+  created_at: 2019-09-13 21:48:58 UTC,
+  updated_at: 2019-09-13 21:48:58 UTC,
+  description: nil,
+  notes: nil>]
+[6] pry(#<RecipesController>)> @recipe.ingredients.second
+=> #<Ingredient:0x00007fffe7ed69c8 id: 260, name: "Peanut Butter">
+[7] pry(#<RecipesController>)> @recipe.ingredients.second.recipes
+D, [2019-09-13T14:51:23.347466 #231] DEBUG -- :   Recipe Load (0.3ms)  SELECT "recipes".* FROM "recipes" INNER JOIN "recipe_ingredients" ON "recipes"."id" = "recipe_ingredients"."recipe_id" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 260]]
+=> [#<Recipe:0x00007fffe804f138
+  id: 81,
+  name: "Peanut Butter and Jelly Sandwich",
+  image_url: nil,
+  serving_size: nil,
+  servings: nil,
+  additional_ingredients: nil,
+  instructions: nil,
+  user_id: 49,
+  created_at: 2019-09-13 21:48:58 UTC,
+  updated_at: 2019-09-13 21:48:58 UTC,
+  description: nil,
+  notes: nil>]
+[8] pry(#<RecipesController>)> @recipe.recipe_ingredients
+D, [2019-09-13T14:51:36.137122 #231] DEBUG -- :   RecipeIngredient Load (0.4ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients" WHERE "recipe_ingredients"."recipe_id" = ?  [["recipe_id", 81]]
+=> [#<RecipeIngredient:0x00007fffe80e2ed8 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>,
+ #<RecipeIngredient:0x00007fffe80e2d98 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: nil>]
+[9] pry(#<RecipesController>)> @recipe.ingredients.first.recipe_ingredients
+D, [2019-09-13T14:52:10.830166 #231] DEBUG -- :   RecipeIngredient Load (0.4ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 259]]
+=> [#<RecipeIngredient:0x00007fffe8151f40 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>]
+[10] pry(#<RecipesController>)> RecipeIngredient.all
+D, [2019-09-13T14:52:17.775915 #231] DEBUG -- :   RecipeIngredient Load (0.5ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients"
+=> [#<RecipeIngredient:0x00007fffe8184350 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>,
+ #<RecipeIngredient:0x00007fffe8184210 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: nil>]
+[11] pry(#<RecipesController>)> RecipeIngredient.last.update(ingredient_amount: "2 tbsp")
+D, [2019-09-13T14:53:18.815007 #231] DEBUG -- :   RecipeIngredient Load (0.4ms)  SELECT  "recipe_ingredients".* FROM "recipe_ingredients"  ORDER BY "recipe_ingredients"."id" DESC LIMIT 1
+D, [2019-09-13T14:53:18.835288 #231] DEBUG -- :    (0.1ms)  begin transaction
+D, [2019-09-13T14:53:18.845302 #231] DEBUG -- :   SQL (2.5ms)  UPDATE "recipe_ingredients" SET "ingredient_amount" = ? WHERE "recipe_ingredients"."id" = ?  [["ingredient_amount", "2 tbsp"], ["id", 30]]
+D, [2019-09-13T14:53:18.851126 #231] DEBUG -- :    (4.1ms)  commit transaction
+=> true
+[12] pry(#<RecipesController>)> RecipeIngredient.all
+D, [2019-09-13T14:53:22.985570 #231] DEBUG -- :   RecipeIngredient Load (0.4ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients"
+=> [#<RecipeIngredient:0x00007fffe8229738 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>,
+ #<RecipeIngredient:0x00007fffe82295f8 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: "2 tbsp">]
+[13] pry(#<RecipesController>)> @recipe.ingredients.first.recipe_ingredients
+=> [#<RecipeIngredient:0x00007fffe8151f40 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>]
+[14] pry(#<RecipesController>)> @recipe.ingredients.last.recipe_ingredients
+D, [2019-09-13T14:53:41.588628 #231] DEBUG -- :   RecipeIngredient Load (0.3ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients" WHERE "recipe_ingredients"."ingredient_id" = ?  [["ingredient_id", 260]]
+=> [#<RecipeIngredient:0x00007fffe82b52b0 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: "2 tbsp">]      
+[15] pry(#<RecipesController>)> @recipe.recipe_ingredients
+=> [#<RecipeIngredient:0x00007fffe80e2ed8 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>,
+ #<RecipeIngredient:0x00007fffe80e2d98 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: nil>]
+[16] pry(#<RecipesController>)> @recipe.recipe_ingredients.first
+=> #<RecipeIngredient:0x00007fffe80e2ed8 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>
+[17] pry(#<RecipesController>)> @recipe.recipe_ingredients.first.update(ingredient_amount: "1.5 tbsp")
+D, [2019-09-13T14:54:50.311835 #231] DEBUG -- :    (0.1ms)  begin transaction
+D, [2019-09-13T14:54:50.325948 #231] DEBUG -- :   SQL (2.7ms)  UPDATE "recipe_ingredients" SET "ingredient_amount" = ? WHERE "recipe_ingredients"."id" = ?  [["ingredient_amount", "1.5 tbsp"], ["id", 29]]
+D, [2019-09-13T14:54:50.331340 #231] DEBUG -- :    (3.7ms)  commit transaction
+=> true
+[18] pry(#<RecipesController>)> RecipeIngredient.all
+D, [2019-09-13T14:54:55.895553 #231] DEBUG -- :   RecipeIngredient Load (0.3ms)  SELECT "recipe_ingredients".* FROM "recipe_ingredients"
+=> [#<RecipeIngredient:0x00007fffe7539578 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: "1.5 tbsp">,    
+ #<RecipeIngredient:0x00007fffe7539280 id: 30, recipe_id: 81, ingredient_id: 260, ingredient_amount: "2 tbsp">]
+[19] pry(#<RecipesController>)> @recipe.recipe_ingredients.first
+=> #<RecipeIngredient:0x00007fffe80e2ed8 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: "1.5 tbsp">
+[20] pry(#<RecipesController>)> @recipe.ingredients.first.recipe_ingredients
+=> [#<RecipeIngredient:0x00007fffe8151f40 id: 29, recipe_id: 81, ingredient_id: 259, ingredient_amount: nil>]
+```
+
+I'll check this out later. Somehow, at one point when I updated @recipe.recipe_ingredients, it updated the Recipe and RecipeIngredient objects, but NOT the Ingredient object.
+
+**Further update:** When I just tried to update an (already existing) ingredient_amount on the recipe, it updated the recipe and the corresponding RecipeIngredient object, but not the ingredient.
+
+So, somehow, when I call #update on @recipe.recipe_ingredients.last (or first) the first time with a new ingredient_amount, it works  (since the ingredient_amount is nil): it updates the recipe, ingredient, and the corresponding RecipeIngredient object.
+But as soon as I #update it again, it updates the recipe and the RecipeIngredient object, but NOT the ingredient!
+
+**I wonder, though: Would this problem happen again in a similar model structure? Say, with Student, Class, and Teacher?**
+In this case, the teacher would have many students through classes, a student would have many teachers through classes, and a class would belong to a student and a teacher. 
+However, the class would have its own attributes: location, start and end times, etc.
+Would I encounter the same bug? If a class location hasn't been determined yet, then teacher.class.update(location: "Room 101") would work (it would update the teacher, class, AND student).
+**But would I encounter this bug: teacher.class.update(location: "Room 203") (when its value was "Room 101") updates the teacher and class, but NOT the student?**
