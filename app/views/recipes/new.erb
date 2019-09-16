@@ -1,6 +1,9 @@
-<h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
-<!-- I should put a flash message here if there is no current_user. -->
+<% if logged_in? %>
+  <h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 
-<form method="post" action="/recipes">
-  <input type="submit" value="Create Recipe" />
-</form>
+  <form method="post" action="/recipes">
+    <input type="submit" value="Create Recipe" />
+  </form>
+<% else %> <!-- This is an edge case. -->
+  <h2>You are not logged in. <a href="/users/login">Click here to go to the login page.</a></h2>
+<% end %>

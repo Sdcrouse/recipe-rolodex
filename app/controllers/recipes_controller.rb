@@ -11,7 +11,11 @@ class RecipesController < ApplicationController
   end
 
   get '/recipes/new' do
-    erb :"/recipes/new" # Only the current_user should be able to do this!
+    if logged_in?
+      erb :"/recipes/new"
+    else
+      redirect to "/users/login" # Add a flash message here.
+    end
   end
 
   post '/recipes' do
