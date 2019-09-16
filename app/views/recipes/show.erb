@@ -2,7 +2,7 @@
   <h2><%= @recipe.name if @recipe.name %></h2>
 
   <% if @recipe.user && @recipe.user.username %>
-    <p>Posted by: <%= @recipe.user.username %></p>
+    <p>Posted by: <a href="/users/<%= @recipe.user.id %>"><%= @recipe.user.username %></a></p>
   <% end %>
 
   <% if @recipe.image_url %>
