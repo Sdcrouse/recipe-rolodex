@@ -18,7 +18,6 @@ class UsersController < ApplicationController
       # I want to use a #slug method here, and redirect to '/users/slug' (or something similar). Edit: That may not work; see NOTES.md.
       redirect to "/users/#{new_user.id}"
     else
-      binding.pry
       redirect to "/users/signup"
       # Add a flash message here, with the ActiveRecord-generated error messages (new_user.errors.full_messages).
     end
