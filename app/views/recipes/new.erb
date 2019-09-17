@@ -8,7 +8,7 @@
     </p>
     <p>
       <label for="image_url">Image URL: </label>
-      <input type="url" id="image_url" name="recipe[image_url]" /><br />
+      <input type="url" id="image_url" name="recipe[image_url]" size="50" /><br />
       <strong>
         Note: To add a URL here, first upload a photo or image (legally, please!) to your favorite photo hosting website. 
         Then, copy and paste your photo's URL here (but PLEASE make sure that you're obeying their Terms of Use first).
@@ -16,6 +16,13 @@
 
       <!-- I could do this, but then I would lose the URL validation: -->
       <!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
+    </p>
+    <p>
+      <label for="serving_size">Serving Size: </label>
+      <input type="text", id="serving_size" name="recipe[serving_size]" size="10" />
+      
+      <label for="servings">Servings: </label>
+      <input type="text" id="servings" name="recipe[servings]" size="1" />
     </p>
     <input type="submit" value="Create Recipe" />
   </form>
