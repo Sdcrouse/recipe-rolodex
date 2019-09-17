@@ -1,5 +1,6 @@
-<% if @recipe %>
-  <h2><%= @recipe.name if @recipe.name %></h2>
+<% if @recipe && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
+<!-- It may be better if that ^^^ were changed to a flash message. -->
+  <h2><%= @recipe.name %></h2>
 
   <% if @recipe.user && @recipe.user.username %>
     <p>Posted by: <a href="/users/<%= @recipe.user.id %>"><%= @recipe.user.username %></a></p>
@@ -20,37 +21,31 @@
     <p>Description: <%= @recipe.description %></p>
   <% end %>
 
-  <% if !@recipe_ingredients.empty? %> <!-- This should not be empty, even if the user specifies additional_ingredients. -->
-    <h3>Ingredients:</h3>
-    <ul>
-      <% @recipe.ingredients.each do |ingredient| %>
-        <li>
-          <!-- I am pretty sure that this syntax avoids multiple database queries: -->
-          <!-- There may be another way to do this, but I do not (yet) know what it is. -->
-          <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
+  <h3>Ingredients:</h3>
+  <ul>
+    <% @recipe.ingredients.each do |ingredient| %>
+      <li>
+        <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+        <!-- There may be another way to do this, but I do not (yet) know what it is. -->
+        <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
 
-          <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+        <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
 
-          <%= recip_ingred.ingredient_amount if recip_ingred && recip_ingred.ingredient_amount %>
-          <%= ingredient.name if ingredient.name %>
-        </li>
-      <% end %> <!-- end of @recipe.ingredients iterator -->
+        <%= recip_ingred.ingredient_amount if recip_ingred && recip_ingred.ingredient_amount %>
+        <%= ingredient.name if ingredient.name %>
+      </li>
+    <% end %> <!-- end of @recipe.ingredients iterator -->
 
-      <% if @recipe.additional_ingredients %>
-        <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
-          <li><%= ingredient %></li>
-        <% end %>
-      <% end %> <!-- end of @recipe.additional_ingredients iterator -->
-    </ul>
-  <% else %>
-    <h3>Uh-Oh! This recipe doesn't appear to have any ingredients! <a href="/recipes">Click here to go back to the recipes.</a></h3>
-  <% end %> <!-- End of "if !@ingredients.empty?" -->
+    <% if @recipe.additional_ingredients %>
+      <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
+        <li><%= ingredient %></li>
+      <% end %>
+    <% end %> <!-- end of @recipe.additional_ingredients iterator -->
+  </ul>
   <br />
 
-  <% if @recipe.instructions %>
-    <h3>Instructions:</h3>
-    <p><%= @recipe.instructions %></p>
-  <% end %>
+  <h3>Instructions:</h3>
+  <p><%= @recipe.instructions %></p>
 
   <% if @recipe.notes %>
     <p><strong>Notes:</strong> <%= @recipe.notes %></p>
@@ -60,6 +55,18 @@
     <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
     <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
   </h5>
-<% else %> <!-- This is connected with "if @recipe" at the top. -->
-  <h3>Uh-Oh! This recipe doesn't exist. Click <a href="/recipes">here</a> to go back to the recipes.</h3>
-<% end %> <!-- end of "if @recipe" -->
+<% else %> <!-- This is connected with "if @recipe && !@recipe.ingredients.empty? &&..." at the top. -->
+  <!-- It might be better to use flash messages here. -->
+
+  <% if !@recipe %>
+    <h3>Uh-Oh! This recipe doesn't exist.</h3>
+  <% elsif @recipe.name.blank? %>
+    <h3>Whoops! Whoever wrote this recipe forgot to give it a name!</h3>
+  <% elsif @recipe.ingredients.empty? %> 
+    <!-- @recipe.ingredients should not be empty, even if the user specifies additional_ingredients. -->
+    <h3>What a shame! This recipe doesn't appear to have any ingredients.</h3>
+  <% elsif @recipe.instructions.blank? %>
+    <h3>Well, this isn't good! This recipe doesn't have instructions.</h3>
+  <% end %> <!-- end of if/elsif statements starting with "if !@recipe" -->
+  <p>Click <a href="/recipes">here</a> to go back to the recipes.</p>
+<% end %> <!-- end of "if @recipe && !recipe.ingredients.empty &&..." -->
