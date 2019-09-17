@@ -127,7 +127,10 @@ It would also be good to let the current_user delete his/her profile and edit it
 
 Remember to put a link to the user's recipes on his/her profile page. On their recipes page, have a link to go back to their profile page. And have a flash message if they don't have any recipes.
 
-I thought about writing a #slug method for usernames, but that would prove problematic - "first.last", "first&last", and "first last" would return the same slug of "first-last". I don't want that. **Update:** That could work if I use the correct validations for usernames (i.e. no blank spaces, and "userName" and "Username" would be treated as the same username.)
+I thought about writing a #slug method for usernames, but that would prove problematic - "first.last", "first&last", and "first last" would return the same slug of "first-last". I don't want that. **Update:** That could work if I use the correct validations for usernames (i.e. no blank spaces, and "userName" and "Username" would be treated as the same username.) 
+**Further update:** I'll just use the validations on the username; I don't think a #slug method is needed as I can just use the username in the URL.
+
+There may be some redundancy with the validation for the User's e-mail and username, since that is also checked in the signup form itself before submission.
 
 **I don't want the login link to be visible on the login page; that makes no sense to me.**
 
