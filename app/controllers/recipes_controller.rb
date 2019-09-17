@@ -19,8 +19,18 @@ class RecipesController < ApplicationController
   end
 
   post '/recipes' do
-    binding.pry
-    "You have successfully created a new recipe!" # Use this as a flash message. This should only happen to the current_user.
+    if logged_in?
+      # I'll probably need some validations here, like if the user creates an ingredient without a name or amount.
+      binding.pry
+      recipe = Recipe.new(params[:recipe])
+      recipe.save
+      current_user.recipes << recipe
+      redirect to "/recipes/#{recipe.id}"
+      # "You have successfully created a new recipe!" # Use this as a flash message. This should only happen to the current_user.
+    else
+      redirect to "/users/login"
+      # This is an edge case, but it might not hurt to put a flash message here.
+    end
   end
 
   get '/recipes/:id' do
