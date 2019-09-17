@@ -10,14 +10,18 @@ class UsersController < ApplicationController
 
   post '/users' do
     new_user = User.new(params)
-    # I need a validation or two here - don't create a blank user!
-    new_user.save
+    
+    if new_user.save
+      session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
+      # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
 
-    session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
-    # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
-
-    # I want to use a #slug method here, and redirect to '/users/slug' (or something similar). Edit: That may not work; see NOTES.md.
-    redirect to "/users/#{new_user.id}"
+      # I want to use a #slug method here, and redirect to '/users/slug' (or something similar). Edit: That may not work; see NOTES.md.
+      redirect to "/users/#{new_user.id}"
+    else
+      binding.pry
+      redirect to "/users/signup"
+      # Add a flash message here, with the ActiveRecord-generated error messages (new_user.errors.full_messages).
+    end
   end
 
   get '/users/login' do
