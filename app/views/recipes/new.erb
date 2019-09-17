@@ -9,10 +9,9 @@
     <p>
       <label for="image_url">Image URL: </label>
       <input type="url" id="image_url" name="recipe[image_url]" size="50" /><br />
-      <strong>
-        Note: To add a URL here, first upload a photo or image (legally, please!) to your favorite photo hosting website. 
-        Then, copy and paste your photo's URL here (but PLEASE make sure that you're obeying their Terms of Use first).
-      </strong>
+      <strong>Note:</strong> 
+      To add a URL here, first upload a photo or image (legally, please!) to your favorite photo hosting website. 
+      Then, copy and paste your photo's URL here (but PLEASE make sure that you're obeying their Terms of Use first).
 
       <!-- I could do this, but then I would lose the URL validation: -->
       <!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
@@ -23,6 +22,19 @@
       
       <label for="servings">Servings: </label>
       <input type="text" id="servings" name="recipe[servings]" size="1" />
+    </p>
+    <p>
+      <label for="description">Description: </label>
+      <input type="text" id="description" name="recipe[description]" size="50" />
+    </p>
+
+    <p>
+      <label for="instructions">Instructions: </label>
+      <textarea id="instructions" name="recipe[instructions]" rows="10" cols="70" required></textarea>
+    </p>
+    <p>
+      <label for="notes">Notes: </label>
+      <textarea id="notes" name="recipe[notes]" rows="3" cols="30"></textarea>
     </p>
     <input type="submit" value="Create Recipe" />
   </form>
