@@ -27,7 +27,18 @@
       <label for="description">Description: </label>
       <input type="text" id="description" name="recipe[description]" size="50" />
     </p>
-
+    <p>
+      <strong>Ingredients:</strong><br />
+      <ol>
+        <li>
+          Ingredient 1<br />
+          <label for="ingredient_1_amount">Amount: </label>
+          <input type="text" id="ingredient_1_amount" name="ingredients[][amount]" size="10" required />
+          <label for="ingredient_1_name">Name: </label>
+          <input type="text" id="ingredient_1_name" name="ingredients[][name]" required />
+        </li>
+      </ol>
+    </p>
     <p>
       <label for="instructions">Instructions: </label>
       <textarea id="instructions" name="recipe[instructions]" rows="10" cols="70" required></textarea>
