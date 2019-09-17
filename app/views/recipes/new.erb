@@ -30,13 +30,17 @@
     <p>
       <strong>Ingredients:</strong><br />
       <ol>
-        <li>
-          Ingredient 1<br />
-          <label for="ingredient_1_amount">Amount: </label>
-          <input type="text" id="ingredient_1_amount" name="ingredients[][amount]" size="10" required />
-          <label for="ingredient_1_name">Name: </label>
-          <input type="text" id="ingredient_1_name" name="ingredients[][name]" required />
-        </li>
+        <!-- Create 5 ingredient list items: -->
+        <% (1..5).each do |num| %>
+          <li>
+            Ingredient <%= num %><br />
+            <label for="ingredient_<%= num %>_amount">Amount: </label>
+            <input type="text" id="ingredient_<%= num %>_amount" name="ingredients[][amount]" size="10" />
+            <label for="ingredient_<%= num %>_name">Name: </label>
+            <input type="text" id="ingredient_<%= num %>_name" name="ingredients[][name]" <%= "required" if num == 1 %> />
+          </li>
+          <br />
+        <% end %>
       </ol>
     </p>
     <p>
