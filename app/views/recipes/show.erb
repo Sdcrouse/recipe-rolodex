@@ -57,8 +57,8 @@
   <% end %>
 
   <h5>
-    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") if @recipe.created_at %>
-    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") if @recipe.updated_at %>
+    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
+    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
   </h5>
 <% else %> <!-- This is connected with "if @recipe" at the top. -->
   <h3>Uh-Oh! This recipe doesn't exist. Click <a href="/recipes">here</a> to go back to the recipes.</h3>
