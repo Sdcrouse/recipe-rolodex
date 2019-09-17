@@ -3,7 +3,7 @@ User.create(username: "roadrunner", email:"vroom@acme.com", password: "meepmeep!
 User.create(username: "musicman", email: "music.meister@dc.com", password: "do-re-mi")
 
 #-------- Gordon Ramsay's recipe(s) -----------------
-ramsay = User.create(username: "gordon.ramsay", email: "gramsay@topchef.uk", password: "glasgowchef")
+ramsay = User.create(username: "gordon_ramsay", email: "gramsay@topchef.uk", password: "glasgowchef")
 
 idiot_sandwich = Recipe.create(
   name: "Idiot Sandwich", 
@@ -110,7 +110,7 @@ egghead.recipes << smokey_eggs
 egghead.recipes << dangerous_sandwich
 
 #----------- Winco's Recipes ----------------------------
-winco = User.create(username: "Winco Foods", email: "winningstore@winco.com", password: "groc3Rie$")
+winco = User.create(username: "Winco_Foods", email: "winningstore@winco.com", password: "groc3Rie$")
 
 winco_ingredients_hash = {
   chicken_cacciatore: [

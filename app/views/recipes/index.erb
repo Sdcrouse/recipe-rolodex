@@ -12,7 +12,7 @@
       <!-- The following Ruby syntax sorts the recipes, first by name, then by username. -->
       <% @recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
         <p>
-          <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a>, posted by <a href="/users/<%= recipe.user.id %>"><%= recipe.user.username %></a></li>
+          <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a>, posted by <a href="/users/<%= recipe.user.username %>"><%= recipe.user.username %></a></li>
         </p>
       <% end %>
     </ol>

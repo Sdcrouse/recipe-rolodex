@@ -31,7 +31,7 @@
       <nav>
         <a href="/">Home</a>
         <% if logged_in? %>
-          <a href="/users/<%= current_user.id %>">Your Profile</a>
+          <a href="/users/<%= current_user.username %>">Your Profile</a>
           <a href="/recipes">Recipes</a>
           <a href="/recipes/new">New Recipe</a>
           <a href="/users/logout">Logout</a>
