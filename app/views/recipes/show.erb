@@ -30,8 +30,11 @@
         <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
 
         <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+        <% if recip_ingred %>
+          <%= recip_ingred.ingredient_amount if recip_ingred.ingredient_amount %>
+          <%= recip_ingred.brand_name if recip_ingred.brand_name %>
+        <% end %>
 
-        <%= recip_ingred.ingredient_amount if recip_ingred && recip_ingred.ingredient_amount %>
         <%= ingredient.name if ingredient.name %>
       </li>
     <% end %> <!-- end of @recipe.ingredients iterator -->
