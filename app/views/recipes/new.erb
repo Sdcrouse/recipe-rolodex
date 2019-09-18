@@ -30,14 +30,23 @@
     <p>
       <strong>Ingredients:</strong><br />
       <ol>
+        <!-- Note: Credit for the datalist idea goes to this user at SO: https://stackoverflow.com/questions/5650457/html-select-form-with-option-to-enter-custom-value#answer-21958246 -->
         <!-- Create 5 ingredient list items: -->
         <% (1..5).each do |num| %>
           <li>
             Ingredient <%= num %><br />
             <label for="ingredient_<%= num %>_amount">Amount: </label>
             <input type="text" id="ingredient_<%= num %>_amount" name="ingredients[][amount]" size="10" />
-            <label for="ingredient_<%= num %>_name">Name: </label>
-            <input type="text" id="ingredient_<%= num %>_name" name="ingredients[][name]" <%= "required" if num == 1 %> />
+           
+            <label for="ingredient_<%= num %>_name">Name (choose one or write your own): </label>
+            <input list="ingredient-names" id="ingredient_<%= num %>_name" name="ingredients[][name]" <%= "required" if num == 1 %> />
+
+            <datalist id="ingredient-names">
+              <% @ingredients.sort_by{|ingredient| ingredient.name}.each do |ingredient| %>
+                <option value="<%= ingredient.name %>">
+              <% end %>
+            </datalist>
+            <!-- <input type="text" id="ingredient_<%#= num %>_name" name="ingredients[][name]" <%#= "required" if num == 1 %> />-->
           </li>
           <br />
         <% end %>

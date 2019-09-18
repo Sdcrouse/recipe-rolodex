@@ -12,6 +12,7 @@ class RecipesController < ApplicationController
 
   get '/recipes/new' do
     if logged_in?
+      @ingredients = Ingredient.all
       erb :"/recipes/new"
     else
       redirect to "/users/login" # Add a flash message here.
