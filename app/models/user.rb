@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :recipes
 
-  # Credit for the format idea goes to Ayana Zaire and https://stackoverflow.com/questions/18281198/rails-validate-no-white-space-in-user-name#answer-18281988
+  # Credit for the format idea goes to Ayana Zaire Cotton and https://stackoverflow.com/questions/18281198/rails-validate-no-white-space-in-user-name#answer-18281988
   validates :username, presence: true, uniqueness: true, format: { without: /[\W]+/, 
     message: "should only contain letters, numbers, and underscores (_)" }
 

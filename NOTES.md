@@ -382,6 +382,8 @@ Would I encounter the same bug? If a class location hasn't been determined yet, 
 **But would I encounter this bug: teacher.class.update(location: "Room 203") (when its value was "Room 101") updates the teacher and class, but NOT the student?**
 
 **FINAL UPDATE FOR ABOVE:** This problem may only be with Tux, or it's an ActiveRecord fluke; it seems to work fine in Pry, when used from the recipes/show.erb file. **But watch for this down the line, especially in the PATCH requests.**
+Further update: even in Pry from the POST route, I'm having the same issue with #update. 
+For now, I will just access the recipe_ingredients with "@recipe.recipe_ingredients" (not @ingredient.recipe_ingredients).
 
 
 **Alternative code for recipes/show.erb. Should I use this or the code I have now?**
@@ -410,3 +412,5 @@ Is there a way to prevent users from filling out the "Additional Ingredients" fi
 
 Give the user an option of what information to display to the public (a boolean in the users table).
 Button or checkbox: Display this attribute (put in User profile form). **Add this later.**
+
+**From the "new recipe" form, just in case I need it again:** <!-- <input type="text" id="ingredient_<%#= num %>_name" name="ingredients[][name]" <%#= "required" if num == 1 %> />-->
