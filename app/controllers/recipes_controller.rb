@@ -37,7 +37,7 @@ class RecipesController < ApplicationController
         redirect to "/recipes/new"
       end
         
-      ingred = Ingredient.new(name: ingredient[:name])
+      ingred = Ingredient.find_or_initialize_by(name: ingredient[:name].downcase)
 
       if !ingred.save 
         # Be careful with the validations here. The first ingredient ALWAYS needs a name.
@@ -55,12 +55,13 @@ class RecipesController < ApplicationController
         # "You have successfully created a new recipe!" 
         # Use this as a flash message.
 
-        recipe.recipe_ingredients.last.update(ingredient_amount: params[:ingredients].second[:amount], brand_name: params[:ingredients].second[:brand_name])
-        current_user.recipes << recipe
-        binding.pry
-        redirect to "/recipes/#{recipe.id}"
+        recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name])
       end       
     end
+
+    current_user.recipes << recipe
+    binding.pry
+    redirect to "/recipes/#{recipe.id}"
 
     # This apparently works (for the first ingredient):
     # recipe = Recipe.new(params[:recipe])
