@@ -28,6 +28,17 @@ class RecipesController < ApplicationController
       current_user.recipes << recipe
       redirect to "/recipes/#{recipe.id}"
       # "You have successfully created a new recipe!" # Use this as a flash message. This should only happen to the current_user.
+      
+      # This apparently works (for the first ingredient):
+      # recipe = Recipe.new(params[:recipe])
+      # ingred = Ingredient.create(name: params[:ingredients].first[:name])
+      # recipe.ingredients << ingred
+      # recipe.save
+
+      # This works for the second ingredient and beyond:
+      # ingred2 = Ingredient.create(name: params[:ingredients].second[:name])
+      # recipe.ingredients << ingred2
+      # recipe.recipe_ingredients.last.update(ingredient_amount: params[:ingredients].second[:amount], brand_name: params[:ingredients].second[:brand_name]")
     else
       redirect to "/users/login"
       # This is an edge case, but it might not hurt to put a flash message here.
