@@ -1,45 +1,45 @@
-<% if @recipe && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
+<% if @recipe && @recipe.user && !@recipe.user.username.blank? && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
 <!-- It may be better if that ^^^ were changed to a flash message. -->
   <h2><%= @recipe.name %></h2>
 
-  <% if @recipe.user && @recipe.user.username %>
-    <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
-  <% end %>
+  <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
 
-  <% if @recipe.image_url %>
+  <% unless @recipe.image_url.blank? %>
     <p><img src="<%= @recipe.image_url %>" alt="<%= @recipe.name %>" /></p>
   <% end %>
 
-  <% if @recipe.serving_size %>
+  <% unless @recipe.serving_size.blank? %>
     Serving Size: <%= @recipe.serving_size %><br />
   <% end %>
-  <% if @recipe.servings %>
+  <% unless @recipe.servings.blank? %>
     Servings: <%= @recipe.servings %><br /><br />
   <% end %>
 
-  <% if @recipe.description %>
+  <% unless @recipe.description.blank? %>
     <p>Description: <%= @recipe.description %></p>
   <% end %>
 
   <h3>Ingredients:</h3>
   <ul>
     <% @recipe.ingredients.each do |ingredient| %>
-      <li>
-        <!-- I am pretty sure that this syntax avoids multiple database queries: -->
-        <!-- There may be another way to do this, but I do not (yet) know what it is. -->
-        <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
+      <% unless ingredient.name.blank? %>
+        <li>
+          <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+          <!-- There may be another way to do this, but I do not (yet) know what it is. -->
+          <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
 
-        <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
-        <% if recip_ingred %>
-          <%= recip_ingred.ingredient_amount if recip_ingred.ingredient_amount %>
-          <%= recip_ingred.brand_name if recip_ingred.brand_name %>
-        <% end %>
+          <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+          <% if recip_ingred %>
+            <%= recip_ingred.ingredient_amount unless recip_ingred.ingredient_amount.blank? %>
+            <%= recip_ingred.brand_name unless recip_ingred.brand_name.blank? %>
+          <% end %>
 
-        <%= ingredient.name if ingredient.name %>
-      </li>
+          <%= ingredient.name %>
+        </li>
+      <% end %> <!-- end of "unless ingredient.name.blank?" -->
     <% end %> <!-- end of @recipe.ingredients iterator -->
 
-    <% if @recipe.additional_ingredients %>
+    <% unless @recipe.additional_ingredients.blank? %>
       <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
         <li><%= ingredient %></li>
       <% end %>
@@ -50,14 +50,17 @@
   <h3>Instructions:</h3>
   <p><%= @recipe.instructions %></p>
 
-  <% if @recipe.notes %>
+  <% unless @recipe.notes.blank? %>
     <p><strong>Notes:</strong> <%= @recipe.notes %></p>
   <% end %>
 
-  <h5>
-    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
-    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
-  </h5>
+  <% if @recipe.created_at && @recipe.updated_at %> <!-- Edge case -->
+    <h5>
+      <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
+      <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
+    </h5>
+  <% end %>
+
 <% else %> <!-- This is connected with "if @recipe && !@recipe.ingredients.empty? &&..." at the top. -->
   <!-- It might be better to use flash messages here. -->
 
@@ -65,6 +68,10 @@
     <h3>Uh-Oh! This recipe doesn't exist.</h3>
   <% elsif @recipe.name.blank? %>
     <h3>Whoops! Whoever wrote this recipe forgot to give it a name!</h3>
+  <% elsif !@recipe.user %> <!-- Edge case -->
+    <h3>This recipe doesn't have a user. But, then, who wrote it?</h3>
+  <% elsif @recipe.user.username.blank? %> <!-- Edge case -->
+    <h3>This recipe's user didn't give him/herself a name for some reason!</h3>
   <% elsif @recipe.ingredients.empty? %> 
     <!-- @recipe.ingredients should not be empty, even if the user specifies additional_ingredients. -->
     <h3>What a shame! This recipe doesn't appear to have any ingredients.</h3>
