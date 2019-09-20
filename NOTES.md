@@ -421,3 +421,5 @@ Use #persisted? to check whether an object has been saved AND not destroyed.
 **IMPORTANT!!!** Check out the notes in the Recipe model! Also, the next step is to re-write and re-seed the database, then remove the bindings in the RecipeController's POST route and test it again.
 
 **If I give users the option of destroying their profiles, then their recipes should ALSO be destroyed. So, add this to the User model: has_many :recipes, dependent: :destroy**
+
+**What I ought to do (to avoid confusion) is to display the right errors in the right places.**
