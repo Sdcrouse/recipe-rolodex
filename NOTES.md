@@ -414,3 +414,10 @@ Give the user an option of what information to display to the public (a boolean 
 Button or checkbox: Display this attribute (put in User profile form). **Add this later.**
 
 **From the "new recipe" form, just in case I need it again:** <!-- <input type="text" id="ingredient_<%#= num %>_name" name="ingredients[][name]" <%#= "required" if num == 1 %> />-->
+
+Use #new_record? to check whether an object is a new record (i.e. hasn't been saved yet)
+Use #persisted? to check whether an object has been saved AND not destroyed.
+
+**IMPORTANT!!!** Check out the notes in the Recipe model! Also, the next step is to re-write and re-seed the database, then remove the bindings in the RecipeController's POST route and test it again.
+
+**If I give users the option of destroying their profiles, then their recipes should ALSO be destroyed. So, add this to the User model: has_many :recipes, dependent: :destroy**
