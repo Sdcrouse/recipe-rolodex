@@ -60,7 +60,7 @@ class RecipesController < ApplicationController
         # For some reason, when the recipe is saved or updated, ingred is in the recipe's ingredients, but the recipe is NOT in ingred's ingredients!
         # Yet, somehow the recipe's recipe_ingredient is among ingred's recipe_ingredients.
         
-        recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name])
+        recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name].capitalize)
         binding.pry
         # Here, though, the recipe's recipe_ingredients got updated, but ingred's did not.
         # I'm getting inconsistent results. Sometimes, the ingredient DOES get updated, but without the recipe being added to its recipes.
