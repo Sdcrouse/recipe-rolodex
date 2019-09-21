@@ -11,6 +11,7 @@ gem 'shotgun'
 gem 'pry'
 gem 'bcrypt'
 gem 'tux'
+# gem 'sinatra-flash' This won't work, somehow...
 
 group :test do
   gem 'rspec'
