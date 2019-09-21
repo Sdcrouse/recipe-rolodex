@@ -132,4 +132,19 @@ class RecipesController < ApplicationController
     
     erb :'recipes/show'
   end
+
+  get '/recipes/:id/edit' do # I still need to test this out, after seeding the database.
+    @recipe = Recipe.find_by_id(params[:id])
+    if @recipe
+      if logged_in? && @recipe.user == current_user
+        erb :"/recipes/edit"
+      else
+        # Add a flash message here.
+        redirect to "/recipes/#{@recipe.id}"
+      end
+    else
+      "<h2>This recipe does not exist. <a href='/recipes'>Click here to go to the recipes.</a></h2>"
+      # This should probably be in a flash message that shows up after redirecting to /recipes.
+    end
+  end
 end
