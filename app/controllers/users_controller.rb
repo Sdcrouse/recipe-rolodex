@@ -17,6 +17,8 @@ class UsersController < ApplicationController
 
       redirect to "/users/#{new_user.username}"
     else
+      flash[:errors] = new_user.errors.full_messages
+      binding.pry
       redirect to "/users/signup"
       # Add a flash message here, with the ActiveRecord-generated error messages (new_user.errors.full_messages).
     end
