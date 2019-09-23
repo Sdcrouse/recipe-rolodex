@@ -429,3 +429,8 @@ Use #persisted? to check whether an object has been saved AND not destroyed.
 **If I give users the option of destroying their profiles, then their recipes should ALSO be destroyed. So, add this to the User model: has_many :recipes, dependent: :destroy**
 
 **What I ought to do (to avoid confusion) is to display the right errors in the right places.**
+
+## For future reference, use #find_or_initialize_by on the Ingredient model, not recipe.ingredients.
+Then, add that ingredient (<<) to recipe.ingredients. 
+Otherwise, #find_or_initialize_by will search through recipe.ingredients (through the recipe_ingredients JOIN table) for an existing ingredient that belongs to the recipe. 
+We want to search the ingredients table instead.
