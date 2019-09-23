@@ -1,11 +1,13 @@
 #-------- No recipes for these guys yet -----------
 User.create(username: "roadrunner", email:"vroom@acme.com", password: "meepmeep!")
 User.create(username: "musicman", email: "music.meister@dc.com", password: "do-re-mi")
+User.create(username: "Sam_I_Am", email: "seussreader@books.com", password: "catinthehat")
+User.create(username: "valid_User_99", password: "validpassword", email: "valid.email@yahoo.com")
 
 #-------- Gordon Ramsay's recipe(s) -----------------
 ramsay = User.create(username: "gordon_ramsay", email: "gramsay@topchef.uk", password: "glasgowchef")
 
-idiot_sandwich = Recipe.create(
+idiot_sandwich = Recipe.new(
   name: "Idiot Sandwich", 
   description: "My least favorite sandwich in the world", 
   serving_size: "1 sandwich", servings: "1",
@@ -14,13 +16,14 @@ idiot_sandwich = Recipe.create(
 )
 
 sandwich_ingredients = [
-  {amount: "2 slices of", name: "bread"},
+  {amount: "2 slices of", brand: "Wonder", name: "bread"},
   {amount: "1 slab of", name: "raw meat"}
 ]
 
 sandwich_ingredients.each do |ingred|
-  idiot_sandwich.ingredients.create(name: ingred[:name])
-  idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
+  idiot_sandwich.ingredients.build(name: ingred[:name])
+  idiot_sandwich.save
+  idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount], brand_name: ingred[:brand])
 end
 
 ramsay.recipes << idiot_sandwich
@@ -29,7 +32,7 @@ ramsay.recipes << idiot_sandwich
 bilbo_baggins = User.create(username: "bbaggins", email: "hobbitburglar@shire.net", password: "thereandbackagain")
 
 # Second Breakfast:
-second_breakfast = Recipe.create(
+second_breakfast = Recipe.new(
   name: "Second Breakfast",
   description: "The meal every hobbit worth his weight should know how to make!",
   image_url: "https://example.com",
@@ -43,25 +46,27 @@ sb_ingredients = [
 ]
 
 sb_ingredients.each do |ingred|
-  second_breakfast.ingredients.create(name: ingred[:name])
+  second_breakfast.ingredients.build(name: ingred[:name])
+  second_breakfast.save
   second_breakfast.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
 end
 
 # Idiot Sandwich:
-shire_idiot_sandwich = Recipe.create(
+shire_idiot_sandwich = Recipe.new(
   name: "Idiot Sandwich",
   instructions: "Sprinkle the pipeweed on one slice of bread. Cover with the other slice. Eat it at your own risk.",
   notes: "Only a fool would make this! Pipeweed is meant to be smoked, not eaten!"
 )
 
 shire_sandwich_ingredients = [
-  {amount: "2 slices", name: "Shire wheat bread"},
+  {amount: "2 slices", brand: "Shire", name: "wheat bread"},
   {amount: "2 pinches", name: "pipeweed"}
 ]
 
 shire_sandwich_ingredients.each do |ingred|
-  shire_idiot_sandwich.ingredients.create(name: ingred[:name])
-  shire_idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
+  shire_idiot_sandwich.ingredients.build(name: ingred[:name])
+  shire_idiot_sandwich.save
+  shire_idiot_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount], brand_name: ingred[:brand])
 end
 
 bilbo_baggins.recipes << second_breakfast
@@ -70,7 +75,7 @@ bilbo_baggins.recipes << shire_idiot_sandwich
 #-------- Egghead's recipe(s) -------------------------
 egghead = User.create(username: "Egghead", email: "eggcitingvillain@scrambled.com", password: "Eggcellent!")
 
-smokey_eggs = Recipe.create(
+smokey_eggs = Recipe.new(
   name: "Smokey Scrambled Eggs",
   description: "A great kind of scrambled eggs. You get the smokey flavor of the Tabasco Sauce without the heat!",
   serving_size: "One plateful", servings: "1",
@@ -80,16 +85,17 @@ smokey_eggs = Recipe.create(
 smokey_eggs_ingredients = [
   {amount: "3", name: "eggs"},
   {amount: "A dash", name: "pepper"},
-  {amount: "10-15 drops", name: "Chipotle Tabasco Sauce"},
+  {amount: "10-15 drops", brand: "Chipotle Tabasco", name: "sauce"},
   {amount: "A dash", name: "salt"}
 ]
 
 smokey_eggs_ingredients.each do |ingred|
-  smokey_eggs.ingredients.create(name: ingred[:name])
-  smokey_eggs.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
+  smokey_eggs.ingredients.build(name: ingred[:name])
+  smokey_eggs.save
+  smokey_eggs.recipe_ingredients.last.update(ingredient_amount: ingred[:amount], brand_name: ingred[:brand])
 end
 
-dangerous_sandwich = Recipe.create(
+dangerous_sandwich = Recipe.new(
   name: "Idiot Sandwich",
   description: "DO NOT MAKE THIS!!! This is an example of what not to do!",
   serving_size: "One nasty sandwich", servings: "1 (or zero, if you're wise)",
@@ -102,7 +108,8 @@ dangerous_ingredients = [
 ]
 
 dangerous_ingredients.each do |ingred|
-  dangerous_sandwich.ingredients.create(name: ingred[:name])
+  dangerous_sandwich.ingredients.build(name: ingred[:name])
+  dangerous_sandwich.save
   dangerous_sandwich.recipe_ingredients.last.update(ingredient_amount: ingred[:amount])
 end
 
@@ -171,18 +178,46 @@ winco_recipes_hash = {
 }
 
 winco_recipes = {
-  chicken_cacciatore: Recipe.create(winco_recipes_hash[:chicken_cacciatore]),
-  fun_taco_cups: Recipe.create(winco_recipes_hash[:fun_taco_cups]),
-  egg_drop_soup: Recipe.create(winco_recipes_hash[:egg_drop_soup]),
-  idiot_sandwich: Recipe.create(winco_recipes_hash[:idiot_sandwich])
+  chicken_cacciatore: Recipe.new(winco_recipes_hash[:chicken_cacciatore]),
+  fun_taco_cups: Recipe.new(winco_recipes_hash[:fun_taco_cups]),
+  egg_drop_soup: Recipe.new(winco_recipes_hash[:egg_drop_soup]),
+  idiot_sandwich: Recipe.new(winco_recipes_hash[:idiot_sandwich])
 }
 
-# For each winco_recipe, get the ingredients_hash with the same name.
-# Then add each ingredient to the recipe.
+# For each winco_recipe, get the winco_ingredients_hash with the same recipe_name.
+# Then find or initialize each ingredient, add them to the recipe, and save the recipe.
 # Lastly, set the corresponding recipe_ingredient's ingredient_amount.
 winco_recipes.each do |recipe_name, recipe|
   winco_ingredients_hash[recipe_name].each do |ingredient|
-    recipe.ingredients.create(name: ingredient[:name])
+    recipe.ingredients.find_or_initialize_by(name: ingredient[:name])
+    recipe.save
+    binding.pry 
+    # My program breaks at the line below, when it gets to the idiot_sandwich.
+    # For some reason, it doesn't save the "bread" ingredient, which then causes recipe.recipe_ingredients to be empty, and it breaks.
+
+    # I don't know why, but this is my output:
+
+    # [3] pry(main)> recipe.ingredients.first
+    # => #<Ingredient:0x00007fffdc250218 id: nil, name: "bread">
+    # [4] pry(main)> recipe.ingredients.first.persisted?
+    # => false
+    # [5] pry(main)> recipe.recipe_ingredients
+    # => []
+    # [6] pry(main)> recipe.ingredients.first.errors.full_messages
+    # => ["Name has already been taken"]
+    # [7] pry(main)> recipe.errors.full_messages
+    # => ["Ingredients is invalid"]
+    # [8] pry(main)> recipe.ingredients.find_or_initialize_by(name: "bread")
+    # => #<Ingredient:0x00007fffdd3cd748 id: nil, name: "bread">
+    # [9] pry(main)> Ingredient.find_by(name: "bread")
+    # => #<Ingredient:0x00007fffdd3f86c8 id: 394, name: "bread">
+    # [10] pry(main)> Ingredient.all.select{|ingred| ingred.name == "bread"}
+    # => [#<Ingredient:0x00007fffdd431928 id: 394, name: "bread">]
+    # [11] pry(main)> ingredient
+    # => {:amount=>"2 slices", :name=>"bread"}
+
+    # Line 8 is interesting. Even though there is an ingredient with the name of "bread" in the database (Line 9),
+    # somehow, calling #find_or_initialize_by returns a new, unsaved Ingredient instance.
     recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount])
   end
 end
