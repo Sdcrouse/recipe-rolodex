@@ -384,6 +384,12 @@ Would I encounter the same bug? If a class location hasn't been determined yet, 
 **FINAL UPDATE FOR ABOVE:** This problem may only be with Tux, or it's an ActiveRecord fluke; it seems to work fine in Pry, when used from the recipes/show.erb file. **But watch for this down the line, especially in the PATCH requests.**
 Further update: even in Pry from the POST route, I'm having the same issue with #update. 
 For now, I will just access the recipe_ingredients with "@recipe.recipe_ingredients" (not @ingredient.recipe_ingredients).
+**ABSOLUTE FINAL UPDATE!!!** *I've been overthinking this.* Accessing an ingredient's recipes is beyond the scope of this project. If I want to get an ingredient's recipes later on, I should do something like this:
+```
+ingredient.recipe_ingredients.collect do |r_i|
+  r_i.recipe
+end
+```
 
 
 **Alternative code for recipes/show.erb. Should I use this or the code I have now?**
