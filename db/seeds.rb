@@ -146,7 +146,7 @@ winco_ingredients_hash = {
     {amount: "1 large scoop", name: "chocolate ice cream"},
     {amount: "1 whole", name: "habanero pepper, quartered"}
   ]
-}
+} # End of winco_ingredients_hash
 
 winco_recipes_hash = {
   chicken_cacciatore: {
@@ -175,7 +175,7 @@ winco_recipes_hash = {
     instructions: "Plop the chocolate ice cream on one slice of bread. Place the dill pickle spears on top of the ice cream. Place the quartered habanero on top of that. Cover with the other slice of bread. Refrigerate overnight. Serves one unfortunate victim.",
     notes: "This is (probably) edible, but we pity your tastebuds and stomach if you're brave (or crazy) enough to try it."
   }
-}
+} # End of winco_recipes_hash
 
 winco_recipes = {
   chicken_cacciatore: Recipe.new(winco_recipes_hash[:chicken_cacciatore]),
@@ -184,41 +184,17 @@ winco_recipes = {
   idiot_sandwich: Recipe.new(winco_recipes_hash[:idiot_sandwich])
 }
 
-# For each winco_recipe, get the winco_ingredients_hash with the same recipe_name.
-# Then find or initialize each ingredient, add them to the recipe, and save the recipe.
+# For each winco_recipe, get the corresponding ingredient_array from the winco_ingredients_hash.
+# Then find or initialize each ingredient, add it to the recipe, and save the recipe.
 # Lastly, set the corresponding recipe_ingredient's ingredient_amount.
 winco_recipes.each do |recipe_name, recipe|
-  winco_ingredients_hash[recipe_name].each do |ingredient|
-    recipe.ingredients.find_or_initialize_by(name: ingredient[:name])
+  ingredient_array = winco_ingredients_hash[recipe_name]
+
+  ingredient_array.each do |ingredient_hash|
+    ingredient = Ingredient.find_or_initialize_by(name: ingredient_hash[:name])
+    recipe.ingredients << ingredient
     recipe.save
-    binding.pry 
-    # My program breaks at the line below, when it gets to the idiot_sandwich.
-    # For some reason, it doesn't save the "bread" ingredient, which then causes recipe.recipe_ingredients to be empty, and it breaks.
-
-    # I don't know why, but this is my output:
-
-    # [3] pry(main)> recipe.ingredients.first
-    # => #<Ingredient:0x00007fffdc250218 id: nil, name: "bread">
-    # [4] pry(main)> recipe.ingredients.first.persisted?
-    # => false
-    # [5] pry(main)> recipe.recipe_ingredients
-    # => []
-    # [6] pry(main)> recipe.ingredients.first.errors.full_messages
-    # => ["Name has already been taken"]
-    # [7] pry(main)> recipe.errors.full_messages
-    # => ["Ingredients is invalid"]
-    # [8] pry(main)> recipe.ingredients.find_or_initialize_by(name: "bread")
-    # => #<Ingredient:0x00007fffdd3cd748 id: nil, name: "bread">
-    # [9] pry(main)> Ingredient.find_by(name: "bread")
-    # => #<Ingredient:0x00007fffdd3f86c8 id: 394, name: "bread">
-    # [10] pry(main)> Ingredient.all.select{|ingred| ingred.name == "bread"}
-    # => [#<Ingredient:0x00007fffdd431928 id: 394, name: "bread">]
-    # [11] pry(main)> ingredient
-    # => {:amount=>"2 slices", :name=>"bread"}
-
-    # Line 8 is interesting. Even though there is an ingredient with the name of "bread" in the database (Line 9),
-    # somehow, calling #find_or_initialize_by returns a new, unsaved Ingredient instance.
-    recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount])
+    recipe.recipe_ingredients.last.update(ingredient_amount: ingredient_hash[:amount])
   end
 end
 
