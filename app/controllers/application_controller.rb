@@ -12,6 +12,12 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/" do
+    if !logged_in?
+      flash[:message] = "You are not signed in."
+    else
+      flash[:message] = "You are signed in."
+    end
+    
     erb :index
   end
 
