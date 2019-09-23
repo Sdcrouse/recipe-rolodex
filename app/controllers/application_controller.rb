@@ -1,5 +1,6 @@
 require './config/environment'
-require 'sinatra/flash'
+# require 'sinatra/flash'
+require 'rack-flash'
 
 class ApplicationController < Sinatra::Base
 
@@ -8,7 +9,8 @@ class ApplicationController < Sinatra::Base
     set :views, 'app/views'
     enable :sessions
     set :session_secret, "kookaburra_cockadoodle" # It sounded funny; what can I say?
-    register Sinatra::Flash
+    # register Sinatra::Flash
+    use Rack::Flash
   end
 
   get "/" do
@@ -17,7 +19,7 @@ class ApplicationController < Sinatra::Base
     else
       flash[:message] = "You are signed in."
     end
-    
+
     erb :index
   end
 
