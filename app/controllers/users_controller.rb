@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      # "You have successfully logged in!" # Use this as a flash message.
+      flash[:login] = "You have successfully logged in!"
       redirect to "/users/#{user.username}"
     else
       redirect to "/users/login" # Use a flash message here.
