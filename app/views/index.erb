@@ -1,8 +1,6 @@
 <h2>Welcome to the Recipe Rolodex!</h2>
 
-<p><%= flash[:message] unless flash[:message].blank? %></p>
-
-<!-- <p>You are not signed in.</p> (This should be a Flash message) -->
+<%= flash[:login] unless flash[:login].blank? %>
 
 <h3>
   Here you can create your own recipes and check out the recipes that other people have created. (If the recipe that you post on here is not your own, then please give credit where credit is due.)
