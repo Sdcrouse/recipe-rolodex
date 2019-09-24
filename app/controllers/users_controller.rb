@@ -28,8 +28,8 @@ class UsersController < ApplicationController
     if !logged_in?
       erb :"users/login"
     else
+      flash[:login] = "Silly chef, you're ALREADY logged in!"
       redirect to "/users/#{current_user.username}"
-      # Have a Flash message here that tells users that they are already logged in.
     end
   end
 
@@ -50,9 +50,11 @@ class UsersController < ApplicationController
   get '/users/logout' do
     if logged_in?
       session.clear
+      flash[:logout] = "You have successfully logged out!"
       redirect to "/users/login" # Have a flash message that tells users that they have logged out.
       # Later, I may instead render a separate logout.erb page to confirm the user's choice; see comments below.
     else
+      flash[:logout] = "Sorry, chef! You can't log out unless you're logged in."
       redirect to "/" # Have a flash message that tells users that they can only log out if logged in.
     end
   end
@@ -77,6 +79,6 @@ class UsersController < ApplicationController
   # end
 
   # post '/users/logout' do
-  #   "You have successfully logged out!" # This could be a flash message.
+  #   flash[:logout] = "You have successfully logged out!"
   # end
 end

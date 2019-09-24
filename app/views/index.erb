@@ -1,6 +1,10 @@
 <h2>Welcome to the Recipe Rolodex!</h2>
 
-<%= flash[:login] unless flash[:login].blank? %>
+<% if !flash[:logout].blank? %>
+  <p><%= flash[:logout] %></p>
+<% elsif !flash[:login].blank? %>
+  <p><%= flash[:login] %></p>
+<% end %>
 
 <h3>
   Here you can create your own recipes and check out the recipes that other people have created. (If the recipe that you post on here is not your own, then please give credit where credit is due.)

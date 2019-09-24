@@ -1,6 +1,10 @@
 <h2>Welcome back, Chef! Please log in here.</h2>
 
-<p><%= flash[:message] if !flash[:message].blank? %>
+<% if !flash[:logout].blank? %>
+  <p><%= flash[:logout] %></p>
+<% elsif !flash[:message].blank? %>
+  <p><%= flash[:message] %></p>
+<% end %>
 
 <form method="post" action="/users/login">
   <p>
