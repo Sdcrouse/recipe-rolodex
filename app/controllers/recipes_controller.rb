@@ -6,7 +6,8 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
       erb :"recipes/index"
     else
-      redirect to "/users/login" # Add a flash message here.
+      flash[:message] = "You must be logged in to view the recipes."
+      redirect to "/users/login"
     end
   end
 

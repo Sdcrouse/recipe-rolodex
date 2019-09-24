@@ -1,5 +1,7 @@
 <h2>Welcome back, Chef! Please log in here.</h2>
 
+<p><%= flash[:message] if !flash[:message].blank? %>
+
 <form method="post" action="/users/login">
   <p>
     <label for="username">Username: </label>
