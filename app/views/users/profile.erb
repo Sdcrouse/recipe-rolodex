@@ -1,6 +1,9 @@
 <% if logged_in? %>
   <% if @user == current_user %>
     <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
+    <% if !flash[:login].blank? %>
+      <%= flash[:login] %>
+    <% end %>
     <!-- Add a Flash message here, for when the chef has successfully signed in. -->
   <% else %>
     <h2>Chef <%= @user.username %>'s kitchen</h2>

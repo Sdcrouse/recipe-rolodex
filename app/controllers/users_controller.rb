@@ -3,8 +3,8 @@ class UsersController < ApplicationController
     if !logged_in?
       erb :"users/signup"
     else
+      flash[:login] = "You don't need to sign up, Chef #{current_user.username}. You're already logged in!"
       redirect to "/users/#{current_user.username}"
-      # I could have a Flash message telling users that they have already signed up and logged in.
     end
   end
 
