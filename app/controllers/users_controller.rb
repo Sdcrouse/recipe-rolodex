@@ -51,11 +51,11 @@ class UsersController < ApplicationController
     if logged_in?
       session.clear
       flash[:logout] = "You have successfully logged out!"
-      redirect to "/users/login" # Have a flash message that tells users that they have logged out.
+      redirect to "/users/login"
       # Later, I may instead render a separate logout.erb page to confirm the user's choice; see comments below.
     else
       flash[:logout] = "Sorry, chef! You can't log out unless you're logged in."
-      redirect to "/" # Have a flash message that tells users that they can only log out if logged in.
+      redirect to "/"
     end
   end
 
