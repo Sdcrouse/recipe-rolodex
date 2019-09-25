@@ -1,7 +1,7 @@
 <h2>Welcome back, Chef! Please log in here.</h2>
 
-<% if !flash[:errors].blank? %> <!-- This may be hard to abstract later; flash[:errors] can also be an array in other ERB files. -->
-  <p><%= flash[:errors] %></p>
+<% if !flash[:error].blank? %>
+  <p><%= flash[:error] %></p>
 <% elsif !flash[:logout].blank? %>
   <p><%= flash[:logout] %></p>
 <% elsif !flash[:message].blank? %>

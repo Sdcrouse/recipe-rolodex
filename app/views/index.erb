@@ -1,7 +1,7 @@
 <h2>Welcome to the Recipe Rolodex!</h2>
 
-<% if !flash[:errors].blank? %> <!-- If I add flash[:validations], I can make :errors singular. -->
-  <p><%= flash[:errors] %></p>
+<% if !flash[:error].blank? %>
+  <p><%= flash[:error] %></p>
 <% elsif !flash[:logout].blank? %>
   <p><%= flash[:logout] %></p>
 <% elsif !flash[:login].blank? %>

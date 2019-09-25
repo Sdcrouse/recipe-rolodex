@@ -6,7 +6,7 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
       erb :"recipes/index"
     else
-      flash[:message] = "You must be logged in to view the recipes." unless !flash[:errors].blank?
+      flash[:message] = "You must be logged in to view the recipes." unless !flash[:error].blank?
       # Other routes with error messages of their own redirect here, so the #unless statement above is needed.
       # There may be a bug that causes that flash message to not show up, but I haven't been able to recreate it.
       redirect to "/users/login"
@@ -18,7 +18,7 @@ class RecipesController < ApplicationController
       @ingredients = Ingredient.all
       erb :"/recipes/new"
     else
-      flash[:errors] = "Sorry, chef! You must be logged in before you can create a new recipe."
+      flash[:error] = "Sorry, chef! You must be logged in before you can create a new recipe."
       redirect to "/users/login"
     end
   end
@@ -28,7 +28,7 @@ class RecipesController < ApplicationController
     
     if !logged_in?
       # This is an edge case.
-      flash[:errors] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
+      flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
       redirect to "/users/login"
     end
 
@@ -139,12 +139,12 @@ class RecipesController < ApplicationController
       
       if !logged_in?
         # Odd; I encountered a bug that used the '/recipes/new' flash message instead. But how?
-        # I don't know how to recreate it, but evidently the former flash[:errors] message wasn't overwritten.
+        # I don't know how to recreate it, but evidently the former flash[:error] message wasn't overwritten.
 
-        flash[:errors] = "You must be logged in before you can view this recipe."
+        flash[:error] = "You must be logged in before you can view this recipe."
         redirect to "/users/login"
       else # The user is logged in, but the recipe does not exist.
-        flash[:errors] = "Sorry, chef! That recipe doesn't exist."
+        flash[:error] = "Sorry, chef! That recipe doesn't exist."
         redirect to "/recipes"
       end
     end # End of "if logged_in? && @recipe..."

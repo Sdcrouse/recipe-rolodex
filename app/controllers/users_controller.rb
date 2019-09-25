@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       flash[:signup] = "You have successfully signed up!"
       redirect to "/users/#{new_user.username}"
     else
-      flash[:errors] = new_user.errors.full_messages
+      flash[:validations] = new_user.errors.full_messages
       redirect to "/users/signup"
     end
   end
@@ -43,9 +43,9 @@ class UsersController < ApplicationController
       redirect to "/users/#{user.username}"
     else
       if user.nil?
-        flash[:errors] = "This chef does not exist."
+        flash[:error] = "This chef does not exist."
       else # The user exists, but the password is incorrect.
-        flash[:errors] = "Invalid password. Try again."
+        flash[:error] = "Invalid password. Try again."
       end
       redirect to "/users/login"
     end
@@ -69,9 +69,9 @@ class UsersController < ApplicationController
       erb :"users/profile"
     else
       if !logged_in?
-        flash[:errors] = "You must be logged in to see this chef's profile."
+        flash[:error] = "You must be logged in to see this chef's profile."
       else # The current_user is logged in, but @user does not exist.
-        flash[:errors] = "It looks like this chef does not exist."
+        flash[:error] = "It looks like this chef does not exist."
       end 
       redirect to "/"
     end

@@ -1,8 +1,8 @@
 <h2>Ready to be a chef? Then create a new account here!</h2>
 
-<% if !flash[:errors].blank? %>
-  <% flash[:errors].each do |error_message| %>
-    <p><%= error_message %></p>
+<% if !flash[:validations].blank? %>
+  <% flash[:validations].each do |validation_error| %>
+    <p><%= validation_error %></p>
   <% end %>
 <% end %>
 
