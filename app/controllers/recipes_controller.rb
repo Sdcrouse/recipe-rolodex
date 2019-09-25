@@ -7,6 +7,7 @@ class RecipesController < ApplicationController
       erb :"recipes/index"
     else
       flash[:message] = "You must be logged in to view the recipes."
+      # There may be a bug that causes that flash message to not show up, but I haven't been able to recreate it.
       redirect to "/users/login"
     end
   end
@@ -16,7 +17,8 @@ class RecipesController < ApplicationController
       @ingredients = Ingredient.all
       erb :"/recipes/new"
     else
-      redirect to "/users/login" # Add a flash message here.
+      flash[:errors] = "Sorry, chef! You must be logged in before you can create a new recipe."
+      redirect to "/users/login"
     end
   end
 
@@ -24,7 +26,8 @@ class RecipesController < ApplicationController
     # I decided against having a bunch of nested "if" statements, due to the calls to #redirect exiting the route anyway.
     
     if !logged_in?
-      # This is an edge case, but it might not hurt to put a flash message here.
+      # This is an edge case.
+      flash[:errors] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
       redirect to "/users/login"
     end
 
