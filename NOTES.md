@@ -434,3 +434,5 @@ Use #persisted? to check whether an object has been saved AND not destroyed.
 Then, add that ingredient (<<) to recipe.ingredients. 
 Otherwise, #find_or_initialize_by will search through recipe.ingredients (through the recipe_ingredients JOIN table) for an existing ingredient that belongs to the recipe. 
 We want to search the ingredients table instead.
+
+Instead of changing flash[:errors] to account for ActiveRecord validations, I could just add flash[:validations] and change flash[:errors] to flash[:error].

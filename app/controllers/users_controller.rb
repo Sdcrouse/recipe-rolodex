@@ -68,7 +68,12 @@ class UsersController < ApplicationController
     if logged_in? && @user = User.find_by(username: params[:username])
       erb :"users/profile"
     else
-      redirect to "/" # Have two different flash messages here: one for when the user is logged out, and one for when @user is nil.
+      if !logged_in?
+        flash[:errors] = "You must be logged in to see this chef's profile."
+      else # The current_user is logged in, but @user does not exist.
+        flash[:errors] = "It looks like this chef does not exist."
+      end 
+      redirect to "/"
     end
   end
 
