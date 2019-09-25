@@ -436,3 +436,6 @@ Otherwise, #find_or_initialize_by will search through recipe.ingredients (throug
 We want to search the ingredients table instead.
 
 Instead of changing flash[:errors] to account for ActiveRecord validations, I could just add flash[:validations] and change flash[:errors] to flash[:error].
+
+**Note: I'm getting some strange flash message bugs when I log in and out, but I don't yet know how to recreate them.**
+E.g. somehow, when I entered a valid recipe URL, it took me to that page, even though I was logged out (or so I thought). Other times, the wrong flash message showed up.
