@@ -1,9 +1,11 @@
 <% if logged_in? %>
   <% if @user == current_user %>
     <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
-    <!-- Add a flash message here. Only display flash[:login] if flash[:signup] is blank. -->
-    <% if !flash[:login].blank? %>
-      <%= flash[:login] %>
+    
+    <% if !flash[:signup].blank? %>
+      <p><%= flash[:signup] %></p>
+    <% elsif !flash[:login].blank? %>
+      <p><%= flash[:login] %></p>
     <% end %>
 
     <!-- Be careful with this; the first time I started this up and logged in, it said that I was NOT logged in. -->

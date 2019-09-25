@@ -15,12 +15,11 @@ class UsersController < ApplicationController
       session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
       # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
 
+      flash[:signup] = "You have successfully signed up!"
       redirect to "/users/#{new_user.username}"
     else
       flash[:errors] = new_user.errors.full_messages
-      binding.pry
       redirect to "/users/signup"
-      # Add a flash message here, with the ActiveRecord-generated error messages (new_user.errors.full_messages).
     end
   end
 

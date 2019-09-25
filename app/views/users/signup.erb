@@ -1,5 +1,11 @@
 <h2>Ready to be a chef? Then create a new account here!</h2>
 
+<% if !flash[:errors].blank? %>
+  <% flash[:errors].each do |error_message| %>
+    <p><%= error_message %></p>
+  <% end %>
+<% end %>
+
 <form method="post" action="/users">
   <p>
     <label for="username">Username: </label>
