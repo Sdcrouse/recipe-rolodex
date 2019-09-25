@@ -6,7 +6,8 @@ class RecipesController < ApplicationController
       @recipes = Recipe.all
       erb :"recipes/index"
     else
-      flash[:message] = "You must be logged in to view the recipes."
+      flash[:message] = "You must be logged in to view the recipes." unless !flash[:errors].blank?
+      # Other routes with error messages of their own redirect here, so the #unless statement above is needed.
       # There may be a bug that causes that flash message to not show up, but I haven't been able to recreate it.
       redirect to "/users/login"
     end
@@ -128,14 +129,26 @@ class RecipesController < ApplicationController
   end
 
   get '/recipes/:id' do
-    @recipe = Recipe.find_by_id(params[:id])
-    # Redirect to an error page (or somewhere else, with a flash message), if there is no recipe.
-    # I also accounted for this in the recipes/show.erb file.
+    if logged_in? && @recipe = Recipe.find_by_id(params[:id])
+      @recipe_ingredients = @recipe.recipe_ingredients
+      erb :'recipes/show'
+    else
+      # Redirect, if there is no recipe and/or the user is not logged in.
+      # Later, I could make a separate error page.
+      # I also accounted for this in the recipes/show.erb file.
+      
+      if !logged_in?
+        # Odd; I encountered a bug that used the '/recipes/new' flash message instead. But how?
+        # I don't know how to recreate it, but evidently the former flash[:errors] message wasn't overwritten.
 
-    @recipe_ingredients = @recipe.recipe_ingredients
-    
-    erb :'recipes/show'
-  end
+        flash[:errors] = "You must be logged in before you can view this recipe."
+        redirect to "/users/login"
+      else # The user is logged in, but the recipe does not exist.
+        flash[:errors] = "Sorry, chef! That recipe doesn't exist."
+        redirect to "/recipes"
+      end
+    end # End of "if logged_in? && @recipe..."
+  end # End of "get '/recipes/:id'" route
 
   get '/recipes/:id/edit' do # I still need to test this out, after seeding the database.
     @recipe = Recipe.find_by_id(params[:id])

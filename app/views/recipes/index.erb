@@ -1,6 +1,10 @@
 <% if logged_in? %> <!-- This is an edge case. -->
   <h2>Here are all the recipes! Click on a recipe to view more information about it.</h2>
 
+  <% if flash[:errors] %>
+    <p><%= flash[:errors] %></p>
+  <% end %>
+
   <form method="get" action="/recipes/new"> <!-- I should probably change this to an <a> element, then style it with CSS. -->
     <input type="submit" value="New Recipe">
   </form>
