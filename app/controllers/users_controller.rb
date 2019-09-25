@@ -42,7 +42,12 @@ class UsersController < ApplicationController
       flash[:login] = "You have successfully logged in!"
       redirect to "/users/#{user.username}"
     else
-      redirect to "/users/login" # Use a flash message here.
+      if user.nil?
+        flash[:errors] = "This chef does not exist."
+      else # The user exists, but the password is incorrect.
+        flash[:errors] = "Invalid password. Try again."
+      end
+      redirect to "/users/login"
     end
   end
 
