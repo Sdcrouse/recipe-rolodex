@@ -2,7 +2,7 @@
   <h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 
   <form method="post" action="/recipes">
-    <p> <!-- This input may need a validation (but NOT for uniqueness): -->
+    <p>
       <label for="recipe_name">Name: </label>
       <input type="text" id="recipe_name" name="recipe[name]" required />
     </p>
@@ -51,9 +51,9 @@
             </datalist>
           </li>
           <br />
-        <% end %>
+        <% end %> <!-- End of (1..5).each do |num| -->
       </ol>
-    </p>
+    </p> <!-- End of Ingredients -->
     <p>
       <label for="additional_ingredients">Additional Ingredients: </label>
       <textarea id="additional_ingredients" name="recipe[additional_ingredients]" rows="5"></textarea>
