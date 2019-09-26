@@ -34,6 +34,21 @@ class RecipesController < ApplicationController
 
     # I'll need some validations here. See comments below.
     recipe = Recipe.new(params[:recipe])
+
+    # Here's what I really want:
+      # To make a new recipe with the given params.
+      # To make new (unsaved) ingredients, or find them from the database.
+      # To add the (unsaved or found from database) ingredients to the recipe.
+      # To save the recipe, unless any ingredient and/or recipe validations fail.
+        # Exception: It's fine if not every ingredient field is filled in, but it should NOT be saved unless it's valid.
+      # To update the recipe's recipe_ingredients with any specified ingredient_amounts and brand_names.
+      # To add the recipe to the user, unless the recipe is invalid.
+      # To redirect back to the "New Recipe" page with the appropriate error messages if a validation fails.
+      # To redirect to the new recipe's page (with a success message) if the recipe is created correctly.
+
+    # Here's what I don't want:
+      # Recipes to be saved unless they have at least one valid ingredient, a name, and instructions.
+      # Ingredients to be saved unless they have a name. Any ingredients with ingredient_amounts and/or brand_names but no names should NOT be saved.
     
     params[:ingredients].each do |ingredient|
       # Make the ingredient
@@ -72,9 +87,10 @@ class RecipesController < ApplicationController
       elsif !ingredient[:amount].blank? || !ingredient[:brand_name].blank?
         # Add a flash message like this: "If you specify an amount and/or brand_name, then you must give your ingredient name as well."
         # Either that, or use the ActiveRecord error message for an ingredient that wasn't persisted.
+        flash[:validations] = ingred.errors.full_messages
         binding.pry
         redirect to "/recipes/new"
-      end
+      end # End of "if ingredient.save"
       binding.pry
    #
       #if !ingred.save && (!ingredient[:amount].blank? || !ingredient[:brand_name].blank?)

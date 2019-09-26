@@ -1,6 +1,14 @@
 <% if logged_in? %>
   <h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 
+  <% if !flash[:validations].blank? %>
+    <ol>
+      <% flash[:validations].each do |validation_error| %>
+        <li><%= validation_error %></li>
+      <% end %>
+    </ol>
+  <% end %>
+
   <form method="post" action="/recipes">
     <p>
       <label for="recipe_name">Name: </label>
