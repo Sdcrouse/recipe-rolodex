@@ -2,7 +2,7 @@ class Ingredient < ActiveRecord::Base
   has_many :recipe_ingredients, dependent: :destroy
   has_many :recipes, through: :recipe_ingredients
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: {message: "must have a name if an amount and/or brand name is specified"}, uniqueness: { case_sensitive: false }
 end
 
 # Save this for later (I might make an Amount model with quantity and units and seed the DB)
