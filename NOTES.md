@@ -370,6 +370,12 @@ D, [2019-09-13T14:54:55.895553 #231] DEBUG -- :   RecipeIngredient Load (0.3ms) 
 
 I'll check this out later. Somehow, at one point when I updated @recipe.recipe_ingredients, it updated the Recipe and RecipeIngredient objects, but NOT the Ingredient object.
 
+Sometimes, even though the recipe isn't in the ingredient's recipes, the recipe's recipe_ingredient is among the ingredient's recipe_ingredients.
+
+Here, though, the recipe's recipe_ingredients got updated, but ingred's did not:
+```recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name].capitalize)```
+I'm getting inconsistent results. Sometimes, the ingredient DOES get updated, but without the recipe being added to its recipes.
+
 **Further update:** When I just tried to update an (already existing) ingredient_amount on the recipe, it updated the recipe and the corresponding RecipeIngredient object, but not the ingredient.
 
 So, somehow, when I call #update on @recipe.recipe_ingredients.last (or first) the first time with a new ingredient_amount, it works  (since the ingredient_amount is nil): it updates the recipe, ingredient, and the corresponding RecipeIngredient object.
@@ -391,6 +397,19 @@ ingredient.recipe_ingredients.collect do |r_i|
 end
 ```
 
+**Old code/comments for the RecipeController's "post '/recipes'" route:**
+```
+# This apparently works (for the first ingredient):
+    # recipe = Recipe.new(params[:recipe])
+    # ingred = Ingredient.create(name: params[:ingredients].first[:name])
+    # recipe.ingredients << ingred
+    # recipe.save
+
+    # This works for the second ingredient and beyond:
+    # ingred2 = Ingredient.create(name: params[:ingredients].second[:name])
+    # recipe.ingredients << ingred2
+    # recipe.recipe_ingredients.last.update(ingredient_amount: params[:ingredients].second[:amount], brand_name: params[:ingredients].second[:brand_name]")
+```
 
 **Alternative code for recipes/show.erb. Should I use this or the code I have now?**
 
