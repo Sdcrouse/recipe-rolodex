@@ -10,7 +10,7 @@ class Recipe < ActiveRecord::Base
     # If the recipe has an ingredient that has NOT been saved, then AR generates the message, "Ingredients is invalid", without saying why.
   
   # I have added a custom error message below, that will be generated every time the second error message above is generated.
-  validate :recipe_ingredients_need_names
+  validate :ingredients_need_names_if_amount_or_brand_are_specified
 
   validates :name, presence: true
   validates :instructions, presence: true
@@ -19,10 +19,19 @@ class Recipe < ActiveRecord::Base
     errors.add(:recipe, "should have at least one ingredient") if self.ingredients.blank?
   end
 
-  def recipe_ingredients_need_names
-    # I don't know how to delete the default error message, so I am adding a new one.
-    if self.ingredients.any?{|ingredient| ingredient.name.blank?}
-      errors.add(:ingredient, "needs a name") 
+  def ingredients_need_names_if_amount_or_brand_are_specified
+    # Will this work for invalid ingredients? 
+    # I am looking for a recipe_ingredient with a brand and/or amount, but whose ingredient lacks a name.
+    invalid_recipe_ingredient = self.recipe_ingredients.detect do |rec_ingr|
+      rec_ingr.ingredient.name.blank? && (!rec_ingr.ingredient_amount.blank? !! rec_ingr.brand_name.blank?)
     end
+    binding.pry
+    if invalid_recipe_ingredient
+      errors.add(:ingredient, "needs a name when it's given an amount and/or brand")
+    end
+    #if self.ingredients.any?{|ingredient| ingredient.name.blank?}
+    #  if self.
+    #  errors.add(:ingredient, "needs a name") 
+    #end
   end
 end
