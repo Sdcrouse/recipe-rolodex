@@ -32,7 +32,6 @@ class RecipesController < ApplicationController
       redirect to "/users/login"
     end
 
-    # I'll need some validations here. See comments below.
     recipe = Recipe.new(params[:recipe])
 
     # Here's what I really want:
@@ -42,106 +41,47 @@ class RecipesController < ApplicationController
       # To save the recipe, unless any ingredient and/or recipe validations fail.
         # Exception: It's fine if not every ingredient field is filled in, but it should NOT be saved unless it's valid.
       # To update the recipe's recipe_ingredients with any specified ingredient_amounts and brand_names.
+          # (I may want to convert blank values to nil with #presence).
       # To add the recipe to the user, unless the recipe is invalid.
-      # To redirect back to the "New Recipe" page with the appropriate error messages if a validation fails.
       # To redirect to the new recipe's page (with a success message) if the recipe is created correctly.
+      # To redirect back to the "New Recipe" page with the appropriate error messages if a validation fails.
+        # Don't redirect until the end, after I try to add the recipe to the user. I want to display ALL error messages.
 
     # Here's what I don't want:
       # Recipes to be saved unless they have at least one valid ingredient, a name, and instructions.
       # Ingredients to be saved unless they have a name. Any ingredients with ingredient_amounts and/or brand_names but no names should NOT be saved.
     
     params[:ingredients].each do |ingredient|
-      # Make the ingredient
-      # Try to save the ingredient (which will NOT save if it's missing a name).
-      # If it saves, great! 
-        # Add the ingredient to the recipe's ingredients.
-        # Save the recipe if it hasn't been saved yet.
-        # Add the ingredient_amount and brand_name to the recipe's recipe_ingredients.
-        # (I may want to convert blank values to nil with #presence).
-      # If it does NOT save:
-        # Do NOT save it to the recipe's ingredients!
-        # Do not update the recipe with the ingredient_amount and brand_name unless the corresponding ingredient has been saved.
-      
       ingred = Ingredient.find_or_initialize_by(name: ingredient[:name].downcase)
       binding.pry
 
-      if ingred.save
-        recipe.ingredients << ingred
-        binding.pry
-
-        # Note that I can also call #persisted? to see whether the recipe has been saved AND not destroyed.
-        # I don't need to call #save if the ingredient is added to an already-persisted recipe; it updates automatically.
-        if recipe.new_record?
-          binding.pry
-          recipe.save
-          binding.pry
-        end
+      if !ingred.name.blank?
+        recipe.ingredients << ingred # This also instantiates a new recipe_ingredient, but does not save it.
         
-        # For some reason, when the recipe is saved or updated, ingred is in the recipe's ingredients, but the recipe is NOT in ingred's ingredients!
-        # Yet, somehow the recipe's recipe_ingredient is among ingred's recipe_ingredients.
-        
-        recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name].capitalize)
-        binding.pry
-        # Here, though, the recipe's recipe_ingredients got updated, but ingred's did not.
-        # I'm getting inconsistent results. Sometimes, the ingredient DOES get updated, but without the recipe being added to its recipes.
-      elsif !ingredient[:amount].blank? || !ingredient[:brand_name].blank?
-        # Add a flash message like this: "If you specify an amount and/or brand_name, then you must give your ingredient name as well."
-        # Either that, or use the ActiveRecord error message for an ingredient that wasn't persisted.
-        flash[:validations] = ingred.errors.full_messages
-        binding.pry
-        redirect to "/recipes/new"
-      end # End of "if ingredient.save"
+        # I tried using recipe.recipe_ingredients.last.update, but that saves the recipe and (I think) everything associated with it.
+        # I don't want to save the recipe until later.
+        rec_ingr = recipe.recipe_ingredients.last
+        rec_ingr.ingredient_amount = ingredient[:amount]
+        rec_ingr.brand_name = ingredient[:brand_name].capitalize
+        rec_ingr.ingredient = ingred
+      end
       binding.pry
-   #
-      #if !ingred.save && (!ingredient[:amount].blank? || !ingredient[:brand_name].blank?)
-      #  # Note that this will only fire if the ingredient does not have a name, yet somehow has an amount and/or brand_name.
-      #  # Add a flash message like this: "If you specify an amount and/or brand_name, then you must add a name as well."
-      #  redirect to "/recipes/new"
-      #end
-      #  
-      #if !ingred.save # This is where I should check for blank-named ingredients, and whether other params have been saved.
-      #  # Be careful with the validations here. The first ingredient ALWAYS needs a name.
-      #  # However, the other ingredients with blank names don't need to be saved or validated.
-      #  # Be sure to have the appropriate flash message here, too.
-      #  redirect to "/recipes/new"
-      #end
-      #
-      #recipe.ingredients << ingred
-      #
-      #if ingredient == params[:ingredients].first || !ingredient[:name].blank? && !recipe.save 
-      #  # Does this work? What if the first ingredient somehow has a blank name and doesn't get saved? Then what?
-      #  # Then, if there are any subsequent valid ingredients, I don't think they'd get saved properly.
-      #  # The recipe should be saved for the first valid ingredient, since it hasn't been saved yet.
-      #  # But further calls to #save aren't necessary because "recipe.ingredients << ingred" updates the recipe automatically.
-      #  # Make sure to use the appropriate Recipe validations and flash message here.
-      #  redirect to "/recipes/new"
-      #else
-      #  # "You have successfully created a new recipe!" 
-      #  # Use this as a flash message.
-#
-      #  recipe.recipe_ingredients.last.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name])
-      #end       
     end
 
+    recipe.save
+
     # The recipe should have at least ONE ingredient.
-    # If it does not, then destroy the recipe and redirect back to the "new recipe" form with an error message.
     # The recipe should also have a name and instructions; redirect with an error message (without saving the recipe) if it lacks either one.
     # If successful, use this flash message: "You have successfully created a new recipe!"
-
-    current_user.recipes << recipe
-    redirect to "/recipes/#{recipe.id}"
-
-    # This apparently works (for the first ingredient):
-    # recipe = Recipe.new(params[:recipe])
-    # ingred = Ingredient.create(name: params[:ingredients].first[:name])
-    # recipe.ingredients << ingred
-    # recipe.save
-
-    # This works for the second ingredient and beyond:
-    # ingred2 = Ingredient.create(name: params[:ingredients].second[:name])
-    # recipe.ingredients << ingred2
-    # recipe.recipe_ingredients.last.update(ingredient_amount: params[:ingredients].second[:amount], brand_name: params[:ingredients].second[:brand_name]")
     
+    #flash[:validations] = recipe.errors.full_messages # This will be implemented in the next commit.
+    binding.pry
+    current_user.recipes << recipe if recipe.persisted? 
+    # Note that I can also call #new_record? to see whether the recipe has ever been saved.
+    # #persisted? checks to see that the recipe has been saved/persisted AND not destroyed.
+    
+    #redirect to "/recipes/new"
+    redirect to "/recipes/#{recipe.id}" 
   end
 
   get '/recipes/:id' do
