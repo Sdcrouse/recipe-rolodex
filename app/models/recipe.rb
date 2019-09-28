@@ -20,18 +20,14 @@ class Recipe < ActiveRecord::Base
   end
 
   def ingredients_need_names_if_amount_or_brand_are_specified
-    # Will this work for invalid ingredients? 
-    # I am looking for a recipe_ingredient with a brand and/or amount, but whose ingredient lacks a name.
+    # I am looking for a recipe_ingredient with an amount and/or brand, but whose ingredient lacks a name.
+    
     invalid_recipe_ingredient = self.recipe_ingredients.detect do |rec_ingr|
-      rec_ingr.ingredient.name.blank? && (!rec_ingr.ingredient_amount.blank? !! rec_ingr.brand_name.blank?)
+      rec_ingr.ingredient.name.blank? && (!rec_ingr.ingredient_amount.blank? || !rec_ingr.brand_name.blank?)
     end
-    binding.pry
+    
     if invalid_recipe_ingredient
       errors.add(:ingredient, "needs a name when it's given an amount and/or brand")
     end
-    #if self.ingredients.any?{|ingredient| ingredient.name.blank?}
-    #  if self.
-    #  errors.add(:ingredient, "needs a name") 
-    #end
-  end
-end
+  end # End of #ingredients_need_names_if_amount_or_brand_name_are_specified
+end # End of Recipe class
