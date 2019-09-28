@@ -2,11 +2,13 @@
   <h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 
   <% if !flash[:validations].blank? %>
+    <p><strong>Errors:</strong></p>
     <ol>
       <% flash[:validations].each do |validation_error| %>
         <li><%= validation_error %></li>
       <% end %>
     </ol>
+    <br />
   <% end %>
 
   <form method="post" action="/recipes">
