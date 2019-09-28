@@ -24,8 +24,10 @@ class RecipesController < ApplicationController
   end
 
   post '/recipes' do
+    # The idea here is to create a recipe with the given params, which has turned out to be tricky due to the complex model relationships and validations.
     # I decided against having a bunch of nested "if" statements, due to the calls to #redirect exiting the route anyway.
-    
+    # Later on, I may want to convert blank values to nil with #presence.
+
     if !logged_in?
       # This is an edge case.
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
@@ -33,23 +35,6 @@ class RecipesController < ApplicationController
     end
 
     recipe = Recipe.new(params[:recipe])
-
-    # Here's what I really want:
-      # To make a new recipe with the given params.
-      # To make new (unsaved) ingredients, or find them from the database.
-      # To add the (unsaved or found from database) ingredients to the recipe.
-      # To save the recipe, unless any ingredient and/or recipe validations fail.
-        # Exception: It's fine if not every ingredient field is filled in, but it should NOT be saved unless it's valid.
-      # To update the recipe's recipe_ingredients with any specified ingredient_amounts and brand_names.
-          # (I may want to convert blank values to nil with #presence).
-      # To add the recipe to the user, unless the recipe is invalid.
-      # To redirect to the new recipe's page (with a success message) if the recipe is created correctly.
-      # To redirect back to the "New Recipe" page with the appropriate error messages if a validation fails.
-        # Don't redirect until the end, after I try to add the recipe to the user. I want to display ALL error messages.
-
-    # Here's what I don't want:
-      # Recipes to be saved unless they have at least one valid ingredient, a name, and instructions.
-      # Ingredients to be saved unless they have a name. Any ingredients with ingredient_amounts and/or brand_names but no names should NOT be saved.
     
     params[:ingredients].each do |ingredient|
       unless ingredient[:amount].blank? && ingredient[:brand_name].blank? && ingredient[:name].blank?
@@ -57,22 +42,19 @@ class RecipesController < ApplicationController
         # Those blank ingredients should not be saved, but neither should they trigger any validation errors.
 
         ingred = Ingredient.find_or_initialize_by(name: ingredient[:name].downcase)
+        # Eggs, eggs, EgGs, etc. should be the same ingredient.
 
         recipe.ingredients << ingred 
         # This also instantiates a new recipe_ingredient, but does not save it.
         
-        # I tried using recipe.recipe_ingredients.last.update, but that saves the recipe and (I think) everything associated with it.
-        # I don't want to save the recipe until later.
+        # My goal is to update the corresponding recipe_ingredient, but I don't want to save the recipe (or anything else) until later.
+        # I tried using recipe.recipe_ingredients.last.update, but that saved the recipe and (I think) everything associated with it.
         rec_ingr = recipe.recipe_ingredients.last
         rec_ingr.ingredient_amount = ingredient[:amount]
         rec_ingr.brand_name = ingredient[:brand_name].capitalize
         rec_ingr.ingredient = ingred
       end # End of #unless
     end # End of #each
-
-    # The recipe should have at least ONE ingredient.
-    # The recipe should also have a name and instructions; redirect with an error message (without saving the recipe) if it lacks either one.
-    # If successful, use this flash message: "You have successfully created a new recipe!"
     
     current_user.recipes << recipe # This automatically attempts to save the recipe, so I don't have to save the recipe before this point.
     if recipe.persisted?
@@ -82,7 +64,7 @@ class RecipesController < ApplicationController
       redirect to "/recipes/#{recipe.id}"
     else
       flash[:validations] = recipe.errors.full_messages
-      redirect to "/recipes/new"
+      redirect to "/recipes/new" # I could have done this earlier, but I wanted to get ALL of the error messages, not just one.
     end
   end # End of " post '/recipes' " route
 

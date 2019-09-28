@@ -3,6 +3,7 @@ This may help with my problem below: https://stackoverflow.com/questions/4381154
 My troubles with my new models:
 
 **What works:**
+```
 >> egg_salad = Recipe.new(name: "Egg Salad")
 => #<Recipe id: nil, name: "Egg Salad", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: nil, updated_at: nil, description: nil, notes: nil>
 
@@ -30,8 +31,10 @@ D, [2019-09-12T14:49:09.792074 #141] DEBUG -- :   Ingredient Load (0.5ms)  SELEC
 => true
 >> egg_salad.ingredients.include?(eggs)
 => true
+```
 
 **What does *not* work:**
+```
 >> mustard = Ingredient.new(name: "mustard")
 => #<Ingredient id: nil, name: "mustard">
 
@@ -54,6 +57,7 @@ D, [2019-09-12T14:52:22.344145 #141] DEBUG -- :   Recipe Load (0.2ms)  SELECT "r
 => true
 >> egg_salad.ingredients.include?(mustard)
 => false
+```
 
 **The mustard has egg_salad in its recipes, but the egg_salad does NOT have mustard in its ingredients.**
 
@@ -70,7 +74,7 @@ This is one complex set of parent-child relationships: The Recipe and Ingredient
 
 **I have to pay close attention to how this affects one's ability to CRUD recipes and ingredients, especially with the RecipeIngredient model.**
 
-**Erase this after implementing it:** I am creating a recipe AND its ingredients in one form, so the params hash should look like this:
+I am creating a recipe AND its ingredients in one form, so the params hash should look like this:
 params = {
   :recipe => {
     name: "name1",
@@ -158,6 +162,7 @@ Maybe label the field something like "Name you want to be called by". New featur
 
 Example inputs and params hash:
 
+```
 <input type="text" name="recipe[name]"> 
 <input type="text" name="ingredients[][name]">
 
@@ -173,10 +178,11 @@ Example inputs and params hash:
 new_ingredient = pbj.cr
 pbj.recipe_ingredients.last.ingredient_amount =
 pbj.ingredients.create(:name => params[:ingredients][:name])
-
+```
 
 Test code:
 
+```
 >> pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
 => #<Recipe id: 76, name: "Peanut Butter and Jelly Sandwich", image_url: nil, serving_size: nil, servings: nil, additional_ingredients: nil, instructions: nil, user_id: nil, created_at: "2019-09-13 17:17:51", updated_at: "2019-09-13 17:17:51", description: nil, notes: nil>
 
@@ -212,9 +218,11 @@ Test code:
 
 >> bread.recipe_ingredients
 => #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 22, recipe_id: 76, ingredient_id: 252, ingredient_amount: "2 slices">]>
+```
 
 (After clearing Recipe.all, Ingredient.all, and RecipeIngredient.all):
 
+```
 >> pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
 >> jelly = pbj.ingredients.create(name: "Jelly")
 
@@ -223,10 +231,11 @@ Test code:
 
 >> pbj.recipe_ingredients
 => #<ActiveRecord::Associations::CollectionProxy [#<RecipeIngredient id: 23, recipe_id: 77, ingredient_id: 253, ingredient_amount: nil>]>
-
+```
 
 **UPDATE: Here is what works:**
 
+```
 pbj = Recipe.create(name: "Peanut Butter and Jelly Sandwich")
 jelly = pbj.ingredients.create(name: "Jelly")
 
@@ -241,6 +250,7 @@ jelly = pbj.ingredients.create(name: "Jelly")
 
 >> RecipeIngredient.last
 => #<RecipeIngredient id: 24, recipe_id: 78, ingredient_id: 254, ingredient_amount: "1 tbsp">
+```
 
 Here's why (I think) #update didn't work as expected when used on RecipeIngredient.last: RecipeIngredient instances are children of Recipe and Ingredient instances. If you update the parent, you update the child (and other parents, evidently). BUT if you update the child (as you would with RecipeIngredient.last.update), you do NOT update the parent!
 
@@ -412,7 +422,7 @@ end
 ```
 
 **Alternative code for recipes/show.erb. Should I use this or the code I have now?**
-
+```
 <% unless @recipe.recipe_ingredients.empty? %>
   <h3>Ingredients:</h3>
   <ul>
@@ -432,16 +442,41 @@ end
   </ul>
   <!-- I should have an error message here. @recipe.recipe_ingredients should NEVER be empty, even if the user specifies additional_ingredients. -->
 <% end %> <!-- End of #unless -->
+```
 
 Is there a way to prevent users from filling out the "Additional Ingredients" field before filling out the first five Ingredient fields? Is that even a good idea, even if it were possible?
 
 Give the user an option of what information to display to the public (a boolean in the users table).
 Button or checkbox: Display this attribute (put in User profile form). **Add this later.**
 
-**From the "new recipe" form, just in case I need it again:** <!-- <input type="text" id="ingredient_<%#= num %>_name" name="ingredients[][name]" <%#= "required" if num == 1 %> />-->
+**From the "new recipe" form, just in case I need it again:** ```<!-- <input type="text" id="ingredient_<%#= num %>_name" name="ingredients[][name]" <%#= "required" if num == 1 %> />-->```
 
 Use #new_record? to check whether an object is a new record (i.e. hasn't been saved yet)
 Use #persisted? to check whether an object has been saved AND not destroyed.
+
+**Old (important) comments from the "new recipe" form:**
+```
+# Here's what I really want:
+  # To make a new recipe with the given params.
+  # To make new (unsaved) ingredients, or find them from the database.
+  # To add the (unsaved or found from database) ingredients to the recipe.
+  # To save the recipe, unless any ingredient and/or recipe validations fail.
+    # Exception: It's fine if not every ingredient field is filled in, but it should NOT be saved unless it's valid.
+  # To update the recipe's recipe_ingredients with any specified ingredient_amounts and brand_names.
+    # (I may want to convert blank values to nil with #presence).
+  # To add the recipe to the user, unless the recipe is invalid.
+  # To redirect to the new recipe's page (with a success message) if the recipe is created correctly.
+  # To redirect back to the "New Recipe" page with the appropriate error messages if a validation fails.
+    # Don't redirect until the end, after I try to add the recipe to the user. I want to display ALL error messages.
+
+# Here's what I don't want:
+  # Recipes to be saved unless they have at least one valid ingredient, a name, and instructions.
+  # Ingredients to be saved unless they have a name. Any ingredients with ingredient_amounts and/or brand_names but no names should NOT be saved.
+
+# The recipe should have at least ONE ingredient.
+# The recipe should also have a name and instructions; redirect with an error message (without saving the recipe) if it lacks either one.
+# If successful, use this flash message: "You have successfully created a new recipe!"
+```
 
 **IMPORTANT!!!** Check out the notes in the Recipe model! Also, the next step is to re-write and re-seed the database, then remove the bindings in the RecipeController's POST route and test it again.
 
