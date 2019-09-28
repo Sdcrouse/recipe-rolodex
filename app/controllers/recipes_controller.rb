@@ -52,11 +52,14 @@ class RecipesController < ApplicationController
       # Ingredients to be saved unless they have a name. Any ingredients with ingredient_amounts and/or brand_names but no names should NOT be saved.
     
     params[:ingredients].each do |ingredient|
-      ingred = Ingredient.find_or_initialize_by(name: ingredient[:name].downcase)
-      binding.pry
+      unless ingredient[:amount].blank? && ingredient[:brand_name].blank? && ingredient[:name].blank?
+        # Depending on the number of ingredients in a recipe, there may be blank ingredients (ingredients without an amount, brand, and name).
+        # Those blank ingredients should not be saved, but neither should they trigger any validation errors.
 
-      if !ingred.name.blank?
-        recipe.ingredients << ingred # This also instantiates a new recipe_ingredient, but does not save it.
+        ingred = Ingredient.find_or_initialize_by(name: ingredient[:name].downcase)
+
+        recipe.ingredients << ingred 
+        # This also instantiates a new recipe_ingredient, but does not save it.
         
         # I tried using recipe.recipe_ingredients.last.update, but that saves the recipe and (I think) everything associated with it.
         # I don't want to save the recipe until later.
@@ -64,25 +67,24 @@ class RecipesController < ApplicationController
         rec_ingr.ingredient_amount = ingredient[:amount]
         rec_ingr.brand_name = ingredient[:brand_name].capitalize
         rec_ingr.ingredient = ingred
-      end
-      binding.pry
-    end
-
-    recipe.save
+      end # End of #unless
+    end # End of #each
 
     # The recipe should have at least ONE ingredient.
     # The recipe should also have a name and instructions; redirect with an error message (without saving the recipe) if it lacks either one.
     # If successful, use this flash message: "You have successfully created a new recipe!"
     
-    #flash[:validations] = recipe.errors.full_messages # This will be implemented in the next commit.
-    binding.pry
-    current_user.recipes << recipe if recipe.persisted? 
-    # Note that I can also call #new_record? to see whether the recipe has ever been saved.
-    # #persisted? checks to see that the recipe has been saved/persisted AND not destroyed.
-    
-    #redirect to "/recipes/new"
-    redirect to "/recipes/#{recipe.id}" 
-  end
+    current_user.recipes << recipe # This automatically attempts to save the recipe, so I don't have to save the recipe before this point.
+    if recipe.persisted?
+      # Note that I can also call #new_record? to see whether the recipe has ever been saved.
+      # #persisted? checks to see that the recipe has been saved/persisted AND not destroyed.
+      
+      redirect to "/recipes/#{recipe.id}"
+    else
+      flash[:validations] = recipe.errors.full_messages
+      redirect to "/recipes/new"
+    end
+  end # End of " post '/recipes' " route
 
   get '/recipes/:id' do
     if logged_in? && @recipe = Recipe.find_by_id(params[:id])
