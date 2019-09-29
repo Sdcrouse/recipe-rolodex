@@ -5,9 +5,14 @@
     <p><%= flash[:error] %></p>
   <% end %>
 
-  <form method="get" action="/recipes/new"> <!-- I should probably change this to an <a> element, then style it with CSS. -->
-    <input type="submit" value="New Recipe">
-  </form>
+  <p>
+    <a href="/recipes/new"><button>New Recipe</button></a>
+  </p>
+  <!-- This alternative technically works, but it goes against convention:
+    <form method="get" action="/recipes/new">
+      <input type="submit" value="New Recipe">
+    </form>
+  -->
 
   <% if Recipe.all.empty? %>
     <br /><strong>No recipes yet. Please feel free to make a new one, Chef <%= current_user.username %>!</strong>
