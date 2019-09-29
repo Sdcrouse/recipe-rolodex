@@ -13,6 +13,20 @@
 
   <form method="post" action="/recipes/<%= @recipe.id %>">
     <input type="hidden" id="hidden" name="_method" value="patch" />
+      <p>
+        <label for="recipe_name">Name: </label>
+        <input type="text" id="recipe_name" name="recipe[name]" value="<%= @recipe.name %>" required />
+      </p>
+      <p>
+        <label for="image_url">Image URL: </label>
+        <input type="url" id="image_url" name="recipe[image_url]" size="50" value="<%= @recipe.image_url %>" /><br />
+        <strong>Note:</strong> 
+        To add a URL here, first upload a photo or image (legally, please!) to your favorite photo hosting website. 
+        Then, copy and paste your photo's URL here (but PLEASE make sure that you're obeying their Terms of Use first).
+
+        <!-- I could do this, but then I would lose the URL validation: -->
+        <!-- <textarea id="image_url" name="recipe[image_url]"><%#= @recipe.image_url %></textarea> -->
+      </p>
 
     <input type="submit" value="Submit Changes" />
   </form>

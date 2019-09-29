@@ -117,7 +117,7 @@ class RecipesController < ApplicationController
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
       redirect to "/users/login"
     end
-
+    binding.pry
     "You have successfully edited the recipe!" # This could be a flash message.
   end
 end # End of RecipesController
