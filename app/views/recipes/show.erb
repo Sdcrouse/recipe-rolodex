@@ -6,6 +6,12 @@
     <p><%= flash[:error] %></p>
   <% end %>
 
+  <% if @recipe.user == current_user %>
+    <p>
+      <a href="/recipes/<%= @recipe.id %>/edit"><button>Edit Recipe</button></a>
+    </p>
+  <% end %>
+
   <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
 
   <% unless @recipe.image_url.blank? %>
