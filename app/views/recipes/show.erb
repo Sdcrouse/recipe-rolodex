@@ -2,6 +2,10 @@
 <!-- It may be better if that ^^^ were changed to a flash message. -->
   <h2><%= @recipe.name %></h2>
 
+  <% if !flash[:error].blank? %>
+    <p><%= flash[:error] %></p>
+  <% end %>
+
   <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
 
   <% unless @recipe.image_url.blank? %>

@@ -95,18 +95,19 @@ class RecipesController < ApplicationController
       @recipe = Recipe.find_by_id(params[:id])
 
       if !@recipe # The recipe does not exist.
-        "<h2>This recipe does not exist. <a href='/recipes'>Click here to go to the recipes.</a></h2>"
-        # This should probably be in a flash message that shows up after redirecting to /recipes.
+        flash[:error] = "Sorry, Chef #{current_user.username}! The recipe that you are trying to edit does not exist."
+        redirect to "/recipes"
       elsif @recipe.user != current_user
         # The recipe exists, but the current_user is not its author (and is thus not allowed to edit it).
         
-        # Add a flash message here.
+        flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to edit this recipe."
         redirect to "/recipes/#{@recipe.id}"
       else # The recipe exists and the current_user is allowed to edit it.
         erb :"/recipes/edit"
-      end
+      end # End of "if !@recipe"
     else
-      "Sorry, Chef! You must be logged in to edit this recipe."
-    end
+      flash[:error] = "Sorry, Chef! You must be logged in to edit this recipe."
+      redirect to "/users/login"
+    end # End of "if logged_in?"
   end # End of "get '/recipes/:id/edit'" route
 end # End of RecipesController
