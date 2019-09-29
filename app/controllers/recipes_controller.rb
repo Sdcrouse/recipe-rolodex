@@ -90,18 +90,23 @@ class RecipesController < ApplicationController
     end # End of "if logged_in? && @recipe..."
   end # End of "get '/recipes/:id'" route
 
-  get '/recipes/:id/edit' do # I still need to test this out, after seeding the database.
-    @recipe = Recipe.find_by_id(params[:id])
-    if @recipe
-      if logged_in? && @recipe.user == current_user
-        erb :"/recipes/edit"
-      else
+  get '/recipes/:id/edit' do
+    if logged_in?
+      @recipe = Recipe.find_by_id(params[:id])
+
+      if !@recipe # The recipe does not exist.
+        "<h2>This recipe does not exist. <a href='/recipes'>Click here to go to the recipes.</a></h2>"
+        # This should probably be in a flash message that shows up after redirecting to /recipes.
+      elsif @recipe.user != current_user
+        # The recipe exists, but the current_user is not its author (and is thus not allowed to edit it).
+        
         # Add a flash message here.
         redirect to "/recipes/#{@recipe.id}"
+      else # The recipe exists and the current_user is allowed to edit it.
+        erb :"/recipes/edit"
       end
     else
-      "<h2>This recipe does not exist. <a href='/recipes'>Click here to go to the recipes.</a></h2>"
-      # This should probably be in a flash message that shows up after redirecting to /recipes.
+      "Sorry, Chef! You must be logged in to edit this recipe."
     end
-  end
-end
+  end # End of "get '/recipes/:id/edit'" route
+end # End of RecipesController
