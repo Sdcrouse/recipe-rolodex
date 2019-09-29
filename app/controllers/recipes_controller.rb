@@ -28,8 +28,7 @@ class RecipesController < ApplicationController
     # I decided against having a bunch of nested "if" statements, due to the calls to #redirect exiting the route anyway.
     # Later on, I may want to convert blank values to nil with #presence.
 
-    if !logged_in?
-      # This is an edge case.
+    if !logged_in? # This is an edge case.
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
       redirect to "/users/login"
     end
@@ -114,6 +113,11 @@ class RecipesController < ApplicationController
   end # End of "get '/recipes/:id/edit'" route
 
   patch '/recipes/:id' do
+    if !logged_in? # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in?
+      flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
+      redirect to "/users/login"
+    end
+
     "You have successfully edited the recipe!" # This could be a flash message.
   end
 end # End of RecipesController
