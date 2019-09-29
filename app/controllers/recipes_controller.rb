@@ -71,6 +71,8 @@ class RecipesController < ApplicationController
   get '/recipes/:id' do
     if logged_in? && @recipe = Recipe.find_by_id(params[:id])
       @recipe_ingredients = @recipe.recipe_ingredients
+      # As noted in the show.erb file, I think this will prevent more database queries than are necessary.
+      
       erb :'recipes/show'
     else
       # Redirect, if there is no recipe and/or the user is not logged in.

@@ -499,6 +499,28 @@ E.g. somehow, when I entered a valid recipe URL, it took me to that page, even t
 <% if @recipe && @recipe.user && !@recipe.user.username.blank? && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
 <!-- It may be better if that ^^^ were changed to a flash message. -->
 
+<h3>Ingredients:</h3>
+<ul>
+  <% @recipe.ingredients.each do |ingredient| %>
+    <% unless ingredient.name.blank? %>
+      <li>
+        <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+        <!-- There may be another way to do this, but I do not (yet) know what it is. -->
+        <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
+
+        <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+        <% if recip_ingred %>
+          <%= recip_ingred.ingredient_amount unless recip_ingred.ingredient_amount.blank? %>
+          <%= recip_ingred.brand_name unless recip_ingred.brand_name.blank? %>
+        <% end %>
+
+        <%= ingredient.name %>
+      </li>
+    <% end %> <!-- end of "unless ingredient.name.blank?" -->
+  <% end %> <!-- end of @recipe.ingredients iterator -->
+</ul>
+<br />
+
 <% else %> <!-- This is connected with "if @recipe && !@recipe.ingredients.empty? &&..." at the top. -->
   <!-- It might be better to use flash messages here. -->
 
