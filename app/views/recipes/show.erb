@@ -1,92 +1,70 @@
-<% if @recipe && @recipe.user && !@recipe.user.username.blank? && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
-<!-- It may be better if that ^^^ were changed to a flash message. -->
-  <h2><%= @recipe.name %></h2>
+<h2><%= @recipe.name %></h2>
 
-  <% if !flash[:error].blank? %>
-    <p><%= flash[:error] %></p>
-  <% end %>
+<% if !flash[:error].blank? %>
+  <p><%= flash[:error] %></p>
+<% end %>
 
-  <% if @recipe.user == current_user %>
-    <p>
-      <a href="/recipes/<%= @recipe.id %>/edit"><button>Edit Recipe</button></a>
-    </p>
-  <% end %>
+<% if @recipe.user == current_user %>
+  <p>
+    <a href="/recipes/<%= @recipe.id %>/edit"><button>Edit Recipe</button></a>
+  </p>
+<% end %>
 
-  <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
+<p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
 
-  <% unless @recipe.image_url.blank? %>
-    <p><img src="<%= @recipe.image_url %>" alt="<%= @recipe.name %>" /></p>
-  <% end %>
+<% unless @recipe.image_url.blank? %>
+  <p><img src="<%= @recipe.image_url %>" alt="<%= @recipe.name %>" /></p>
+<% end %>
 
-  <% unless @recipe.serving_size.blank? %>
-    Serving Size: <%= @recipe.serving_size %><br />
-  <% end %>
-  <% unless @recipe.servings.blank? %>
-    Servings: <%= @recipe.servings %><br /><br />
-  <% end %>
+<% unless @recipe.serving_size.blank? %>
+  Serving Size: <%= @recipe.serving_size %><br />
+<% end %>
+<% unless @recipe.servings.blank? %>
+  Servings: <%= @recipe.servings %><br /><br />
+<% end %>
 
-  <% unless @recipe.description.blank? %>
-    <p>Description: <%= @recipe.description %></p>
-  <% end %>
+<% unless @recipe.description.blank? %>
+  <p>Description: <%= @recipe.description %></p>
+<% end %>
 
-  <h3>Ingredients:</h3>
-  <ul>
-    <% @recipe.ingredients.each do |ingredient| %>
-      <% unless ingredient.name.blank? %>
-        <li>
-          <!-- I am pretty sure that this syntax avoids multiple database queries: -->
-          <!-- There may be another way to do this, but I do not (yet) know what it is. -->
-          <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
+<h3>Ingredients:</h3>
+<ul>
+  <% @recipe.ingredients.each do |ingredient| %>
+    <% unless ingredient.name.blank? %>
+      <li>
+        <!-- I am pretty sure that this syntax avoids multiple database queries: -->
+        <!-- There may be another way to do this, but I do not (yet) know what it is. -->
+        <!-- recip_ingred = RecipeIngredient.find_by(recipe: @recipe, ingredient: ingredient) -->
 
-          <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
-          <% if recip_ingred %>
-            <%= recip_ingred.ingredient_amount unless recip_ingred.ingredient_amount.blank? %>
-            <%= recip_ingred.brand_name unless recip_ingred.brand_name.blank? %>
-          <% end %>
+        <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
+        <% if recip_ingred %>
+          <%= recip_ingred.ingredient_amount unless recip_ingred.ingredient_amount.blank? %>
+          <%= recip_ingred.brand_name unless recip_ingred.brand_name.blank? %>
+        <% end %>
 
-          <%= ingredient.name %>
-        </li>
-      <% end %> <!-- end of "unless ingredient.name.blank?" -->
-    <% end %> <!-- end of @recipe.ingredients iterator -->
+        <%= ingredient.name %>
+      </li>
+    <% end %> <!-- end of "unless ingredient.name.blank?" -->
+  <% end %> <!-- end of @recipe.ingredients iterator -->
 
-    <% unless @recipe.additional_ingredients.blank? %>
-      <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
-        <li><%= ingredient %></li>
-      <% end %>
-    <% end %> <!-- end of @recipe.additional_ingredients iterator -->
-  </ul>
-  <br />
+  <% unless @recipe.additional_ingredients.blank? %>
+    <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
+      <li><%= ingredient %></li>
+    <% end %>
+  <% end %> <!-- end of @recipe.additional_ingredients iterator -->
+</ul>
+<br />
 
-  <h3>Instructions:</h3>
-  <p><%= @recipe.instructions %></p>
+<h3>Instructions:</h3>
+<p><%= @recipe.instructions %></p>
 
-  <% unless @recipe.notes.blank? %>
-    <p><strong>Notes:</strong> <%= @recipe.notes %></p>
-  <% end %>
+<% unless @recipe.notes.blank? %>
+  <p><strong>Notes:</strong> <%= @recipe.notes %></p>
+<% end %>
 
-  <% if @recipe.created_at && @recipe.updated_at %> <!-- Edge case -->
-    <h5>
-      <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
-      <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
-    </h5>
-  <% end %>
-
-<% else %> <!-- This is connected with "if @recipe && !@recipe.ingredients.empty? &&..." at the top. -->
-  <!-- It might be better to use flash messages here. -->
-
-  <% if !@recipe %>
-    <h3>Uh-Oh! This recipe doesn't exist.</h3>
-  <% elsif @recipe.name.blank? %>
-    <h3>Whoops! Whoever wrote this recipe forgot to give it a name!</h3>
-  <% elsif !@recipe.user %> <!-- Edge case -->
-    <h3>This recipe doesn't have a user. But, then, who wrote it?</h3>
-  <% elsif @recipe.user.username.blank? %> <!-- Edge case -->
-    <h3>This recipe's user didn't give him/herself a name for some reason!</h3>
-  <% elsif @recipe.ingredients.empty? %> 
-    <!-- @recipe.ingredients should not be empty, even if the user specifies additional_ingredients. -->
-    <h3>What a shame! This recipe doesn't appear to have any ingredients.</h3>
-  <% elsif @recipe.instructions.blank? %>
-    <h3>Well, this isn't good! This recipe doesn't have instructions.</h3>
-  <% end %> <!-- end of if/elsif statements starting with "if !@recipe" -->
-  <p>Click <a href="/recipes">here</a> to go back to the recipes.</p>
-<% end %> <!-- end of "if @recipe && !recipe.ingredients.empty &&..." -->
+<% if @recipe.created_at && @recipe.updated_at %> <!-- Edge case -->
+  <h5>
+    <%= @recipe.created_at.strftime("Posted on %m/%d/%Y at %I:%M%p.") %>
+    <%= @recipe.updated_at.strftime("Updated on %m/%d/%Y at %I:%M%p.") %>
+  </h5>
+<% end %>

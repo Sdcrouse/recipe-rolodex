@@ -493,3 +493,30 @@ Instead of changing flash[:errors] to account for ActiveRecord validations, I co
 
 **Note: I'm getting some strange flash message bugs when I log in and out, but I don't yet know how to recreate them.**
 E.g. somehow, when I entered a valid recipe URL, it took me to that page, even though I was logged out (or so I thought). Other times, the wrong flash message showed up.
+
+**Old code from the recipes/show.erb page (before validations and flash messages):**
+```
+<% if @recipe && @recipe.user && !@recipe.user.username.blank? && !@recipe.name.blank? && !@recipe.ingredients.empty? && !@recipe.instructions.blank? %> 
+<!-- It may be better if that ^^^ were changed to a flash message. -->
+
+<% else %> <!-- This is connected with "if @recipe && !@recipe.ingredients.empty? &&..." at the top. -->
+  <!-- It might be better to use flash messages here. -->
+
+  <% if !@recipe %>
+    <h3>Uh-Oh! This recipe doesn't exist.</h3>
+  <% elsif @recipe.name.blank? %>
+    <h3>Whoops! Whoever wrote this recipe forgot to give it a name!</h3>
+  <% elsif !@recipe.user %> <!-- Edge case -->
+    <h3>This recipe doesn't have a user. But, then, who wrote it?</h3>
+  <% elsif @recipe.user.username.blank? %> <!-- Edge case -->
+    <h3>This recipe's user didn't give him/herself a name for some reason!</h3>
+  <% elsif @recipe.ingredients.empty? %> 
+    <!-- @recipe.ingredients should not be empty, even if the user specifies additional_ingredients. -->
+    <h3>What a shame! This recipe doesn't appear to have any ingredients.</h3>
+  <% elsif @recipe.instructions.blank? %>
+    <h3>Well, this isn't good! This recipe doesn't have instructions.</h3>
+  <% end %> <!-- end of if/elsif statements starting with "if !@recipe" -->
+  <p>Click <a href="/recipes">here</a> to go back to the recipes.</p>
+<% end %> <!-- end of "if @recipe && !recipe.ingredients.empty &&..." -->
+```
+**End of old code from recipes/show.erb page**
