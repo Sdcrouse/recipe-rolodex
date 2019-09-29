@@ -112,4 +112,8 @@ class RecipesController < ApplicationController
       redirect to "/users/login"
     end # End of "if logged_in?"
   end # End of "get '/recipes/:id/edit'" route
+
+  patch '/recipes/:id' do
+    "You have successfully edited the recipe!" # This could be a flash message.
+  end
 end # End of RecipesController

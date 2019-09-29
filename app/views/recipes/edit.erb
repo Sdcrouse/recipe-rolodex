@@ -11,6 +11,12 @@
     <br />
   <% end %>
 
+  <form method="post" action="/recipes/<%= @recipe.id %>">
+    <input type="hidden" id="hidden" name="_method" value="patch" />
+
+    <input type="submit" value="Submit Changes" />
+  </form>
+
 <% else %> <!-- This is an edge case, as mentioned above. -->
   <h2>You are not logged in. <a href="/users/login">Click here to go to the login page.</a></h2>
 <% end %>
