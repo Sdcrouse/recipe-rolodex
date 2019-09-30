@@ -38,6 +38,29 @@
       <label for="description">Description: </label>
       <input type="text" id="description" name="recipe[description]" size="50" value="<%= @recipe.description %>" />
     </p>
+    <p>
+      <strong>Edit and/or create new Ingredients here:</strong><br />
+      <ol>
+        <!-- Create 5 ingredient list items. -->
+        <!-- My one objection to this, is that it makes up to 5 calls to the database's ingredients table. -->
+        
+        <% num = 1 %> <!-- This number will be displayed for each ingredient, then incremented. It will especially help with blank ingredient fields. -->
+
+        <% @recipe_ingredients.each do |rec_ingr| %>
+          <li>
+            Ingredient <%= num %><br />
+            <label for="ingredient_<%= num %>_amount">Amount: </label>
+            <input type="text" id="ingredient_<%= num %>_amount" name="ingredients[][amount]" size="10" value="<%= rec_ingr.ingredient_amount %>" />
+            
+            <label for="ingredient_<%= num %>_brand_name">Brand: </label>
+            <input type="text" id="ingredient_<%= num %>_brand_name" name="ingredients[][brand_name]" size="10" value="<%= rec_ingr.brand_name %>" />
+          </li>
+          <br />
+          <% num += 1 %>
+        <% end %>
+      </ol>
+    </p> <!-- End of Ingredients -->
+
     <input type="submit" value="Submit Changes" />
   </form>
 
