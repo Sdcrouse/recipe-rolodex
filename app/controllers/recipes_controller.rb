@@ -124,4 +124,8 @@ class RecipesController < ApplicationController
     binding.pry
     "You have successfully edited the recipe!" # This could be a flash message.
   end
+
+  delete '/recipes/:id' do
+    "You have successfully deleted the recipe!" # This (or something similar) could be a flash message.
+  end
 end # End of RecipesController
