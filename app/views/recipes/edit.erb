@@ -65,8 +65,32 @@
             </datalist>          
           </li>
           <br />
+
           <% num += 1 %>
-        <% end %>
+        <% end %> <!-- End of "@recipe.recipe_ingredients.each" -->
+
+        <% (num..5).each do |n| %> <!-- This adds blank Ingredient inputs until there are 5 ingredients total. -->
+          <!-- This can probably be refactored later. -->
+
+          <li>
+            Ingredient <%= n %><br />
+            <label for="ingredient_<%= n %>_amount">Amount: </label>
+            <input type="text" id="ingredient_<%= n %>_amount" name="ingredients[][amount]" size="10" />
+            
+            <label for="ingredient_<%= n %>_brand_name">Brand: </label>
+            <input type="text" id="ingredient_<%= n %>_brand_name" name="ingredients[][brand_name]" size="10" />
+          
+            <label for="ingredient_<%= n %>_name">Name: </label>
+            <input list="ingredient-names" id="ingredient_<%= n %>_name" name="ingredients[][name]" size="30" placeholder="Choose a name or write your own." />
+
+            <datalist id="ingredient-names">
+              <% @all_ingredients.sort_by{|ingredient| ingredient.name}.each do |ingredient| %>
+                <option value="<%= ingredient.name %>">
+              <% end %>
+            </datalist>          
+          </li>
+          <br />
+        <% end %> <!-- End of "(num..5).each" -->
       </ol>
     </p> <!-- End of Ingredients -->
 
