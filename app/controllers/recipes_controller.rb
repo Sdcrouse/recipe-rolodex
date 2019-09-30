@@ -121,8 +121,19 @@ class RecipesController < ApplicationController
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
       redirect to "/users/login"
     end
+
+    recipe = Recipe.find_by_id(params[:id])
+    recipe.update(params[:recipe])
+
     binding.pry
-    "You have successfully edited the recipe!" # This could be a flash message.
+
+    if recipe.errors.full_messages.blank?
+      flash[:message] = "You have successfully edited the recipe!"
+      redirect to "/recipes/#{recipe.id}"
+    else
+      flash[:validations] = recipe.errors.full_messages
+      redirect to "/recipes/#{recipe.id}/edit"
+    end
   end
 
   delete '/recipes/:id' do

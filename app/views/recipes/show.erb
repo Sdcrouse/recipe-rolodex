@@ -2,6 +2,8 @@
 
 <% if !flash[:error].blank? %>
   <p><%= flash[:error] %></p>
+<% elsif !flash[:message].blank? %>
+  <p><%= flash[:message] %></p>
 <% end %>
 
 <% if @recipe.user == current_user %>
