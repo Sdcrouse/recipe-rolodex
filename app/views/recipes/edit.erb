@@ -46,7 +46,7 @@
         
         <% num = 1 %> <!-- This number will be displayed for each ingredient, then incremented. It will especially help with blank ingredient fields. -->
 
-        <% @recipe_ingredients.each do |rec_ingr| %>
+        <% @recipe.recipe_ingredients.each do |rec_ingr| %>
           <li>
             Ingredient <%= num %><br />
             <label for="ingredient_<%= num %>_amount">Amount: </label>
@@ -54,6 +54,15 @@
             
             <label for="ingredient_<%= num %>_brand_name">Brand: </label>
             <input type="text" id="ingredient_<%= num %>_brand_name" name="ingredients[][brand_name]" size="10" value="<%= rec_ingr.brand_name %>" />
+          
+            <label for="ingredient_<%= num %>_name">Name: </label>
+            <input list="ingredient-names" id="ingredient_<%= num %>_name" name="ingredients[][name]" size="30" value="<%= rec_ingr.ingredient.name %>" <%= "required" if num == 1 %> />
+
+            <datalist id="ingredient-names">
+              <% @all_ingredients.sort_by{|ingredient| ingredient.name}.each do |ingredient| %>
+                <option value="<%= ingredient.name %>">
+              <% end %>
+            </datalist>          
           </li>
           <br />
           <% num += 1 %>

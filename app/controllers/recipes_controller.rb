@@ -104,7 +104,7 @@ class RecipesController < ApplicationController
         flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to edit this recipe."
         redirect to "/recipes/#{@recipe.id}"
       else # The recipe exists and the current_user is allowed to edit it.
-        @recipe_ingredients = @recipe.recipe_ingredients
+        @all_ingredients = Ingredient.all
         # @blank_ingredient_fields = 5 - @recipe_ingredients.size
         # My goal here ^^^ is to create 5 ingredient fields in the edit form.
         # I need to know how many will be blank, based on how many recipe_ingredients are in the original recipe.
