@@ -5,13 +5,13 @@
 <% end %>
 
 <% if @recipe.user == current_user %>
-  <p>
-    <a href="/recipes/<%= @recipe.id %>/edit"><button>Edit Recipe</button></a>
-    <form method="post" action="/recipes/<%= @recipe.id %>">
-      <input type="hidden" id="hidden" name="_method" value="delete">
-      <input type="submit" value="Delete Recipe" />
-    </form>
-  </p>
+  <a href="/recipes/<%= @recipe.id %>/edit"><button>Edit Recipe</button></a>
+  <form method="post" action="/recipes/<%= @recipe.id %>" style="display:inline">
+    <input type="hidden" id="hidden" name="_method" value="delete">
+    <input type="submit" value="Delete Recipe" />
+  </form>
+  <br /><br />
+  <!-- I tried to put the <a> and <form> tags inside of a <p> tag, but that didn't work, for some reason. -->
 <% end %>
 
 <p>Posted by: <a href="/users/<%= @recipe.user.username %>"><%= @recipe.user.username %></a></p>
