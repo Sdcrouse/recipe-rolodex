@@ -93,7 +93,18 @@
         <% end %> <!-- End of "(num..5).each" -->
       </ol>
     </p> <!-- End of Ingredients -->
-
+    <p>
+      <label for="additional_ingredients">Additional Ingredients: </label>
+      <textarea id="additional_ingredients" name="recipe[additional_ingredients]" rows="5"><%= @recipe.additional_ingredients %></textarea>
+    </p>
+    <p>
+      <label for="instructions">Instructions: </label>
+      <textarea id="instructions" name="recipe[instructions]" rows="10" cols="70" required><%= @recipe.instructions %></textarea>
+    </p>
+    <p>
+      <label for="notes">Notes: </label>
+      <textarea id="notes" name="recipe[notes]" rows="3" cols="30"><%= @recipe.notes %></textarea>
+    </p>
     <input type="submit" value="Submit Changes" />
   </form>
 
