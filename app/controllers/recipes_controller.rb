@@ -167,7 +167,7 @@ class RecipesController < ApplicationController
     end
     binding.pry
 
-    recipe.save # That didn't work.
+    recipe.save # That didn't work, even with autosave enabled on the recipe_ingredients.
 
     binding.pry
     # params[:ingredients].each do |ingredient|
@@ -178,7 +178,7 @@ class RecipesController < ApplicationController
       # binding.pry
     # end
 
-    recipe.update(params[:recipe]) # This didn't save the ingredients.
+    recipe.update(params[:recipe]) # This didn't save the ingredients, even with autosave enabled.
     # The recipe variable itself got changed in that #each_with_index block, but the recipe in the database did NOT, even after #update.
 
     binding.pry
