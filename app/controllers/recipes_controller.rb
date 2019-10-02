@@ -142,12 +142,22 @@ class RecipesController < ApplicationController
     # I may need to add this validation to the Ingredient model:
     # validates :name, presence: true
 
-    if !logged_in? # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in?
+    if !logged_in? 
+      # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in? 
+      # Update: I also have to set the session[:user_id] to nil; clearing the session won't work.
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
       redirect to "/users/login"
     end
 
     recipe = Recipe.find_by_id(params[:id])
+
+    binding.pry
+
+    if recipe.user != current_user 
+      # Another edge case. I got it to work by changing the session's user_id and resetting @logged_in_user to User.find_by_id(session[:user_id]).
+      flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! You should not have gotten this far, since you are not authorized to edit this recipe."
+      redirect to "/recipes/#{recipe.id}"
+    end
 
     # Update the recipe's ingredients. But what if the user removes an ingredient?
     recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
