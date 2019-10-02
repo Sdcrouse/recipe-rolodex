@@ -117,13 +117,59 @@ class RecipesController < ApplicationController
   end # End of "get '/recipes/:id/edit'" route
 
   patch '/recipes/:id' do
+    # Right now:
+      # When creating a recipe, neither it nor its ingredients will be saved until the recipe is added to the user.
+      # The validations:
+        # None for the RecipeIngredient or Ingredient models
+        # The Recipe validates name, instructions, having at least one ingredient (edge case), and having ingredients with names and brands and/or amounts
+      # Blank ingredients (ingredients with no name, amount, or brand) are not saved, but they are not invalid either.
+      # The Ingredient model has a name; the RecipeIngredient model has an ingredient_amount and a brand_name.
+
+    # What I want to do:
+      # Update the recipe, but only under these edge cases:
+        # The user is logged in (CHECK!), and the user is the one who wrote the recipe.
+      # Save the recipe, but only if it has valid attributes (CHECK!), ingredients, and recipe_ingredients.
+      # Avoid saving ingredients and recipe_ingredients unless the ENTIRE recipe is valid.
+      # Avoid saving ingredients that don't have names (but without triggering validation errors).
+      # Avoid saving recipe_ingredients unless their corresponding ingredient has a name.
+        # Trigger validation errors if the recipe_ingredients have brand_names and/or ingredient_amounts, but their ingredient has no name.
+      # Create new, valid ingredients before saving the recipe.
+
+    # How do I do this? (Note: I already figured out one edge case, and how to update a recipe with everything except the ingredients and recipe_ingredients.)
+    # First, figure out how to update a recipe's ingredients, but without saving them.
+    # REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe too early, then I will have to undo those changes if I encounter a validation error.
+
+    # I may need to add this validation to the Ingredient model:
+    # validates :name, presence: true
+
     if !logged_in? # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in?
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
       redirect to "/users/login"
     end
 
     recipe = Recipe.find_by_id(params[:id])
-    recipe.update(params[:recipe])
+
+    # Update the recipe's ingredients. But what if the user removes an ingredient?
+    recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
+      rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
+      rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
+      rec_ingr.ingredient.name = params[:ingredients][index][:name]
+    end
+    binding.pry
+
+    recipe.save # That didn't work.
+
+    binding.pry
+    # params[:ingredients].each do |ingredient|
+      # ingred = recipe.ingredients.find_or_initialize_by(name: ingredient[:name].downcase)
+      # That won't work if I want to change the ingredient name.
+      # Also, I have no validations on the Ingredient model itself.
+      # Don't call #update on the ingredient; it shouldn't be saved until the recipe is updated.
+      # binding.pry
+    # end
+
+    recipe.update(params[:recipe]) # This didn't save the ingredients.
+    # The recipe variable itself got changed in that #each_with_index block, but the recipe in the database did NOT, even after #update.
 
     binding.pry
 
