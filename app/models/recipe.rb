@@ -2,7 +2,8 @@ class Recipe < ActiveRecord::Base
   belongs_to :user
   has_many :recipe_ingredients, dependent: :destroy 
   # Destroying a recipe should destroy its recipe_ingredients ^^^, but not the associated ingredients themselves.
-  has_many :ingredients, through: :recipe_ingredients, autosave: true
+  has_many :ingredients, through: :recipe_ingredients
+  accepts_nested_attributes_for :recipe_ingredients
   
   validate :recipe_should_have_at_least_one_ingredient
   # Two possible error messages are generated here:

@@ -127,20 +127,17 @@ class RecipesController < ApplicationController
 
     # What I want to do:
       # Update the recipe, but only under these edge cases:
-        # The user is logged in (CHECK!), and the user is the one who wrote the recipe.
-      # Save the recipe, but only if it has valid attributes (CHECK!), ingredients, and recipe_ingredients.
-      # Avoid saving ingredients and recipe_ingredients unless the ENTIRE recipe is valid.
-      # Avoid saving ingredients that don't have names (but without triggering validation errors).
-      # Avoid saving recipe_ingredients unless their corresponding ingredient has a name.
-        # Trigger validation errors if the recipe_ingredients have brand_names and/or ingredient_amounts, but their ingredient has no name.
+        # The user is logged in (CHECK!), and the user is the one who wrote the recipe (CHECK!).
+      # Save the recipe, but only if it has valid attributes (CHECK!), ingredients (CHECK!), and recipe_ingredients (CHECK!).
+      # Avoid saving ingredients and recipe_ingredients unless the ENTIRE recipe is valid.(CHECK!)
+      # Avoid saving ingredients that don't have names (but without triggering validation errors). (CHECK!)
+      # Avoid saving recipe_ingredients unless their corresponding ingredient has a name. (CHECK!)
+        # Trigger validation errors if the recipe_ingredients have brand_names and/or ingredient_amounts, but their ingredient has no name. (CHECK!)
       # Create new, valid ingredients before saving the recipe.
 
     # How do I do this? (Note: I already figured out one edge case, and how to update a recipe with everything except the ingredients and recipe_ingredients.)
-    # First, figure out how to update a recipe's ingredients, but without saving them.
+    # First, figure out how to update a recipe's ingredients, but without saving them. (CHECK!)
     # REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe too early, then I will have to undo those changes if I encounter a validation error.
-
-    # I may need to add this validation to the Ingredient model:
-    # validates :name, presence: true
 
     if !logged_in? 
       # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in? 
@@ -151,7 +148,7 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
-    binding.pry
+    #binding.pry
 
     if recipe.user != current_user 
       # Another edge case. I got it to work by changing the session's user_id and resetting @logged_in_user to User.find_by_id(session[:user_id]).
@@ -159,20 +156,18 @@ class RecipesController < ApplicationController
       redirect to "/recipes/#{recipe.id}"
     end
 
-    recipe.recipe_ingredients.second.brand_name = params[:ingredients].second[:brand_name]
-    # AARGH!!! Even THAT ^^^ doesn't work, even with autosave!
+     # Update the recipe's ingredients. But what if the user removes an ingredient?
+     # That is a stretch goal.
+     recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
+       rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
+       rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
+       rec_ingr.ingredient.name = params[:ingredients][index][:name]
+     end
+    # binding.pry
 
-    # Update the recipe's ingredients. But what if the user removes an ingredient?
-    # recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
-    #   rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
-    #   rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
-    #   rec_ingr.ingredient.name = params[:ingredients][index][:name]
-    # end
-    binding.pry
+    recipe.save
 
-    recipe.save # That didn't work, even with autosave enabled on the recipe_ingredients.
-
-    binding.pry
+    #binding.pry
     # params[:ingredients].each do |ingredient|
       # ingred = recipe.ingredients.find_or_initialize_by(name: ingredient[:name].downcase)
       # That won't work if I want to change the ingredient name.
@@ -184,7 +179,7 @@ class RecipesController < ApplicationController
     recipe.update(params[:recipe]) # This didn't save the ingredients, even with autosave enabled.
     # The recipe variable itself got changed in that #each_with_index block, but the recipe in the database did NOT, even after #update.
 
-    binding.pry
+    # binding.pry
 
     if recipe.errors.full_messages.blank?
       flash[:message] = "You have successfully edited the recipe!"
