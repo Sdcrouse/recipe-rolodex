@@ -159,12 +159,15 @@ class RecipesController < ApplicationController
       redirect to "/recipes/#{recipe.id}"
     end
 
+    recipe.recipe_ingredients.second.brand_name = params[:ingredients].second[:brand_name]
+    # AARGH!!! Even THAT ^^^ doesn't work, even with autosave!
+
     # Update the recipe's ingredients. But what if the user removes an ingredient?
-    recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
-      rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
-      rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
-      rec_ingr.ingredient.name = params[:ingredients][index][:name]
-    end
+    # recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
+    #   rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
+    #   rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
+    #   rec_ingr.ingredient.name = params[:ingredients][index][:name]
+    # end
     binding.pry
 
     recipe.save # That didn't work, even with autosave enabled on the recipe_ingredients.
