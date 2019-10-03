@@ -156,7 +156,7 @@ class RecipesController < ApplicationController
       redirect to "/recipes/#{recipe.id}"
     end
 
-     # Update the recipe's ingredients.
+     # Update the recipe's ingredients. All of this works because the recipe now accepts nested attributes for recipe_ingredients.
      recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
        rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
        rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
@@ -168,7 +168,17 @@ class RecipesController < ApplicationController
     
     # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form): No errors, and the recipe ingredients retain their names, but not their amounts or brands.
     # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
-    recipe.save
+    
+    # range_start = recipe.recipe_ingredients.size
+    # range_end = params[:ingredients].size - 1
+# 
+    # ingred = params[:ingredients].second
+    # ingredient = Ingredient.find_or_initialize_by(name: ingred[:name].downcase)
+    # recipe.ingredients << ingredient # Updates the recipe and ingredient too early!
+# 
+    # ingred2 = params[:ingredients].third
+    # ingredient3 = Ingredient.find_or_initialize_by(name: ingred[:name].downcase)
+
 
     binding.pry
     # params[:ingredients].each do |ingredient|
@@ -179,8 +189,7 @@ class RecipesController < ApplicationController
       # binding.pry
     # end
 
-    recipe.update(params[:recipe]) # This didn't save the ingredients, even with autosave enabled.
-    # The recipe variable itself got changed in that #each_with_index block, but the recipe in the database did NOT, even after #update.
+    recipe.update(params[:recipe]) # I don't need to save the recipe until this point.
 
     # binding.pry
 
@@ -194,6 +203,23 @@ class RecipesController < ApplicationController
   end
 
   delete '/recipes/:id' do
-    "You have successfully deleted the recipe!" # This (or something similar) could be a flash message.
-  end
+    if !logged_in? # Edge case
+      flash[:error] = "You must be logged in to delete this recipe."
+      redirect to "/users/login"
+    else
+      recipe = Recipe.find_by_id(params[:id])
+      
+      if !recipe # Edge case
+        flash[:error] = "This recipe does not exist."
+        redirect to "/recipes"
+      elsif recipe.user != current_user # Edge case ("Delete Recipe" button only shows up for the authorized user)
+        flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to delete this recipe."
+        redirect to "/recipes/#{recipe.id}"
+      else # The user is logged in, the recipe exists, and the user is authorized to delete it.
+        recipe.destroy
+        flash[:message] = "You have successfully deleted the recipe!"
+        redirect to "/recipes"
+      end # End of "if !recipe"
+    end # End of "if !logged_in?"
+  end # End of "delete '/recipes/:id'" route
 end # End of RecipesController

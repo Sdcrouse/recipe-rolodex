@@ -3,6 +3,8 @@
 
   <% if flash[:error] %>
     <p><%= flash[:error] %></p>
+  <% elsif flash[:message] %>
+    <p><%= flash[:message] %></p>
   <% end %>
 
   <p>
