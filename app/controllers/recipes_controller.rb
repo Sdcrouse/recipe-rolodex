@@ -156,18 +156,21 @@ class RecipesController < ApplicationController
       redirect to "/recipes/#{recipe.id}"
     end
 
-     # Update the recipe's ingredients. But what if the user removes an ingredient?
-     # That is a stretch goal.
+     # Update the recipe's ingredients.
      recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
        rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
        rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
        rec_ingr.ingredient.name = params[:ingredients][index][:name]
      end
-    # binding.pry
-
+    # But what if the user removes an ingredient?
+    # That is a stretch goal. When I implement it, the user should also be able to delete the first ingredient, for consistency (so remove the "required" keyword).
+    # I should also probably remove the "required" keywords from the "new recipe" and "edit recipe" forms, so that the corresponding validations and flash messages will be run.
+    
+    # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form): No errors, and the recipe ingredients retain their names, but not their amounts or brands.
+    # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
     recipe.save
 
-    #binding.pry
+    binding.pry
     # params[:ingredients].each do |ingredient|
       # ingred = recipe.ingredients.find_or_initialize_by(name: ingredient[:name].downcase)
       # That won't work if I want to change the ingredient name.

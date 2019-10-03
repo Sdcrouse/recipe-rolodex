@@ -9,8 +9,11 @@ class Recipe < ActiveRecord::Base
   # Two possible error messages are generated here:
     # If the recipe has no ingredients when it's saved, then AR generates my custom error message.
     # If the recipe has an ingredient that has NOT been saved, then AR generates the message, "Ingredients is invalid", without saying why.
-  
-  # I have added a custom error message below, that will be generated every time the second error message above is generated.
+    # UPDATE: Only the custom error message is generated now.
+
+  # I have added a custom error message below, that will be generated every time the user tries to create an ingredient without a name.
+  # Note that when the user creates only invalid ingredients (and the first ingredient does not have the "required" keyword),
+  # then the #ingredients_need_names... validation is triggered, but the #recipe_should_have_at_least_one_ingredient validation is NOT triggered.
   validate :ingredients_need_names_if_amount_or_brand_are_specified
 
   validates :name, presence: true
