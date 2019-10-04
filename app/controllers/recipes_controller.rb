@@ -50,8 +50,8 @@ class RecipesController < ApplicationController
         # I tried using recipe.recipe_ingredients.last.update, but that saved the recipe and (I think) everything associated with it.
         rec_ingr = recipe.recipe_ingredients.last
         rec_ingr.ingredient_amount = ingredient[:amount]
-        rec_ingr.brand_name = ingredient[:brand_name].capitalize
-        rec_ingr.ingredient = ingred
+        rec_ingr.brand_name = ingredient[:brand_name].capitalize # I may not want to capitalize, after all. "This Brand".capitalize returns "This brand"
+        rec_ingr.ingredient = ingred # Is this needed?
       end # End of #unless
     end # End of #each
     
@@ -148,27 +148,69 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
-    #binding.pry
-
     if recipe.user != current_user 
       # Another edge case. I got it to work by changing the session's user_id and resetting @logged_in_user to User.find_by_id(session[:user_id]).
       flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! You should not have gotten this far, since you are not authorized to edit this recipe."
       redirect to "/recipes/#{recipe.id}"
     end
 
-     # Update the recipe's ingredients. All of this works because the recipe now accepts nested attributes for recipe_ingredients.
-     recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
-       rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
-       rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
-       rec_ingr.ingredient.name = params[:ingredients][index][:name]
-     end
-    # But what if the user removes an ingredient?
+    params[:ingredients].each do |ingred| # Check for invalid ingredients.
+      if ingred[:name].blank? && !ingred[:amount].blank? || !ingred[:brand_name].blank?
+        flash[:error] = "An ingredient needs a name when it's given an amount and/or brand"
+        redirect to "/recipes/#{recipe.id}/edit"
+      end
+    end
+    
+    # Update the recipe's ingredients. All of this works because the recipe now accepts nested attributes for recipe_ingredients.
+    recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
+      rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
+      rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
+
+      ingredient_name = params[:ingredients][index][:name].downcase
+
+      if ingredient_name != rec_ingr.ingredient.name
+        # If the user changes the ingredient's name, find or create that ingredient, then store it as the recipe_ingredient's new ingredient.
+        rec_ingr.ingredient = Ingredient.find_or_create_by(name: ingredient_name)
+      end
+
+      #rec_ingr.ingredient.name = params[:ingredients][index][:name]
+    end
+    
+    # But what if the user removes an ingredient? ^^^
     # That is a stretch goal. When I implement it, the user should also be able to delete the first ingredient, for consistency (so remove the "required" keyword).
     # I should also probably remove the "required" keywords from the "new recipe" and "edit recipe" forms, so that the corresponding validations and flash messages will be run.
     
-    # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form): No errors, and the recipe ingredients retain their names, but not their amounts or brands.
+    ingredient_total = recipe.recipe_ingredients.size
+    # Note: It's better to count the recipe's recipe_ingredients than its ingredients, because this will avoid a SQL query.
+    # For the same reason, use #length or #size instead of #count.
+
+    # Create new ingredients specified by the user, from the remaining params that don't correspond to the recipe's original ingredients.
+    params[:ingredients][ingredient_total..-1].each do |ingred|
+      unless ingred[:amount].blank? && ingred[:brand_name].blank? && ingred[:name].blank?
+        recipe.ingredients << Ingredient.find_or_create_by(name: ingred[:name])
+        recipe.recipe_ingredients.last.ingredient_amount = ingred[:amount]
+        recipe.recipe_ingredients.last.brand_name = ingred[:brand_name].capitalize
+      end
+    end
+
+    # I think I shouldn't use #capitalize on the brand name.
+    
+    # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form).
+    # No errors, and the recipe gets new ingredients (duplicates with blank names) and recipe_ingredients (with blank amounts and brand names).
     # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
     
+    # Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
+
+
+    # ingred = params[:ingredients].first
+    # ingredient = Ingredient.find_or_create_by(name: ingred[:name].downcase) #Probably need a name validation here.
+    # recipe.ingredients << ingredient
+    # rec_ingr = recipe.recipe_ingredients.last
+    # rec_ingr.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name].capitalize)
+    recipe.update(params[:recipe]) # Doing this should simultaneously validate the recipe's params and the recipe_ingredients (both of which are now edge cases).
+
+
+
     # range_start = recipe.recipe_ingredients.size
     # range_end = params[:ingredients].size - 1
 # 
@@ -180,7 +222,7 @@ class RecipesController < ApplicationController
     # ingredient3 = Ingredient.find_or_initialize_by(name: ingred[:name].downcase)
 
 
-    binding.pry
+    #binding.pry
     # params[:ingredients].each do |ingredient|
       # ingred = recipe.ingredients.find_or_initialize_by(name: ingredient[:name].downcase)
       # That won't work if I want to change the ingredient name.
@@ -189,11 +231,11 @@ class RecipesController < ApplicationController
       # binding.pry
     # end
 
-    recipe.update(params[:recipe]) # I don't need to save the recipe until this point.
+    #recipe.update(params[:recipe]) # I don't need to save the recipe until this point.
 
     # binding.pry
 
-    if recipe.errors.full_messages.blank?
+    if recipe.errors.full_messages.blank? # This is an edge case, at this point.
       flash[:message] = "You have successfully edited the recipe!"
       redirect to "/recipes/#{recipe.id}"
     else
