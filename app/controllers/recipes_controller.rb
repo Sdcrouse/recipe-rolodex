@@ -117,28 +117,6 @@ class RecipesController < ApplicationController
   end # End of "get '/recipes/:id/edit'" route
 
   patch '/recipes/:id' do
-    # Right now:
-      # When creating a recipe, neither it nor its ingredients will be saved until the recipe is added to the user.
-      # The validations:
-        # None for the RecipeIngredient or Ingredient models
-        # The Recipe validates name, instructions, having at least one ingredient (edge case), and having ingredients with names and brands and/or amounts
-      # Blank ingredients (ingredients with no name, amount, or brand) are not saved, but they are not invalid either.
-      # The Ingredient model has a name; the RecipeIngredient model has an ingredient_amount and a brand_name.
-
-    # What I want to do:
-      # Update the recipe, but only under these edge cases:
-        # The user is logged in (CHECK!), and the user is the one who wrote the recipe (CHECK!).
-      # Save the recipe, but only if it has valid attributes (CHECK!), ingredients (CHECK!), and recipe_ingredients (CHECK!).
-      # Avoid saving ingredients and recipe_ingredients unless the ENTIRE recipe is valid.(CHECK!)
-      # Avoid saving ingredients that don't have names (but without triggering validation errors). (CHECK!)
-      # Avoid saving recipe_ingredients unless their corresponding ingredient has a name. (CHECK!)
-        # Trigger validation errors if the recipe_ingredients have brand_names and/or ingredient_amounts, but their ingredient has no name. (CHECK!)
-      # Create new, valid ingredients before saving the recipe (CHECK!).
-
-    # How do I do this? (Note: I already figured out one edge case, and how to update a recipe with everything except the ingredients and recipe_ingredients.)
-    # First, figure out how to update a recipe's ingredients, but without saving them. (CHECK!)
-    # REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe too early, then I will have to undo those changes if I encounter a validation error.
-
     if !logged_in? 
       # This is an edge case. I don't know why it won't work when I clear the session just before calling #logged_in? 
       # Update: I also have to set the session[:user_id] to nil; clearing the session won't work.
@@ -172,8 +150,6 @@ class RecipesController < ApplicationController
         # If the user changes the ingredient's name, find or create that ingredient, then store it as the recipe_ingredient's new ingredient.
         rec_ingr.ingredient = Ingredient.find_or_create_by(name: ingredient_name)
       end
-
-      #rec_ingr.ingredient.name = params[:ingredients][index][:name]
     end
     
     # But what if the user removes an ingredient? ^^^
