@@ -133,7 +133,7 @@ class RecipesController < ApplicationController
       # Avoid saving ingredients that don't have names (but without triggering validation errors). (CHECK!)
       # Avoid saving recipe_ingredients unless their corresponding ingredient has a name. (CHECK!)
         # Trigger validation errors if the recipe_ingredients have brand_names and/or ingredient_amounts, but their ingredient has no name. (CHECK!)
-      # Create new, valid ingredients before saving the recipe.
+      # Create new, valid ingredients before saving the recipe (CHECK!).
 
     # How do I do this? (Note: I already figured out one edge case, and how to update a recipe with everything except the ingredients and recipe_ingredients.)
     # First, figure out how to update a recipe's ingredients, but without saving them. (CHECK!)
@@ -155,7 +155,7 @@ class RecipesController < ApplicationController
     end
 
     params[:ingredients].each do |ingred| # Check for invalid ingredients.
-      if ingred[:name].blank? && !ingred[:amount].blank? || !ingred[:brand_name].blank?
+      if ingred[:name].blank? && (!ingred[:amount].blank? || !ingred[:brand_name].blank?) # I need those () because Ruby and/or ActiveRecord and/or Sinatra is PICKY!
         flash[:error] = "An ingredient needs a name when it's given an amount and/or brand"
         redirect to "/recipes/#{recipe.id}/edit"
       end
@@ -200,41 +200,10 @@ class RecipesController < ApplicationController
     # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
     
     # Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
+    # Yet another stretch goal: In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
 
-
-    # ingred = params[:ingredients].first
-    # ingredient = Ingredient.find_or_create_by(name: ingred[:name].downcase) #Probably need a name validation here.
-    # recipe.ingredients << ingredient
-    # rec_ingr = recipe.recipe_ingredients.last
-    # rec_ingr.update(ingredient_amount: ingredient[:amount], brand_name: ingredient[:brand_name].capitalize)
     recipe.update(params[:recipe]) # Doing this should simultaneously validate the recipe's params and the recipe_ingredients (both of which are now edge cases).
-
-
-
-    # range_start = recipe.recipe_ingredients.size
-    # range_end = params[:ingredients].size - 1
-# 
-    # ingred = params[:ingredients].second
-    # ingredient = Ingredient.find_or_initialize_by(name: ingred[:name].downcase)
-    # recipe.ingredients << ingredient # Updates the recipe and ingredient too early!
-# 
-    # ingred2 = params[:ingredients].third
-    # ingredient3 = Ingredient.find_or_initialize_by(name: ingred[:name].downcase)
-
-
-    #binding.pry
-    # params[:ingredients].each do |ingredient|
-      # ingred = recipe.ingredients.find_or_initialize_by(name: ingredient[:name].downcase)
-      # That won't work if I want to change the ingredient name.
-      # Also, I have no validations on the Ingredient model itself.
-      # Don't call #update on the ingredient; it shouldn't be saved until the recipe is updated.
-      # binding.pry
-    # end
-
-    #recipe.update(params[:recipe]) # I don't need to save the recipe until this point.
-
-    # binding.pry
-
+    
     if recipe.errors.full_messages.blank? # This is an edge case, at this point.
       flash[:message] = "You have successfully edited the recipe!"
       redirect to "/recipes/#{recipe.id}"

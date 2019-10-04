@@ -1,7 +1,10 @@
 <% if logged_in? %> <!-- This is an (unlikely) edge case. -->
   <h2>Edit your recipe here, Chef <%= current_user.username %>!</h2>
 
-  <% if !flash[:validations].blank? %>
+  <% if !flash[:error].blank? %>
+    <p><strong>Error:</strong></p>
+    <p><%= flash[:error] %></p>
+  <% elsif !flash[:validations].blank? %>
     <p><strong>Errors:</strong></p>
     <ol>
       <% flash[:validations].each do |validation_error| %>
