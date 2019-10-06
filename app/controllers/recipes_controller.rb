@@ -50,7 +50,7 @@ class RecipesController < ApplicationController
         # I tried using recipe.recipe_ingredients.last.update, but that saved the recipe and (I think) everything associated with it.
         rec_ingr = recipe.recipe_ingredients.last
         rec_ingr.ingredient_amount = ingredient[:amount]
-        rec_ingr.brand_name = ingredient[:brand_name].capitalize # I may not want to capitalize, after all. "This Brand".capitalize returns "This brand"
+        rec_ingr.brand_name = ingredient[:brand_name]
         rec_ingr.ingredient = ingred # Is this needed?
       end # End of #unless
     end # End of #each
@@ -142,7 +142,7 @@ class RecipesController < ApplicationController
     # Update the recipe's ingredients. All of this works because the recipe now accepts nested attributes for recipe_ingredients.
     recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
       rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
-      rec_ingr.brand_name = params[:ingredients][index][:brand_name].capitalize
+      rec_ingr.brand_name = params[:ingredients][index][:brand_name]
 
       ingredient_name = params[:ingredients][index][:name].downcase
 
@@ -165,11 +165,9 @@ class RecipesController < ApplicationController
       unless ingred[:amount].blank? && ingred[:brand_name].blank? && ingred[:name].blank?
         recipe.ingredients << Ingredient.find_or_create_by(name: ingred[:name])
         recipe.recipe_ingredients.last.ingredient_amount = ingred[:amount]
-        recipe.recipe_ingredients.last.brand_name = ingred[:brand_name].capitalize
+        recipe.recipe_ingredients.last.brand_name = ingred[:brand_name]
       end
     end
-
-    # I think I shouldn't use #capitalize on the brand name.
     
     # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form).
     # No errors, and the recipe gets new ingredients (duplicates with blank names) and recipe_ingredients (with blank amounts and brand names).

@@ -35,18 +35,13 @@
 
 <h3>Ingredients:</h3>
 <ul>
-  <% @recipe.ingredients.each do |ingredient| %>
-    <li>
-      <!-- I am pretty sure that this code uses the least number of database queries (especially to the recipe_ingredients table). -->
-      <!-- There may be another way to do this, but I do not (yet) know what it is. -->
-
-      <% recip_ingred = @recipe_ingredients.detect {|recip_ingred| recip_ingred.ingredient == ingredient} %>
-      
+  <% @recipe.recipe_ingredients.each do |recip_ingred| %>
+    <li>      
       <%= recip_ingred.ingredient_amount unless recip_ingred.ingredient_amount.blank? %>
       <%= recip_ingred.brand_name unless recip_ingred.brand_name.blank? %>
-      <%= ingredient.name %>
+      <%= recip_ingred.ingredient.name %>
     </li>
-  <% end %> <!-- end of @recipe.ingredients iterator -->
+  <% end %> <!-- end of @recipe.recipe_ingredients iterator -->
 
   <% unless @recipe.additional_ingredients.blank? %>
     <% @recipe.additional_ingredients.split(", ").each do |ingredient| %>
