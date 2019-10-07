@@ -18,29 +18,27 @@
 
   <% if @user == current_user %>
     <p>
-      <ul>
-        <li>Username: <%= @user.username %></li>
-        <li>E-mail: <%= @user.email %></li>
-      </ul>
+      Username: <%= @user.username %><br />
+      E-mail: <%= @user.email %>
     </p>
   <% end %>
 
   <p>
-    <ul>
-      <% if @user == current_user %>
-        Your recipes:
-      <% else %>
-        Chef <%= @user.username %>'s recipes:
-      <% end %>
-
-      <% if @user.recipes.empty? %>
-        No recipes yet
-      <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
-        <% @user.recipes.each do |recipe| %>
-          <li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li>
+    <% if @user == current_user %>
+    <strong>Your recipes:</strong>
+    <% else %>
+    <strong>Recipes:</strong>
+    <% end %>
+  
+    <% if @user.recipes.empty? %>
+      <strong>No recipes yet</strong>
+    <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
+      <ol>
+        <% @user.recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
+          <p><li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li></p>
         <% end %>
-      <% end %>
-    </ul>
+      </ol>
+    <% end %>
   </p>
 <% else %> <!-- This is an edge case. -->
   <h2>Oops! You are not signed in. <a href="/users/login">Click here to log in.</a></h2>
