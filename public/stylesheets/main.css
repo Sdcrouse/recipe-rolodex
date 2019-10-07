@@ -1,7 +1,7 @@
 @media screen {
   /* --- Reset Styles --- */
   * {
-    list-style: none;
+    /* list-style: none; */
     margin: 0;
     padding: 0;
   }
@@ -11,7 +11,7 @@
     width: 100%;
   }
 
-  /* --- Welcome Page Styles --- */
+  /* --- Recipe Rolodex Styles --- */
   body {
     background-color: lightblue;
     color: #333;
@@ -49,6 +49,26 @@
 
   p {
     margin-bottom: 18px;
+  }
+
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-top: 1em;
+    margin-bottom: 1 em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+  }
+
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
   }
 
   .main {
