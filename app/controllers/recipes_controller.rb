@@ -1,14 +1,10 @@
 class RecipesController < ApplicationController
-  # Don't forget to use Rack::MethodOverride in the config.ru file. I may need to require it here as well.
-
   get '/recipes' do
     if logged_in?
       @recipes = Recipe.all
       erb :"recipes/index"
     else
-      flash[:message] = "You must be logged in to view the recipes." unless !flash[:error].blank?
-      # Other routes with error messages of their own redirect here, so the #unless statement above is needed.
-      # There may be a bug that causes that flash message to not show up, but I haven't been able to recreate it.
+      flash[:message] = "You must be logged in to view the recipes."
       redirect to "/users/login"
     end
   end
