@@ -70,10 +70,11 @@ class UsersController < ApplicationController
     else
       if !logged_in?
         flash[:error] = "You must be logged in to see this chef's profile."
+        redirect to "/users/login"
       else # The current_user is logged in, but @user does not exist.
         flash[:error] = "It looks like this chef does not exist."
-      end 
-      redirect to "/"
+        redirect to "/" # Change this to "/users" later on (stretch goal).
+      end
     end
   end
 
