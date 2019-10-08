@@ -2,10 +2,10 @@
 
 <% if !flash[:error].blank? %>
   <p><%= flash[:error] %></p>
-<% elsif !flash[:logout].blank? %>
-  <p><%= flash[:logout] %></p>
-<% elsif !flash[:message].blank? %>
-  <p><%= flash[:message] %></p>
+<% elsif !flash[:success].blank? %>
+  <p><%= flash[:success] %></p>
+<% else %> <!-- flash[:login] should never be blank. -->
+  <p><%= flash[:login] %></p>
 <% end %>
 
 <form method="post" action="/users/login">
