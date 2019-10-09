@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     if !logged_in?
       erb :"users/signup"
     else
-      flash[:login] = "You don't need to sign up, Chef #{current_user.username}. You're already logged in!"
+      flash[:error] = "You don't need to sign up, Chef #{current_user.username}. You're already logged in!"
       redirect to "/users/#{current_user.username}"
     end
   end
@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
       # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
 
-      flash[:signup] = "You have successfully signed up!"
+      flash[:success] = "You have successfully signed up!"
       redirect to "/users/#{new_user.username}"
     else
       flash[:validations] = new_user.errors.full_messages
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
       flash[:login] = "You are not logged in."
       erb :"users/login"
     else
-      flash[:login] = "Silly chef, you're ALREADY logged in!"
+      flash[:error] = "Silly chef, you're ALREADY logged in!"
       redirect to "/users/#{current_user.username}"
     end
   end
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      flash[:login] = "You have successfully logged in!"
+      flash[:success] = "You have successfully logged in!"
       redirect to "/users/#{user.username}"
     else
       if user.nil?

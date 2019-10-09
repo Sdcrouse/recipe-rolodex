@@ -2,11 +2,13 @@
   <% if @user == current_user %>
     <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
     
-    <% if !flash[:signup].blank? %>
-      <p><%= flash[:signup] %></p>
-    <% elsif !flash[:login].blank? %>
-      <p><%= flash[:login] %></p>
+    <% if !flash[:error].blank? %>
+      <p><%= flash[:error] %></p>
+    <% elsif !flash[:success].blank? %>
+      <p><%= flash[:success] %></p>
     <% end %>
+
+    <!-- Note: I still need to test these changes ^^^ -->
 
     <!-- Be careful with this; the first time I started this up and logged in, it said that I was NOT logged in. -->
     <!-- Somehow, the flash[:login] message got carried over from the "get '/'" route. -->
