@@ -566,3 +566,44 @@ How do I do this? (Note: I already figured out one edge case, and how to update 
 First, figure out how to update a recipe's ingredients, but without saving them. (CHECK!)
 REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe too early, then I will have to undo those changes if I encounter a validation error.
 **End of old comments and ideas from the "patch '/recipes/:id'" route:**
+
+**Flash messages:**
+  flash[:error] = "You must be logged in to view the recipes."
+  flash[:error] = "Sorry, chef! You must be logged in before you can create a new recipe."
+  flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
+  flash[:error] = "You must be logged in before you can view this recipe."
+  flash[:error] = "Sorry, chef! That recipe doesn't exist."
+  flash[:error] = "Sorry, Chef #{current_user.username}! The recipe that you are trying to edit does not exist."
+  flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to edit this recipe."
+  flash[:error] = "Sorry, Chef! You must be logged in to edit this recipe."
+  flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while editing a recipe."
+  flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! You should not have gotten this far, since you are not authorized to edit this recipe."
+  flash[:error] = "An ingredient needs a name when it's given an amount and/or brand"
+  flash[:error] = "You must be logged in to delete this recipe."
+  flash[:error] = "This recipe does not exist."
+  flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to delete this recipe."
+  flash[:error] = "This chef does not exist."
+  flash[:error] = "Invalid password. Try again."
+  flash[:error] = "You must be logged in to see this chef's profile."
+  flash[:error] = "It looks like this chef does not exist."
+  flash[:error] = "You don't need to sign up, Chef #{current_user.username}. You're already logged in!"
+  flash[:error] = "Silly chef, you're ALREADY logged in!"
+  flash[:error] = "Sorry, chef! You can't log out unless you're logged in."
+
+  flash[:validations] = recipe.errors.full_messages
+  flash[:validations] = new_user.errors.full_messages
+
+  flash[:login] = "You are not logged in."
+  flash[:login] = "You are logged in."
+
+  flash[:success] = "You have successfully logged in!"
+  flash[:success] = "You have successfully signed up!"
+  flash[:success] = "You have successfully logged out!"
+  flash[:success] = "You have successfully edited the recipe!"
+  flash[:success] = "You have successfully deleted the recipe!"
+
+**Stretch goals:**
+Allow users to delete their accounts.
+Enable password confirmation when signing up.
+Change '/recipes/:id' route to '/recipes/:name/:id'.
+Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank.
