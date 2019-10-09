@@ -175,7 +175,7 @@ class RecipesController < ApplicationController
     recipe.update(params[:recipe]) # Doing this should simultaneously validate the recipe's params and the recipe_ingredients (both of which are now edge cases).
     
     if recipe.errors.full_messages.blank? # This is an edge case, at this point.
-      flash[:message] = "You have successfully edited the recipe!"
+      flash[:success] = "You have successfully edited the recipe!"
       redirect to "/recipes/#{recipe.id}"
     else
       flash[:validations] = recipe.errors.full_messages
@@ -198,7 +198,7 @@ class RecipesController < ApplicationController
         redirect to "/recipes/#{recipe.id}"
       else # The user is logged in, the recipe exists, and the user is authorized to delete it.
         recipe.destroy
-        flash[:message] = "You have successfully deleted the recipe!"
+        flash[:success] = "You have successfully deleted the recipe!"
         redirect to "/recipes"
       end # End of "if !recipe"
     end # End of "if !logged_in?"
