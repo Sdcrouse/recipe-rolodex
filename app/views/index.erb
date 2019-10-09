@@ -2,8 +2,6 @@
 
 <% if !flash[:error].blank? %>
   <p><%= flash[:error] %></p>
-<% elsif !flash[:logout].blank? %>
-  <p><%= flash[:logout] %></p>
 <% elsif !flash[:login].blank? %>
   <p><%= flash[:login] %></p>
 <% end %>
