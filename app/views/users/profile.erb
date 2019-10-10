@@ -3,9 +3,9 @@
     <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
     
     <% if !flash[:error].blank? %>
-      <p><%= flash[:error] %></p>
+      <p class="error-message"><%= flash[:error] %></p>
     <% elsif !flash[:success].blank? %>
-      <p><%= flash[:success] %></p>
+      <p class="success-message"><%= flash[:success] %></p>
     <% end %>
 
     <!-- Note: I still need to test these changes ^^^ -->

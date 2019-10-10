@@ -2,13 +2,13 @@
   <h2>Edit your recipe here, Chef <%= current_user.username %>!</h2>
 
   <% if !flash[:error].blank? %>
-    <p><strong>Error:</strong></p>
-    <p><%= flash[:error] %></p>
+    <p class="error-message"><strong>Error:</strong></p>
+    <p class="error-message"><%= flash[:error] %></p>
   <% elsif !flash[:validations].blank? %>
-    <p><strong>Errors:</strong></p>
+    <p class="error-message"><strong>Errors:</strong></p>
     <ol>
       <% flash[:validations].each do |validation_error| %>
-        <li><%= validation_error %></li>
+        <li class="error-message"><%= validation_error %></li>
       <% end %>
     </ol>
     <br />

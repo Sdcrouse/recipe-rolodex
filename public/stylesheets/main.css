@@ -101,6 +101,18 @@
     margin-top: 20px;
     padding-top: 20px;
   }
+
+  .login-message {
+    color: blue;
+  }
+
+  .error-message {
+    color: red;
+  }
+
+  .success-message {
+    color: green;
+  }
 }
 
 @media screen and (max-width: 600px) {

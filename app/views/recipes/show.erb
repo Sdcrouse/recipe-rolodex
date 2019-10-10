@@ -1,9 +1,9 @@
 <h2><%= @recipe.name %></h2>
 
 <% if !flash[:error].blank? %>
-  <p><%= flash[:error] %></p>
+  <p class="error-message"><%= flash[:error] %></p>
 <% elsif !flash[:success].blank? %>
-  <p><%= flash[:success] %></p>
+  <p class="success-message"><%= flash[:success] %></p>
 <% end %>
 
 <% if @recipe.user == current_user %>
