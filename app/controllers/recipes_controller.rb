@@ -47,7 +47,7 @@ class RecipesController < ApplicationController
         rec_ingr = recipe.recipe_ingredients.last
         rec_ingr.ingredient_amount = ingredient[:amount]
         rec_ingr.brand_name = ingredient[:brand_name]
-        rec_ingr.ingredient = ingred # Is this needed?
+        rec_ingr.ingredient = ingred # I think this is needed because the recipe hasn't been saved yet.
       end # End of #unless
     end # End of #each
     
@@ -56,9 +56,10 @@ class RecipesController < ApplicationController
       # Note that I can also call #new_record? to see whether the recipe has ever been saved.
       # #persisted? checks to see that the recipe has been saved/persisted AND not destroyed.
       
+      flash[:success] = "You have successfully created the recipe!"
       redirect to "/recipes/#{recipe.id}"
     else
-      flash[:validations] = recipe.errors.full_messages
+      flash[:validations] = recipe.errors.full_messages # This is likely an edge case, for the moment.
       redirect to "/recipes/new" # I could have done this earlier, but I wanted to get ALL of the error messages, not just one.
     end
   end # End of " post '/recipes' " route
