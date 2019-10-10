@@ -602,8 +602,13 @@ REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe
   flash[:success] = "You have successfully edited the recipe!"
   flash[:success] = "You have successfully deleted the recipe!"
 
-**Stretch goals:**
+**Stretch goals and ideas:**
 Allow users to delete their accounts.
 Enable password confirmation when signing up.
 Change '/recipes/:id' route to '/recipes/:name/:id'.
 Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank.
+Put the New Recipe button next to the "No recipes yet" message if the user hasn't made a recipe yet.
+Maybe change "Your recipes: No recipes yet" to "No recipes yet".
+Make a '/users' route.
+In the "get '/users/:username'" route, redirect users to '/users' if they are logged in, but the chef doesn't exist.
+Add a red asterisk * next to required fields, and have a red message telling users about that.
