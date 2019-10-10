@@ -1,9 +1,13 @@
 <h2>Ready to be a chef? Then create a new account here!</h2>
 
 <% if !flash[:validations].blank? %>
-  <% flash[:validations].each do |validation_error| %>
-    <p><%= validation_error %></p>
-  <% end %>
+  <p class="error-message"><strong>Errors:</strong></p>
+  <ol>
+    <% flash[:validations].each do |validation_error| %>
+      <li class="error-message"><%= validation_error %></li>
+    <% end %>
+  </ol>
+  <br />
 <% end %>
 
 <form method="post" action="/users">
