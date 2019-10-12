@@ -602,7 +602,109 @@ REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe
   flash[:success] = "You have successfully edited the recipe!"
   flash[:success] = "You have successfully deleted the recipe!"
 
+
+**Other images I can use:**
+https://www.dreamstime.com/colori-public-domain-image-free-99545753
+https://www.dreamstime.com/dish-food-cuisine-vegetarian-public-domain-image-free-93563240
+https://www.dreamstime.com/lemon-orange-stock-photography-image-free-2297242
+https://www.dreamstime.com/spices-prepare-tasty-food-stock-images-image-free-2848944
+https://www.dreamstime.com/high-angle-view-fruit-bowl-table-public-domain-image-free-84911861
+https://www.dreamstime.com/sliced-lemon-blue-chopping-board-public-domain-image-free-112809490
+https://www.dreamstime.com/fresh-garden-vegetables-stock-images-image-free-6361024
+https://www.dreamstime.com/pasta-ingredients-free-stock-photography-image-free-5232637
+
+https://www.dreamstime.com/strawberry-duet-2-stock-photos-image-free-86213 **(Third choice)**
+https://www.dreamstime.com/abstract-background-blueberries-close-up-public-domain-image-free-101659754 **(This one ^^^ came as a close second. The corresponding CSS is shown below.)**
+```
+body {
+    background-image: url("../images/dreamstime_blueberries_background.jpg"); /* You'll have to rename the image. */
+    background-color: rgb(79, 114, 162);
+    background-size: 100% 100%;
+    color: rgb(51, 51, 51);
+    font-family: sans-serif;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    background-repeat: no-repeat;
+}
+
+.wrapper {
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    max-width: 960px;
+    width: 85%;
+    background: rgb(255, 255, 255);
+    margin: 16px 0px 16px 30%;
+    padding: 2.25%;
+}
+
+```
+
+The winner (from the choices above): https://www.dreamstime.com/raw-vegetables-free-stock-photography-image-free-18675657
+
+**Better yet, try these guys: https://www.pexels.com/search/food/**
+This is a good contender: https://www.pexels.com/photo/basil-delicious-food-ingredients-459469/
+Corresponding CSS:
+```
+body {
+    background-image: url(../images/pexels_delicious_food_ingredients.jpg);
+    background-color: darkred;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: #333;
+    font-family: Sans-Serif;
+    line-height: 18px;
+}
+
+.wrapper {
+    background: #fff;
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
+    margin: 16px auto;
+    max-width: 960px;
+    padding: 2.25%;
+    width: 85%;
+}
+```
+
+And this: https://www.pexels.com/photo/carrots-food-fresh-freshness-616404/
+Corresponding CSS:
+```
+body {
+    background-image: url("../images/carrots-food-fresh-616404.jpg");
+    background-color: #f13b21;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: #333;
+    font-family: Sans-Serif;
+    line-height: 18px;
+    /* display: flex; */ 
+    /* align-items: center; */
+    /* justify-content: center; */
+    /* If I uncomment some of these, some of the webpages' content gets cut off. */
+  }
+
+  .wrapper {
+    background: #fff;
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.3);
+    box-shadow: 0 0 10px rgba(0,0,0,.3);
+    margin: 16px auto;
+    max-width: 960px;
+    padding: 2.25%; /* 18px / 800px */
+    width: 85%;
+  }
+  ```
+
+**And this (the winner; no adjustment of wrapper content needed):** https://www.pexels.com/photo/five-white-plates-with-different-kinds-of-dishes-54455/
+
+**Important note: Sometimes, changes to CSS won't show up in Chrome, possibly after a Windows update. They will, however, show up in other browsers. To fix this, clear Chrome's cache.**
+**Another solution: Do a hard refresh.**
+
 **Stretch goals and ideas:**
+Use CSS to change the links into buttons and/or tabs.
+Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
 Enable password confirmation when signing up.
 Change '/recipes/:id' route to '/recipes/:name/:id'.
@@ -611,4 +713,5 @@ Put the New Recipe button next to the "No recipes yet" message if the user hasn'
 Maybe change "Your recipes: No recipes yet" to "No recipes yet".
 Make a '/users' route.
 In the "get '/users/:username'" route, redirect users to '/users' if they are logged in, but the chef doesn't exist.
-Add a red asterisk * next to required fields, and have a red message telling users about that.
+Delete the development.sqlite file (and possibly test.sqlite), then run rake db:migrate. If that works (causing the database entries to be reset with the seeds alone), then add that to the README as an option. I may instead have to reset the databases in Tux.
+Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md
