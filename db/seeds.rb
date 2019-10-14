@@ -1,12 +1,14 @@
-#-------- No recipes for these guys yet -----------
 User.create(username: "roadrunner", email:"vroom@acme.com", password: "meepmeep!")
 User.create(username: "musicman", email: "music.meister@dc.com", password: "do-re-mi")
+
+#-------- No recipes for these guys yet -----------
 User.create(username: "Sam_I_Am", email: "seussreader@books.com", password: "catinthehat")
 User.create(username: "valid_User_99", password: "validpassword", email: "valid.email@yahoo.com")
 
 #-------- Gordon Ramsay's recipe(s) -----------------
 ramsay = User.create(username: "gordon_ramsay", email: "gramsay@topchef.uk", password: "glasgowchef")
 
+# Idiot Sandwich:
 idiot_sandwich = Recipe.new(
   name: "Idiot Sandwich", 
   description: "My least favorite sandwich in the world", 
@@ -75,6 +77,7 @@ bilbo_baggins.recipes << shire_idiot_sandwich
 #-------- Egghead's recipe(s) -------------------------
 egghead = User.create(username: "Egghead", email: "eggcitingvillain@scrambled.com", password: "Eggcellent!")
 
+# Smokey Scrambled Eggs:
 smokey_eggs = Recipe.new(
   name: "Smokey Scrambled Eggs",
   description: "A great kind of scrambled eggs. You get the smokey flavor of the Tabasco Sauce without the heat!",
@@ -95,6 +98,7 @@ smokey_eggs_ingredients.each do |ingred|
   smokey_eggs.recipe_ingredients.last.update(ingredient_amount: ingred[:amount], brand_name: ingred[:brand])
 end
 
+# Idiot Sandwich:
 dangerous_sandwich = Recipe.new(
   name: "Idiot Sandwich",
   description: "DO NOT MAKE THIS!!! This is an example of what not to do!",
