@@ -120,6 +120,11 @@
   .success-message {
     color: green;
   }
+
+  .required {
+    display: inline;
+    color: red;
+  }
 }
 
 @media screen and (max-width: 600px) {
