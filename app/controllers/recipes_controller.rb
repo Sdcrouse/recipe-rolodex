@@ -43,6 +43,7 @@ class RecipesController < ApplicationController
         # This also instantiates a new recipe_ingredient, but does not save it.
         
         # My goal is to update the corresponding recipe_ingredient, but I don't want to save the recipe (or anything else) until later.
+        # This should (in theory) trigger the right validations at the right time.
         # I tried using recipe.recipe_ingredients.last.update, but that saved the recipe and (I think) everything associated with it.
         rec_ingr = recipe.recipe_ingredients.last
         rec_ingr.ingredient_amount = ingredient[:amount]
@@ -72,12 +73,13 @@ class RecipesController < ApplicationController
       erb :'recipes/show'
     else
       # Redirect, if there is no recipe and/or the user is not logged in.
-      # Later, I could make a separate error page.
       # I also accounted for this in the recipes/show.erb file.
+      # Later, I could make a separate error page.
       
       if !logged_in?
         # Odd; I encountered a bug that used the '/recipes/new' flash message instead. But how?
         # I don't know how to recreate it, but evidently the former flash[:error] message wasn't overwritten.
+        # Update: This may have occurred before I changed the validations in the Recipe model; it likely won't happen now.
 
         flash[:error] = "You must be logged in before you can view this recipe."
         redirect to "/users/login"
@@ -130,13 +132,15 @@ class RecipesController < ApplicationController
     end
 
     params[:ingredients].each do |ingred| # Check for invalid ingredients.
-      if ingred[:name].blank? && (!ingred[:amount].blank? || !ingred[:brand_name].blank?) # I need those () because Ruby and/or ActiveRecord and/or Sinatra is PICKY!
+      if ingred[:name].blank? && (!ingred[:amount].blank? || !ingred[:brand_name].blank?) 
+        # I need those ()'s above because Ruby and/or ActiveRecord and/or Sinatra is PICKY with the order of logical operators!
+
         flash[:error] = "An ingredient needs a name when it's given an amount and/or brand"
         redirect to "/recipes/#{recipe.id}/edit"
       end
     end
     
-    # Update the recipe's ingredients. All of this works because the recipe now accepts nested attributes for recipe_ingredients.
+    # Updates the recipe's ingredients. All of this works because the recipe accepts nested attributes for recipe_ingredients.
     recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
       rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
       rec_ingr.brand_name = params[:ingredients][index][:brand_name]

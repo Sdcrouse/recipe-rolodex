@@ -8,8 +8,6 @@
       <p class="success-message"><%= flash[:success] %></p>
     <% end %>
 
-    <!-- Note: I still need to test these changes ^^^ -->
-
     <!-- Be careful with this; the first time I started this up and logged in, it said that I was NOT logged in. -->
     <!-- Somehow, the flash[:login] message got carried over from the "get '/'" route. -->
     <!-- That may have been an edge case, since it worked fine after I logged out and signed in as another user. -->
