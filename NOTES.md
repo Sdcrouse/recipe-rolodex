@@ -706,12 +706,91 @@ body {
 Use CSS to change the links into buttons and/or tabs.
 Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
-Enable password confirmation when signing up.
+Enable password confirmation when signing up. See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html
 Change '/recipes/:id' route to '/recipes/:name/:id'.
-Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank.
+Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank;
+in that case, I should also let the user delete the first ingredient, so I need to remove a 'required' keyword in the edit form.
+If I want to run other flash messages (so that they're no longer just edge cases), I should remove all of the 'required' keywords from the forms.
+Change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
+In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc).
 Put the New Recipe button next to the "No recipes yet" message if the user hasn't made a recipe yet.
 Maybe change "Your recipes: No recipes yet" to "No recipes yet".
-Make a '/users' route.
+Make a '/users' route and a users/index.erb page.
 In the "get '/users/:username'" route, redirect users to '/users' if they are logged in, but the chef doesn't exist.
 Delete the development.sqlite file (and possibly test.sqlite), then run rake db:migrate. If that works (causing the database entries to be reset with the seeds alone), then add that to the README as an option. I may instead have to reset the databases in Tux.
 Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md
+Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
+Maybe make a separate page to display errors, similar to a 404 page.
+
+# Ideas from Ingredient model:
+ Save this for later (I might make an Amount model with quantity and units and seed the DB)
+ UNITS_LIST = {
+   :us => ["cup", "cups", "fl oz", "gal", "lb", "oz", "pt", "qt", "tbsp", "tsp"],
+   :si => ["g", "kg", "kL", "L", "mg", "mL"],
+   :other => ["dash", "dollop", "dollops", "drop", "drops", "handful", "handfuls", "piece", "pieces", pinch", "scoop", "scoops", "slice", "slices"]
+ }
+ Note: When the user chooses a unit from the :other hash, that unit should have the word "of" after it n the view.
+ That, or just have "of" after EVERY unit.
+ def self.units_list # This should protect @@units_list and its arrays of units from unwanted changes.
+   Hash.new.tap do |hash|
+     UNITS_LIST.each do |unit_system, units|
+       hash[unit_system] = units.freeze
+     end
+   end.freeze
+ end
+ ---------------- New Features --------------------
+ I want the user to be able to write their own unit and save it into their list of units (and maybe make t available to others).
+ Is it possible for any changes to @@units_list to be saved into the ingredients database?
+
+ @@units_list = {
+   :us => ["cup", "fl oz", "gal", "lb", "oz", "pt", "qt", "tbsp", "tsp"],
+   :si => ["L", "g", "kL", "kg", "mL", "mg"],
+   :other => ["dash", "drop", "drops", "handful", "handfuls", "piece", "pieces", "pinch"]
+ }
+ 
+ def self.units_list # This should protect @@units_list from unwanted changes.
+   @@units_list.dup.freeze
+ end
+ 
+ def self.add_unit_to_list(unit) # This is intended to let users SAFELY add their own units to @units_list.
+   unless already_in_list?(unit)
+     units_list[:other] << unit
+     units_list[:other].sort! # Sort @@units_list[:other] alphabetically after adding the unit.
+   end
+ end
+ 
+ def self.already_in_list?(unit) # Is the unit in @@units_list?
+   units_list.detect do |unit_system, units|
+     units.include?(unit)
+   end
+ end
+# End of ideas from Ingredient model
+
+# Logout idea from UsersController:
+Later on, I want to render a logout.erb page that confirms the user's choice to log out.
+That would require a get '/users/:username/logout' route (and I would need to update therresponding <a> on the layout page).
+If they say "No", then redirect them to their profile page.
+This will be easier to implement (I think), once the login and logout links are only shown when the user is respectively logged out or in.
+
+get '/users/:username/logout' do
+  @user = User.find_by(name: params[:username])
+  erb :"users/logout"
+end
+
+post '/users/logout' do
+  flash[:success] = "You have successfully logged out!"
+end
+# End of logout idea from UsersController
+
+# Ideas for additional links in the layout file:
+<!-- <nav>
+  <a>About</a> <!-- Not sure about this one.
+  <a>Users</a> <!-- Not sure about this, either. It should only be shown when users are logged in.
+  <a>Search Recipes</a> <!-- Again, only show this when users are logged in. This is a feature for later.
+        
+  <!-- It may be best to put the Recipes, Search Recipes, and New Recipe links in one drop-down list.
+</nav> -->
+
+# Alternative idea from the recipes/new.erb file:
+<!-- I could do this, but then I would lose the URL validation: -->
+<!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
