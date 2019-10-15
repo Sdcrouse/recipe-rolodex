@@ -10,17 +10,23 @@
   <br />
 <% end %>
 
+<div>
+  <small>
+    <div class="required">*</div> Required field
+  </small>
+</div>
+
 <form method="post" action="/users">
   <p>
-    <label for="username">Username: </label>
+    <label for="username"><div class="required">*</div> Username: </label>
     <input type="text" id="username" name="username" required />
   </p>
   <p>
-    <label for="email">E-mail: </label>
+    <label for="email"><div class="required">*</div> E-mail: </label>
     <input type="email" id="email" name="email" required />
   </p>
   <p>
-    <label for="password">Password: </label>
+    <label for="password"><div class="required">*</div> Password: </label>
     <input type="password" id="password" name="password" required />
   </p>
   <input type="submit" id="submit" value="Create User" />
