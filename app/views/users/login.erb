@@ -1,11 +1,11 @@
 <h2>Welcome back, Chef! Please log in here.</h2>
 
 <% if !flash[:error].blank? %>
-<p class="error-message"><%= flash[:error] %></p>
+  <p class="error-message"><%= flash[:error] %></p>
 <% elsif !flash[:success].blank? %>
-<p class="success-message"><%= flash[:success] %></p>
+  <p class="success-message"><%= flash[:success] %></p>
 <% else %> <!-- flash[:login] should never be blank. -->
-<p class="login-message"><%= flash[:login] %></p>
+  <p class="login-message"><%= flash[:login] %></p>
 <% end %>
 
 <div>
