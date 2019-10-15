@@ -159,7 +159,6 @@ If they don't provide a Name, then address them by username.
 Caveat: This may confuse Users: name vs. username
 Maybe label the field something like "Name you want to be called by". New feature to try out later.
 
-
 Example inputs and params hash:
 
 ```
@@ -484,7 +483,7 @@ Use #persisted? to check whether an object has been saved AND not destroyed.
 
 **What I ought to do (to avoid confusion) is to display the right errors in the right places.**
 
-## For future reference, use #find_or_initialize_by on the Ingredient model, not recipe.ingredients.
+**For future reference, use #find_or_initialize_by on the Ingredient model, not recipe.ingredients.**
 Then, add that ingredient (<<) to recipe.ingredients. 
 Otherwise, #find_or_initialize_by will search through recipe.ingredients (through the recipe_ingredients JOIN table) for an existing ingredient that belongs to the recipe. 
 We want to search the ingredients table instead.
@@ -702,7 +701,7 @@ body {
 **Important note: Sometimes, changes to CSS won't show up in Chrome, possibly after a Windows update. They will, however, show up in other browsers. To fix this, clear Chrome's cache.**
 **Another solution: Do a hard refresh.**
 
-# Stretch goals and ideas:
+## Stretch goals and ideas:
 
 **Bug to fix:** It is currently possible for users to add multiple ingredients with the same name to a recipe. So, a recipe's ingredients can look like this:
 ```
@@ -718,6 +717,7 @@ I should do a couple of things:
 2. Prevent users from adding multiple ingredients with the same name, but ONLY if the amount, brand, and type/variety are blank; I'm iffy on whether to allow multiple ingredients with the same name, but different amounts.
 **End of bug to fix**
 
+**Note:** There are other stretch goals and ideas, starting at around line 104 or so; I should move them here.
 Use CSS to change the links into buttons and/or tabs.
 Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
@@ -733,12 +733,12 @@ Maybe change "Your recipes: No recipes yet" to "No recipes yet".
 Make a '/users' route and a users/index.erb page.
 In the "get '/users/:username'" route, redirect users to '/users' if they are logged in, but the chef doesn't exist.
 Delete the development.sqlite file (and possibly test.sqlite), then run rake db:migrate. If that works (causing the database entries to be reset with the seeds alone), then add that to the README as an option. I may instead have to reset the databases in Tux.
-Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md
+Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md, and separate them into the appropriate sections (past versions, problems/solutions, etc).
 Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
 Maybe make a separate page to display errors, similar to a 404 page.
 Put each error message next to the corresponding field/value.
 
-# Ideas from Ingredient model:
+## Ideas from Ingredient model:
  Save this for later (I might make an Amount model with quantity and units and seed the DB)
  UNITS_LIST = {
    :us => ["cup", "cups", "fl oz", "gal", "lb", "oz", "pt", "qt", "tbsp", "tsp"],
@@ -780,9 +780,9 @@ Put each error message next to the corresponding field/value.
      units.include?(unit)
    end
  end
-# End of ideas from Ingredient model
+## End of ideas from Ingredient model
 
-# Logout idea from UsersController:
+## Logout idea from UsersController:
 Later on, I want to render a logout.erb page that confirms the user's choice to log out.
 That would require a get '/users/:username/logout' route (and I would need to update therresponding <a> on the layout page).
 If they say "No", then redirect them to their profile page.
@@ -796,9 +796,10 @@ end
 post '/users/logout' do
   flash[:success] = "You have successfully logged out!"
 end
-# End of logout idea from UsersController
+## End of logout idea from UsersController
 
-# Ideas for additional links in the layout file:
+## Ideas for additional links in the layout file:
+```
 <!-- <nav>
   <a>About</a> <!-- Not sure about this one.
   <a>Users</a> <!-- Not sure about this, either. It should only be shown when users are logged in.
@@ -806,7 +807,10 @@ end
         
   <!-- It may be best to put the Recipes, Search Recipes, and New Recipe links in one drop-down list.
 </nav> -->
+```
 
-# Alternative idea from the recipes/new.erb file:
+## Alternative idea from the recipes/new.erb file:
+```
 <!-- I could do this, but then I would lose the URL validation: -->
 <!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
+```
