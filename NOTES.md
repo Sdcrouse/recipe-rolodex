@@ -702,7 +702,22 @@ body {
 **Important note: Sometimes, changes to CSS won't show up in Chrome, possibly after a Windows update. They will, however, show up in other browsers. To fix this, clear Chrome's cache.**
 **Another solution: Do a hard refresh.**
 
-**Stretch goals and ideas:**
+# Stretch goals and ideas:
+
+**Bug to fix:** It is currently possible for users to add multiple ingredients with the same name to a recipe. So, a recipe's ingredients can look like this:
+```
+dill weed
+saffron
+dill weed
+dill weed
+chicken
+```
+Sometimes this is a good thing: With different varieties of cheeses (Gouda, cheddar, Swiss, etc.), I would rather have users create one "cheese" ingredient, but add different brands/types.
+I should do a couple of things: 
+1. Add a type/flavor/variety attribute; brand_name doesn't make sense in this case.
+2. Prevent users from adding multiple ingredients with the same name, but ONLY if the amount, brand, and type/variety are blank; I'm iffy on whether to allow multiple ingredients with the same name, but different amounts.
+**End of bug to fix**
+
 Use CSS to change the links into buttons and/or tabs.
 Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
@@ -721,6 +736,7 @@ Delete the development.sqlite file (and possibly test.sqlite), then run rake db:
 Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md
 Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
 Maybe make a separate page to display errors, similar to a 404 page.
+Put each error message next to the corresponding field/value.
 
 # Ideas from Ingredient model:
  Save this for later (I might make an Amount model with quantity and units and seed the DB)
