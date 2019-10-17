@@ -721,6 +721,7 @@ I should do a couple of things:
 Use CSS to change the links into buttons and/or tabs.
 Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
+Allow users to upload their own images (including image credits/captions) instead of image URLs.
 Enable password confirmation when signing up. See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html
 Change '/recipes/:id' route to '/recipes/:name/:id'; that would make for a more readable URL and open the way for a webpage that shows all of the recipes with a given name.
 Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank;
@@ -737,6 +738,7 @@ Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.
 Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
 Maybe make a separate page to display errors, similar to a 404 page.
 Put each error message next to the corresponding field/value.
+
 **I'd like to split the "delete '/recipes/:id'" route into two routes:**
   1. get '/recipes/:id/delete', which redirects users to a recipes/delete.erb page that asks them if they are sure they want to delete this recipe; I could do something similar for the user account.
     * If the user clicks Yes, go to the "delete '/recipes/:id'" route.
