@@ -700,6 +700,7 @@ body {
 
 **Important note: Sometimes, changes to CSS won't show up in Chrome, possibly after a Windows update. They will, however, show up in other browsers. To fix this, clear Chrome's cache.**
 **Another solution: Do a hard refresh.**
+------------------------------------------------------------------
 
 ## Stretch goals and ideas:
 
@@ -723,7 +724,7 @@ Add a red asterisk * next to required fields, and have a red message telling use
 Allow users to delete their accounts.
 Allow users to upload their own images (including image credits/captions) instead of image URLs.
 Enable password confirmation when signing up. See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html
-Change '/recipes/:id' route to '/recipes/:name/:id'; that would make for a more readable URL and open the way for a webpage that shows all of the recipes with a given name.
+Change '/recipes/:id' route to '/recipes/:name/:id'; that would make for a more readable URL and open the way for a webpage that shows all of the recipes with a given name. The :name is the slugified version of the recipe's name.
 Allow users to delete ingredients in the Edit route by leaving the amount, brand, and name blank;
 in that case, I should also let the user delete the first ingredient, so I need to remove a 'required' keyword in the edit form.
 If I want to run other flash messages (so that they're no longer just edge cases), I should remove all of the 'required' keywords from the forms.
@@ -738,6 +739,28 @@ Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.
 Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
 Maybe make a separate page to display errors, similar to a 404 page.
 Put each error message next to the corresponding field/value.
+Add a Rating class with up to 5 filled-in stars, review/comment space, etc.
+----------------------------------------------------------
+
+**Here's an idea from Ayana Zaire Cotton, from Flatiron:**
+As a business product feature, I could make a Restaurant model (an alias of the User model). 
+Restaurants could make some of their recipes available to the public through Premium User accounts.
+Users could then try out the recipes and "favorite" them and/or suggest improvements for them.
+In other words, restaurants could crowd-source/open-source their recipes.
+On the flip side, users could create recipes at home and share them with restaurants.
+As a marketing strategy, restaurants could establish a good relationship with their customers by asking them what they want to see on the menu.
+Local customers could submit their recipes to restaurants (as mentioned above), and the restaurants could make the food for them.
+It sounds like this may be new and/or unexplored territory.
+
+According to this 2010 article from bon appetit, the company called food52 did something very similar: https://www.bonappetit.com/test-kitchen/article/the-future-of-food-media-food52-and-crowd-sourced-recipes
+
+**My additional thoughts on this:**
+Obviously, some recipes and food are better than others (better flavor combos, easier/harder to make, less/more costly, etc).
+So, from the get go, current and new restaurants could either ask customers for the types of food they'd like to have and/or present them with a list of options/categories.
+Users could then vote on the options and submit recipes fitting those categories, and restaurants could suggest recipes of their own.
+From all those recipes, the restaurant could limit them and have users vote on which recipes/foods they'd like to eat.
+I could expand this into another project altogether, maybe something that uses Rails and/or JavaScript.
+------------------------------------------------------------
 
 **I'd like to split the "delete '/recipes/:id'" route into two routes:**
   1. get '/recipes/:id/delete', which redirects users to a recipes/delete.erb page that asks them if they are sure they want to delete this recipe; I could do something similar for the user account.
@@ -760,7 +783,7 @@ Put each error message next to the corresponding field/value.
        hash[unit_system] = units.freeze
      end
    end.freeze
- end
+ end 
  ---------------- New Features --------------------
  I want the user to be able to write their own unit and save it into their list of units (and maybe make t available to others).
  Is it possible for any changes to @@units_list to be saved into the ingredients database?
