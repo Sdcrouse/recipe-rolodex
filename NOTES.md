@@ -753,6 +753,7 @@ Local customers could submit their recipes to restaurants (as mentioned above), 
 It sounds like this may be new and/or unexplored territory.
 
 According to this 2010 article from bon appetit, the company called food52 did something very similar: https://www.bonappetit.com/test-kitchen/article/the-future-of-food-media-food52-and-crowd-sourced-recipes
+Other companies have done/attempted this as well; Google "crowdsource recipes" and "restaurants with crowdsourcing" for more information.
 
 **My additional thoughts on this:**
 Obviously, some recipes and food are better than others (better flavor combos, easier/harder to make, less/more costly, etc).
