@@ -21,6 +21,9 @@ As this Sinatra app is not yet available outside of Github, you will need to dow
 
 You're all set to use the app!
 
+## Usage
+[Check out my demo video here for how to use the Recipe Rolodex.](https://www.loom.com/share/aae54fd7990e42bd8b6acfb56c71ea33)
+
 ## Development Notes
 Google Chrome's cache is "weird". If you want to see any changes that you make to your CSS file(s), you will need to do a hard refresh in your browser. Exiting and restarting Shotgun will not work.
 
