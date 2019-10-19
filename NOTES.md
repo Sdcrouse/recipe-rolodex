@@ -740,6 +740,8 @@ Idea from the "post '/recipes'" route: convert blank values to nil with #presenc
 Maybe make a separate page to display errors, similar to a 404 page.
 Put each error message next to the corresponding field/value.
 Add a Rating class with up to 5 filled-in stars, review/comment space, etc.
+Make this app look more like a Rolodex, either with an image or some kind of Rolodex-like animation with Javascript or something similar; that could serve as a transition between pages.
+In fields that need a url or have specific required formats (like username), add placeholder text (or something similar) to explain that.
 ----------------------------------------------------------
 
 **Here's an idea from Ayana Zaire Cotton, from Flatiron:**
