@@ -1,12 +1,9 @@
 class RecipesController < ApplicationController
   get '/recipes' do
-    if logged_in?
-      @recipes = Recipe.all
-      erb :"recipes/index"
-    else
-      flash[:error] = "You must be logged in to view the recipes."
-      redirect to "/users/login"
-    end
+    redirect_if_not_logged_in
+
+    @recipes = Recipe.all_sorted
+    erb :"recipes/index"
   end
 
   get '/recipes/new' do
@@ -25,7 +22,7 @@ class RecipesController < ApplicationController
     # Later on, I may want to convert blank values to nil with #presence.
 
     if !logged_in? # This is an edge case.
-      flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! Either you somehow got this far without being logged in, or you got logged out while creating a recipe."
+      flash[:error] = "You cannot edit this recipe without being logged in."
       redirect to "/users/login"
     end
 
@@ -175,6 +172,7 @@ class RecipesController < ApplicationController
     # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
     
     # Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
+    # Better yet, change the params hash so that I can just use recipe.update(params[:recipe]). Revisit this after going through nested forms in Rails.
     # Yet another stretch goal: In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
 
     recipe.update(params[:recipe]) # Doing this should simultaneously validate the recipe's params and the recipe_ingredients (both of which are now edge cases).
