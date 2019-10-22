@@ -34,4 +34,9 @@ class Recipe < ActiveRecord::Base
       errors.add(:ingredient, "needs a name when it's given an amount and/or brand")
     end
   end # End of #ingredients_need_names_if_amount_or_brand_name_are_specified
+
+  def self.all_sorted
+    # This class method sorts the recipes alphabetically, first by name, then by username.
+    self.all.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}
+  end
 end # End of Recipe class
