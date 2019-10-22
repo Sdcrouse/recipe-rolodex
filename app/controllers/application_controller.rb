@@ -38,9 +38,12 @@ class ApplicationController < Sinatra::Base
       !!current_user
     end
 
-    def redirect_if_not_logged_in
+    def redirect_if_not_logged_in(action = "view this page")
+      # This redirects users who try to do various actions (view a page, edit/delete a recipe, etc.) without being logged in.
+      # By default, the error message is "You must be logged in to view this page."
+
       if !logged_in?
-        flash[:error] = "You must be logged in to view this page."
+        flash[:error] = "You must be logged in to #{action}."
         redirect to "/users/login"
       end
     end
