@@ -566,6 +566,22 @@ First, figure out how to update a recipe's ingredients, but without saving them.
 REMEMBER: If I update/save the ingredient and/or recipe_ingredient and/or recipe too early, then I will have to undo those changes if I encounter a validation error.
 **End of old comments and ideas from the "patch '/recipes/:id'" route:**
 
+**Old comments and code from the "get '/recipes/:id'" route:**
+Redirect, if there is no recipe and/or the user is not logged in.
+Later, I could make a separate error page.
+
+if !logged_in?
+  Odd; I encountered a bug that used the '/recipes/new' flash message instead. But how?
+  I don't know how to recreate it, but evidently the former flash[:error] message wasn't overwritten.
+  Update: This may have occurred before I changed the validations in the Recipe model; it likely won't happen now.
+
+  flash[:error] = "You must be logged in before you can view this recipe."
+  redirect to "/users/login"
+
+  ...(The rest of the code)...
+end
+**End of old comments and code from the "get '/recipes/:id'" route**
+
 **Flash messages:**
   flash[:error] = "You must be logged in to view the recipes."
   flash[:error] = "Sorry, chef! You must be logged in before you can create a new recipe."
@@ -720,7 +736,6 @@ I should do a couple of things:
 
 **Note:** There are other stretch goals and ideas, starting at around line 104 or so; I should move them here.
 Use CSS to change the links into buttons and/or tabs.
-Add a red asterisk * next to required fields, and have a red message telling users about that.
 Allow users to delete their accounts.
 Allow users to upload their own images (including image credits/captions) instead of image URLs.
 Enable password confirmation when signing up. See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html
@@ -742,6 +757,7 @@ Put each error message next to the corresponding field/value.
 Add a Rating class with up to 5 filled-in stars, review/comment space, etc.
 Make this app look more like a Rolodex, either with an image or some kind of Rolodex-like animation with Javascript or something similar; that could serve as a transition between pages.
 In fields that need a url or have specific required formats (like username), add placeholder text (or something similar) to explain that.
+I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
 ----------------------------------------------------------
 
 **Here's an idea from Ayana Zaire Cotton, from Flatiron:**
