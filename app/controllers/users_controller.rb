@@ -66,17 +66,16 @@ class UsersController < ApplicationController
 
   get '/users/:username' do
     # Show users this user's profile, but ONLY if they are logged in and that user exists.
-    if logged_in? && @user = User.find_by(username: params[:username])
+    
+    redirect_if_not_logged_in
+
+    if @user = User.find_by(username: params[:username])
       @user_recipes = Recipe.sort_recipes(@user.recipes)
       erb :"users/profile"
     else
-      if !logged_in?
-        flash[:error] = "You must be logged in to see this chef's profile."
-        redirect to "/users/login"
-      else # The current_user is logged in, but @user does not exist.
-        flash[:error] = "It looks like this chef does not exist."
-        redirect to "/" # Change this to "/users" later on (stretch goal).
-      end
+      # The current_user is logged in, but @user does not exist.
+      flash[:error] = "It looks like this chef does not exist."
+      redirect to "/" # Change this to "/users" later on (stretch goal).
     end
   end
 
