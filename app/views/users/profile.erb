@@ -11,15 +11,13 @@
   <!-- Somehow, the flash[:login] message got carried over from the "get '/'" route. -->
   <!-- That may have been an edge case, since it worked fine after I logged out and signed in as another user. -->
   <!-- UPDATE: This should no longer be the case, now that there is a new flash message for signing in. -->
-<% else %>
-  <h2>Chef <%= @user.username %>'s kitchen</h2>
-<% end %>
 
-<% if @user == current_user %>
   <p>
     Username: <%= @user.username %><br />
     E-mail: <%= @user.email %>
   </p>
+<% else %> <!-- @user is not the current_user -->
+  <h2>Chef <%= @user.username %>'s kitchen</h2>
 <% end %>
 
 <p>
