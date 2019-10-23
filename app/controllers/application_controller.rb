@@ -47,5 +47,5 @@ class ApplicationController < Sinatra::Base
         redirect to "/users/login"
       end
     end
-  end
-end
+  end # End of helpers
+end # End of ApplicationController
