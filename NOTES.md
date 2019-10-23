@@ -582,6 +582,11 @@ if !logged_in?
 end
 **End of old comments and code from the "get '/recipes/:id'" route**
 
+**Old notes from the "post '/recipes'" route:**
+  I decided against having a bunch of nested "if" statements, due to the calls to #redirect exiting the route anyway.
+  Later on, I may want to convert blank values to nil with #presence.
+**End of "post '/recipes'" route notes**
+
 **Flash messages:**
   flash[:error] = "You must be logged in to view the recipes."
   flash[:error] = "Sorry, chef! You must be logged in before you can create a new recipe."

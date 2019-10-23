@@ -14,10 +14,9 @@ class RecipesController < ApplicationController
   end
 
   post '/recipes' do
-    # The idea here is to create a recipe with the given params, which has turned out to be tricky due to the complex model relationships and validations.
-    # I decided against having a bunch of nested "if" statements, due to the calls to #redirect exiting the route anyway.
-    # Later on, I may want to convert blank values to nil with #presence.
-
+    # The idea here is to create a recipe with the given params.
+    # This has turned out to be tricky, due to the complex model relationships and validations.
+    
     redirect_if_not_logged_in("create a recipe") # Important edge case
 
     recipe = Recipe.new(params[:recipe])
@@ -43,7 +42,9 @@ class RecipesController < ApplicationController
       end # End of #unless
     end # End of #each
     
-    current_user.recipes << recipe # This automatically attempts to save the recipe, so I don't have to save the recipe before this point.
+    current_user.recipes << recipe
+    # This automatically attempts to save the recipe, so I don't have to save it before this point.
+    
     if recipe.persisted?
       # Note that I can also call #new_record? to see whether the recipe has ever been saved.
       # #persisted? checks to see that the recipe has been saved/persisted AND not destroyed.
