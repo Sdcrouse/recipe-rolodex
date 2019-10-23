@@ -764,7 +764,43 @@ Make this app look more like a Rolodex, either with an image or some kind of Rol
 In fields that need a url or have specific required formats (like username), add placeholder text (or something similar) to explain that.
 I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
 Make a page that lists all of the recipes that contain a certain ingredient; I will need an IngredientsController for that, and I can use the #Recipe.sort_recipes class method.
+In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
 ----------------------------------------------------------
+
+**Notes, stretch goals, and corresponding code from the "patch '/recipes/:id'" route:**
+
+  #Updates the recipe's ingredients. All of this works because the recipe accepts nested attributes for recipe_ingredients.
+  recipe.recipe_ingredients.each_with_index do |rec_ingr, index|
+    rec_ingr.ingredient_amount = params[:ingredients][index][:amount]
+    rec_ingr.brand_name = params[:ingredients][index][:brand_name]
+
+    ingredient_name = params[:ingredients][index][:name].downcase
+
+    if ingredient_name != rec_ingr.ingredient.name
+      # If the user changes the ingredient's name, find or create that ingredient, then store it as the recipe_ingredient's new ingredient.
+      rec_ingr.ingredient = Ingredient.find_or_create_by(name: ingredient_name)
+    end
+  end
+  
+  #But what if the user removes an ingredient? ^^^
+  #That is a stretch goal. When I implement it, the user should also be able to delete the first ingredient, for consistency (so remove the "required" keyword).
+  #I should also probably remove the "required" keywords from the "new recipe" and "edit recipe" forms, so that the corresponding validations and flash messages will be run.
+  
+  ingredient_total = recipe.recipe_ingredients.size
+  #Note: It's better to count the recipe's recipe_ingredients than its ingredients, because this will avoid a SQL query.
+  #For the same reason, use #length or #size instead of #count.
+
+...
+
+  #At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form).
+  #No errors, and the recipe gets new ingredients (duplicates with blank names) and recipe_ingredients (with blank amounts and brand names).
+  #The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
+    
+  #Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
+  #Better yet, change the params hash so that I can just use recipe.update(params[:recipe]). Revisit this after going through nested forms in Rails.
+  #Yet another stretch goal: In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
+
+**End of notes, stretch goals, and code from "patch '/recipes/:id'"**
 
 **Here's an idea from Ayana Zaire Cotton, from Flatiron:**
 As a business product feature, I could make a Restaurant model (an alias of the User model). 

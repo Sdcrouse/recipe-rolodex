@@ -126,14 +126,8 @@ class RecipesController < ApplicationController
         rec_ingr.ingredient = Ingredient.find_or_create_by(name: ingredient_name)
       end
     end
-    
-    # But what if the user removes an ingredient? ^^^
-    # That is a stretch goal. When I implement it, the user should also be able to delete the first ingredient, for consistency (so remove the "required" keyword).
-    # I should also probably remove the "required" keywords from the "new recipe" and "edit recipe" forms, so that the corresponding validations and flash messages will be run.
-    
+     
     ingredient_total = recipe.recipe_ingredients.size
-    # Note: It's better to count the recipe's recipe_ingredients than its ingredients, because this will avoid a SQL query.
-    # For the same reason, use #length or #size instead of #count.
 
     # Create new ingredients specified by the user, from the remaining params that don't correspond to the recipe's original ingredients.
     params[:ingredients][ingredient_total..-1].each do |ingred|
@@ -144,14 +138,6 @@ class RecipesController < ApplicationController
       end
     end
     
-    # At this time, I get strange results when I make every ingredient blank (and remove the "required" keyword from the "edit recipe" form).
-    # No errors, and the recipe gets new ingredients (duplicates with blank names) and recipe_ingredients (with blank amounts and brand names).
-    # The Recipe model's #recipe_should_have_at_least_one_ingredient validation does NOT get triggered.
-    
-    # Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
-    # Better yet, change the params hash so that I can just use recipe.update(params[:recipe]). Revisit this after going through nested forms in Rails.
-    # Yet another stretch goal: In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
-
     recipe.update(params[:recipe]) # Doing this should simultaneously validate the recipe's params and the recipe_ingredients (both of which are now edge cases).
     
     if recipe.errors.full_messages.blank? # This is an edge case, at this point.
