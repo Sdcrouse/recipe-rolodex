@@ -67,6 +67,7 @@ class UsersController < ApplicationController
   get '/users/:username' do
     # Show users this user's profile, but ONLY if they are logged in and that user exists.
     if logged_in? && @user = User.find_by(username: params[:username])
+      @user_recipes = Recipe.sort_recipes(@user.recipes)
       erb :"users/profile"
     else
       if !logged_in?

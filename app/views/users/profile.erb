@@ -31,7 +31,7 @@
     <strong>No recipes yet</strong>
   <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
     <ol>
-      <% @user.recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
+      <% @user_recipes.each do |recipe| %>
         <p><li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li></p>
       <% end %>
     </ol>
