@@ -35,8 +35,9 @@ class Recipe < ActiveRecord::Base
     end
   end # End of #ingredients_need_names_if_amount_or_brand_name_are_specified
 
-  def self.all_sorted
+  def self.sort_recipes(recipes)
     # This class method sorts the recipes alphabetically, first by name, then by username.
-    self.all.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}
+    recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}
   end
+
 end # End of Recipe class

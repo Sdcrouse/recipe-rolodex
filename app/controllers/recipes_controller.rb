@@ -2,7 +2,7 @@ class RecipesController < ApplicationController
   get '/recipes' do
     redirect_if_not_logged_in
 
-    @recipes = Recipe.all_sorted
+    @recipes = Recipe.sort_recipes(Recipe.all)
     erb :"recipes/index"
   end
 
