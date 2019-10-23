@@ -758,6 +758,7 @@ Add a Rating class with up to 5 filled-in stars, review/comment space, etc.
 Make this app look more like a Rolodex, either with an image or some kind of Rolodex-like animation with Javascript or something similar; that could serve as a transition between pages.
 In fields that need a url or have specific required formats (like username), add placeholder text (or something similar) to explain that.
 I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
+Make a page that lists all of the recipes that contain a certain ingredient; I will need an IngredientsController for that, and I can use the #Recipe.sort_recipes class method.
 ----------------------------------------------------------
 
 **Here's an idea from Ayana Zaire Cotton, from Flatiron:**
