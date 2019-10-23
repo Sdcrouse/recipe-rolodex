@@ -765,6 +765,10 @@ In fields that need a url or have specific required formats (like username), add
 I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
 Make a page that lists all of the recipes that contain a certain ingredient; I will need an IngredientsController for that, and I can use the #Recipe.sort_recipes class method.
 In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
+**Refactoring goal:** In the RecipesController, change the local recipe variables to @recipe instance variables.
+That will allow me to remove an argument from the #redirect_if_unauthorized_user_tries_to helper method.
+This in turn will prevent the need to pass an instance variable into the method (which likely goes against convention, although it technically works).
+**End of refactoring goal**
 ----------------------------------------------------------
 
 **Notes, stretch goals, and corresponding code from the "patch '/recipes/:id'" route:**

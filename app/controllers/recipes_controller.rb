@@ -81,10 +81,11 @@ class RecipesController < ApplicationController
       flash[:error] = "Sorry, Chef #{current_user.username}! The recipe that you are trying to edit does not exist."
       redirect to "/recipes"
     else
-      redirect_if_unauthorized_user_tries_to("edit this recipe")
+      redirect_if_unauthorized_user_tries_to("edit this recipe", @recipe)
+      # It is unusual to pass an instance variable to a method like this.
+      # However, it's easier than changing local variables to instance variables in other routes (and testing for bugs).
       
       # By this point, the recipe exists and the current_user is allowed to edit it.
-      
       @all_ingredients = Ingredient.all
       # My goal here ^^^ is to create 5 ingredient fields in the edit form.
       # I need to know how many will be blank, based on how many recipe_ingredients are in the original recipe.
@@ -167,12 +168,14 @@ class RecipesController < ApplicationController
   end # End of "delete '/recipes/:id'" route
 
   helpers do
-    def redirect_if_unauthorized_user_tries_to(action)
-      if @recipe.user != current_user
+    def redirect_if_unauthorized_user_tries_to(action, recipe)
+      # Note that the recipe will either be a local or instance variable. This will be changed later.
+
+      if recipe.user != current_user
         # The current_user is not this recipe's author (and is thus not allowed to edit or delete it).
 
         flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to #{action}."
-        redirect to "/recipes/#{@recipe.id}"
+        redirect to "/recipes/#{recipe.id}"
       end
     end
   end # End of helpers
