@@ -1,95 +1,91 @@
-<% if logged_in? %>
-  <h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
+<h2>Chef <%= current_user.username %>, please create your new recipe here!</h2>
 
-  <% if !flash[:validations].blank? %>
-    <p class="error-message"><strong>Errors:</strong></p>
-    <ol>
-      <% flash[:validations].each do |validation_error| %>
-        <li class="error-message"><%= validation_error %></li>
-      <% end %>
-    </ol>
-    <br />
-  <% end %>
-
-  <div>
-    <small>
-      <div class="required">*</div> Required field
-    </small>
-  </div>
-
-  <form method="post" action="/recipes">
-    <p>
-      <label for="recipe_name"><div class="required">*</div> Name: </label>
-      <input type="text" id="recipe_name" name="recipe[name]" required />
-    </p>
-    <p>
-      <label for="image_url">Image URL: </label>
-      <input type="url" id="image_url" name="recipe[image_url]" size="50" /><br />
-      <small>
-        <strong class="important-note">Note: </strong>
-        Check out the Home page for instructions on how to upload an image here.
-      </small>
-
-      <!-- I could do this, but then I would lose the URL validation: -->
-      <!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
-    </p>
-    <p>
-      <label for="serving_size">Serving Size: </label>
-      <input type="text", id="serving_size" name="recipe[serving_size]" size="10" />
-      
-      <label for="servings">Servings: </label>
-      <input type="text" id="servings" name="recipe[servings]" size="1" />
-    </p>
-    <p>
-      <label for="description">Description: </label>
-      <input type="text" id="description" name="recipe[description]" size="50" />
-    </p>
-    <p>
-      <strong>Ingredients:</strong><br />
-      <ol>
-        <!-- Note: Credit for the datalist idea goes to this user at SO: https://stackoverflow.com/questions/5650457/html-select-form-with-option-to-enter-custom-value#answer-21958246 -->
-        <!-- Create 5 ingredient list items: -->
-        <% (1..5).each do |num| %>
-          <li>
-            Ingredient <%= num %><br />
-            <label for="ingredient_<%= num %>_amount">Amount: </label>
-            <input type="text" id="ingredient_<%= num %>_amount" name="ingredients[][amount]" size="10" />
-            
-            <label for="ingredient_<%= num %>_brand_name">Brand: </label>
-            <input type="text" id="ingredient_<%= num %>_brand_name" name="ingredients[][brand_name]" size="10" />
-            
-            <label for="ingredient_<%= num %>_name">
-              <% if num == 1 %>
-                <div class="required">*</div>
-              <% end %>
-              Name: 
-            </label>
-            <input list="ingredient-names" id="ingredient_<%= num %>_name" name="ingredients[][name]" placeholder="Choose a name or write your own." size="30" <%= "required" if num == 1 %> />
-
-            <datalist id="ingredient-names">
-              <% @ingredients.sort_by{|ingredient| ingredient.name}.each do |ingredient| %>
-                <option value="<%= ingredient.name %>">
-              <% end %>
-            </datalist>
-          </li>
-          <br />
-        <% end %> <!-- End of (1..5).each do |num| -->
-      </ol>
-    </p> <!-- End of Ingredients -->
-    <p>
-      <label for="additional_ingredients">Additional Ingredients: </label>
-      <textarea id="additional_ingredients" name="recipe[additional_ingredients]" rows="5"></textarea>
-    </p>
-    <p>
-      <label for="instructions"><div class="required">*</div> Instructions: </label>
-      <textarea id="instructions" name="recipe[instructions]" rows="10" cols="70" required></textarea>
-    </p>
-    <p>
-      <label for="notes">Notes: </label>
-      <textarea id="notes" name="recipe[notes]" rows="3" cols="30"></textarea>
-    </p>
-    <input type="submit" value="Create Recipe" />
-  </form>
-<% else %> <!-- This is an edge case. -->
-  <h2>You are not logged in. <a href="/users/login">Click here to go to the login page.</a></h2>
+<% if !flash[:validations].blank? %>
+  <p class="error-message"><strong>Errors:</strong></p>
+  <ol>
+    <% flash[:validations].each do |validation_error| %>
+      <li class="error-message"><%= validation_error %></li>
+    <% end %>
+  </ol>
+  <br />
 <% end %>
+
+<div>
+  <small>
+    <div class="required">*</div> Required field
+  </small>
+</div>
+
+<form method="post" action="/recipes">
+  <p>
+    <label for="recipe_name"><div class="required">*</div> Name: </label>
+    <input type="text" id="recipe_name" name="recipe[name]" required />
+  </p>
+  <p>
+    <label for="image_url">Image URL: </label>
+    <input type="url" id="image_url" name="recipe[image_url]" size="50" /><br />
+    <small>
+      <strong class="important-note">Note: </strong>
+      Check out the Home page for instructions on how to upload an image here.
+    </small>
+
+    <!-- I could do this, but then I would lose the URL validation: -->
+    <!-- <textarea id="image_url" name="recipe[image_url]"></textarea> -->
+  </p>
+  <p>
+    <label for="serving_size">Serving Size: </label>
+    <input type="text", id="serving_size" name="recipe[serving_size]" size="10" />
+    
+    <label for="servings">Servings: </label>
+    <input type="text" id="servings" name="recipe[servings]" size="1" />
+  </p>
+  <p>
+    <label for="description">Description: </label>
+    <input type="text" id="description" name="recipe[description]" size="50" />
+  </p>
+  <p>
+    <strong>Ingredients:</strong><br />
+    <ol>
+      <!-- Note: Credit for the datalist idea goes to this user at SO: https://stackoverflow.com/questions/5650457/html-select-form-with-option-to-enter-custom-value#answer-21958246 -->
+      <!-- Create 5 ingredient list items: -->
+      <% (1..5).each do |num| %>
+        <li>
+          Ingredient <%= num %><br />
+          <label for="ingredient_<%= num %>_amount">Amount: </label>
+          <input type="text" id="ingredient_<%= num %>_amount" name="ingredients[][amount]" size="10" />
+          
+          <label for="ingredient_<%= num %>_brand_name">Brand: </label>
+          <input type="text" id="ingredient_<%= num %>_brand_name" name="ingredients[][brand_name]" size="10" />
+          
+          <label for="ingredient_<%= num %>_name">
+            <% if num == 1 %>
+              <div class="required">*</div>
+            <% end %>
+            Name: 
+          </label>
+          <input list="ingredient-names" id="ingredient_<%= num %>_name" name="ingredients[][name]" placeholder="Choose a name or write your own." size="30" <%= "required" if num == 1 %> />
+
+          <datalist id="ingredient-names">
+            <% @ingredients.sort_by{|ingredient| ingredient.name}.each do |ingredient| %>
+              <option value="<%= ingredient.name %>">
+            <% end %>
+          </datalist>
+        </li>
+        <br />
+      <% end %> <!-- End of (1..5).each do |num| -->
+    </ol>
+  </p> <!-- End of Ingredients -->
+  <p>
+    <label for="additional_ingredients">Additional Ingredients: </label>
+    <textarea id="additional_ingredients" name="recipe[additional_ingredients]" rows="5"></textarea>
+  </p>
+  <p>
+    <label for="instructions"><div class="required">*</div> Instructions: </label>
+    <textarea id="instructions" name="recipe[instructions]" rows="10" cols="70" required></textarea>
+  </p>
+  <p>
+    <label for="notes">Notes: </label>
+    <textarea id="notes" name="recipe[notes]" rows="3" cols="30"></textarea>
+  </p>
+  <input type="submit" value="Create Recipe" />
+</form>

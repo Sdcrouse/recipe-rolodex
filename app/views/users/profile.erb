@@ -1,45 +1,41 @@
-<% if logged_in? %>
-  <% if @user == current_user %>
-    <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
-    
-    <% if !flash[:error].blank? %>
-      <p class="error-message"><%= flash[:error] %></p>
-    <% elsif !flash[:success].blank? %>
-      <p class="success-message"><%= flash[:success] %></p>
-    <% end %>
-
-    <!-- Be careful with this; the first time I started this up and logged in, it said that I was NOT logged in. -->
-    <!-- Somehow, the flash[:login] message got carried over from the "get '/'" route. -->
-    <!-- That may have been an edge case, since it worked fine after I logged out and signed in as another user. -->
-    <!-- UPDATE: This should no longer be the case, now that there is a new flash message for signing in. -->
-  <% else %>
-    <h2>Chef <%= @user.username %>'s kitchen</h2>
-  <% end %>
-
-  <% if @user == current_user %>
-    <p>
-      Username: <%= @user.username %><br />
-      E-mail: <%= @user.email %>
-    </p>
-  <% end %>
-
-  <p>
-    <% if @user == current_user %>
-    <strong>Your recipes:</strong>
-    <% else %>
-    <strong>Recipes:</strong>
-    <% end %>
+<% if @user == current_user %>
+  <h2>Welcome to your kitchen, Chef <%= @user.username %>!</h2>
   
-    <% if @user.recipes.empty? %>
-      <strong>No recipes yet</strong>
-    <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
-      <ol>
-        <% @user.recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
-          <p><li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li></p>
-        <% end %>
-      </ol>
-    <% end %>
+  <% if !flash[:error].blank? %>
+    <p class="error-message"><%= flash[:error] %></p>
+  <% elsif !flash[:success].blank? %>
+    <p class="success-message"><%= flash[:success] %></p>
+  <% end %>
+
+  <!-- Be careful with this; the first time I started this up and logged in, it said that I was NOT logged in. -->
+  <!-- Somehow, the flash[:login] message got carried over from the "get '/'" route. -->
+  <!-- That may have been an edge case, since it worked fine after I logged out and signed in as another user. -->
+  <!-- UPDATE: This should no longer be the case, now that there is a new flash message for signing in. -->
+<% else %>
+  <h2>Chef <%= @user.username %>'s kitchen</h2>
+<% end %>
+
+<% if @user == current_user %>
+  <p>
+    Username: <%= @user.username %><br />
+    E-mail: <%= @user.email %>
   </p>
-<% else %> <!-- This is an edge case. -->
-  <h2>Oops! You are not signed in. <a href="/users/login">Click here to log in.</a></h2>
-<% end %> <!-- End of "if logged_in?" -->
+<% end %>
+
+<p>
+  <% if @user == current_user %>
+  <strong>Your recipes:</strong>
+  <% else %>
+  <strong>Recipes:</strong>
+  <% end %>
+
+  <% if @user.recipes.empty? %>
+    <strong>No recipes yet</strong>
+  <% else %> <!-- Display @user's recipes and link to each recipe's page. -->
+    <ol>
+      <% @user.recipes.sort_by{|recipe| [recipe.name.downcase, recipe.user.username.downcase]}.each do |recipe| %>
+        <p><li><a href="/recipes/<%= recipe.id %>"><%= recipe.name %></a></li></p>
+      <% end %>
+    </ol>
+  <% end %>
+</p>
