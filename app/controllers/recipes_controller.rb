@@ -62,7 +62,7 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_recipe_does_not_exist
+    redirect_if_nonexistent(@recipe) # I will refactor this later (if possible) so that I don't need to pass an instance variable.
 
     @recipe_ingredients = @recipe.recipe_ingredients
     # I think this will prevent more database queries than are necessary.
@@ -75,12 +75,13 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_recipe_does_not_exist
+    redirect_if_nonexistent(@recipe)
       
     redirect_if_unauthorized_user_tries_to("edit this recipe", @recipe)
     # It is unusual to pass an instance variable to a method like this.
     # However, it's easier than changing local variables to instance variables in other routes (and testing for bugs).
-    
+    # I will try to refactor this and the method above it later, so that I won't have to send instance variables.
+
     # By this point, the recipe exists and the user is authorized to edit it.
     @all_ingredients = Ingredient.all
     # My goal here ^^^ is to create 5 ingredient fields in the edit form.
@@ -170,8 +171,8 @@ class RecipesController < ApplicationController
       end
     end
 
-    def redirect_if_recipe_does_not_exist
-      if !@recipe
+    def redirect_if_nonexistent(obj)
+      if !obj
         flash[:error] = "This recipe does not exist."
         redirect to "/recipes"
       end
