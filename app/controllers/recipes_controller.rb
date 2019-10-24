@@ -99,11 +99,7 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
-    if recipe.user != current_user 
-      # Another edge case. I got it to work by changing the session's user_id and resetting @logged_in_user to User.find_by_id(session[:user_id]).
-      flash[:error] = "Congratulations, chef! You just found a bug in the Recipe Rolodex! You should not have gotten this far, since you are not authorized to edit this recipe."
-      redirect to "/recipes/#{recipe.id}"
-    end
+    redirect_if_unauthorized_user_tries_to("edit this recipe", recipe) # Important edge case
 
     params[:ingredients].each do |ingred| # Check for invalid ingredients.
       if ingred[:name].blank? && (!ingred[:amount].blank? || !ingred[:brand_name].blank?) 
@@ -157,10 +153,10 @@ class RecipesController < ApplicationController
     if !recipe # Edge case
       flash[:error] = "This recipe does not exist."
       redirect to "/recipes"
-    elsif recipe.user != current_user # Edge case ("Delete Recipe" button only shows up for the authorized user)
-      flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to delete this recipe."
-      redirect to "/recipes/#{recipe.id}"
-    else # The user is logged in, the recipe exists, and the user is authorized to delete it.
+    else
+      redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important edge case
+      
+      # The user is logged in, the recipe exists, and the user is authorized to delete it.
       recipe.destroy
       flash[:success] = "You have successfully deleted the recipe!"
       redirect to "/recipes"
