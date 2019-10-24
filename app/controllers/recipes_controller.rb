@@ -75,21 +75,18 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.find_by_id(params[:id])
 
-    if !@recipe
-      flash[:error] = "Sorry, Chef #{current_user.username}! The recipe that you are trying to edit does not exist."
-      redirect to "/recipes"
-    else
-      redirect_if_unauthorized_user_tries_to("edit this recipe", @recipe)
-      # It is unusual to pass an instance variable to a method like this.
-      # However, it's easier than changing local variables to instance variables in other routes (and testing for bugs).
+    redirect_if_recipe_does_not_exist
       
-      # By this point, the recipe exists and the current_user is allowed to edit it.
-      @all_ingredients = Ingredient.all
-      # My goal here ^^^ is to create 5 ingredient fields in the edit form.
-      # I need to know how many will be blank, based on how many recipe_ingredients are in the original recipe.
+    redirect_if_unauthorized_user_tries_to("edit this recipe", @recipe)
+    # It is unusual to pass an instance variable to a method like this.
+    # However, it's easier than changing local variables to instance variables in other routes (and testing for bugs).
+    
+    # By this point, the recipe exists and the user is authorized to edit it.
+    @all_ingredients = Ingredient.all
+    # My goal here ^^^ is to create 5 ingredient fields in the edit form.
+    # I need to know how many will be blank, based on how many recipe_ingredients are in the original recipe.
 
-      erb :"/recipes/edit"
-    end # End of "if !@recipe"
+    erb :"/recipes/edit"
   end # End of "get '/recipes/:id/edit'" route
 
   patch '/recipes/:id' do
