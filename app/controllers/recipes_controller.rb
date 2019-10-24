@@ -60,16 +60,14 @@ class RecipesController < ApplicationController
   get '/recipes/:id' do
     redirect_if_not_logged_in
 
-    if @recipe = Recipe.find_by_id(params[:id])
-      @recipe_ingredients = @recipe.recipe_ingredients
-      # I think this will prevent more database queries than are necessary.
-      
-      erb :'recipes/show'
-    else # Redirect if there is no recipe.
-      flash[:error] = "Sorry, chef! That recipe doesn't exist."
-      redirect to "/recipes"
-    end # End of "if @recipe..."
+    @recipe = Recipe.find_by_id(params[:id])
 
+    redirect_if_recipe_does_not_exist
+
+    @recipe_ingredients = @recipe.recipe_ingredients
+    # I think this will prevent more database queries than are necessary.
+    
+    erb :'recipes/show'
   end # End of "get '/recipes/:id'" route
 
   get '/recipes/:id/edit' do
@@ -172,6 +170,13 @@ class RecipesController < ApplicationController
 
         flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to #{action}."
         redirect to "/recipes/#{recipe.id}"
+      end
+    end
+
+    def redirect_if_recipe_does_not_exist
+      if !@recipe
+        flash[:error] = "This recipe does not exist."
+        redirect to "/recipes"
       end
     end
   end # End of helpers
