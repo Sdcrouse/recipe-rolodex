@@ -769,6 +769,12 @@ In the "create" and "edit" routes, identify the invalid ingredients in the flash
 That will allow me to remove an argument from the #redirect_if_unauthorized_user_tries_to helper method.
 This in turn will prevent the need to pass an instance variable into the method (which likely goes against convention, although it technically works).
 **End of refactoring goal**
+
+**Important stretch goals:** When I think about it, I don't think it's wise to redirect unauthorized users to a recipe that they are trying to edit/delete, especially if they don't know that it exists. Maybe I should redirect them back home, away from the recipes.
+
+I want to refactor the RecipesController in such a way that I don't have to send an instance variable to the #redirect_if_unauthorized_user_tries_to and #redirect_if_nonexistent methods.
+The first method can easily be changed, but I will have to change local variables in the patch and delete routes to instance variables. I am not sure about the second method yet.
+**End of important stretch goals**
 ----------------------------------------------------------
 
 **Notes, stretch goals, and corresponding code from the "patch '/recipes/:id'" route:**
