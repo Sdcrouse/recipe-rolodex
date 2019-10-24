@@ -140,7 +140,7 @@ There may be some redundancy with the validation for the User's e-mail and usern
 
 **For convention, I think I should change profile.erb to index.erb, since there isn't much difference between the two.**
 
-Is there a way to add a **default route** in my ApplicationController, for when the user enters an invalid URL?
+Is there a way to add a **default route** in my ApplicationController, for when the user enters an invalid URL? Possibly; see https://stackoverflow.com/questions/10806024/how-can-i-give-sinatra-a-catchall-default-route for more info. I don't know where to add that route without overriding others.
 
 **When displaying an ordered list of recipes, I should probably override that "list-style: none;" rule in the CSS file. Look up the list-style-type property.**
 
