@@ -47,5 +47,12 @@ class ApplicationController < Sinatra::Base
         redirect to "/users/login"
       end
     end
+
+    def redirect_if_nonexistent(obj)
+      if !obj
+        flash[:error] = "This recipe does not exist."
+        redirect to "/recipes"
+      end
+    end
   end # End of helpers
 end # End of ApplicationController

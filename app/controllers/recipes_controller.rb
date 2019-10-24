@@ -169,12 +169,5 @@ class RecipesController < ApplicationController
         redirect to "/recipes/#{recipe.id}"
       end
     end
-
-    def redirect_if_nonexistent(obj)
-      if !obj
-        flash[:error] = "This recipe does not exist."
-        redirect to "/recipes"
-      end
-    end
   end # End of helpers
 end # End of RecipesController
