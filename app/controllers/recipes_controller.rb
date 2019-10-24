@@ -95,6 +95,8 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
+    redirect_if_nonexistent(recipe) # Edge case
+
     redirect_if_unauthorized_user_tries_to("edit this recipe", recipe) # Important edge case
 
     params[:ingredients].each do |ingred| # Check for invalid ingredients.
@@ -145,18 +147,15 @@ class RecipesController < ApplicationController
     redirect_if_not_logged_in("delete a recipe") # Important edge case
 
     recipe = Recipe.find_by_id(params[:id])
+
+    redirect_if_nonexistent(recipe) # Edge case
     
-    if !recipe # Edge case
-      flash[:error] = "This recipe does not exist."
-      redirect to "/recipes"
-    else
-      redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important edge case
-      
-      # The user is logged in, the recipe exists, and the user is authorized to delete it.
-      recipe.destroy
-      flash[:success] = "You have successfully deleted the recipe!"
-      redirect to "/recipes"
-    end # End of "if !recipe"
+    redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important edge case
+    
+    # The user is logged in, the recipe exists, and the user is authorized to delete it.
+    recipe.destroy
+    flash[:success] = "You have successfully deleted the recipe!"
+    redirect to "/recipes"
   end # End of "delete '/recipes/:id'" route
 
   helpers do
