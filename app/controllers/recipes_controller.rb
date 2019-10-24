@@ -62,7 +62,7 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_nonexistent(@recipe) # I will refactor this later (if possible) so that I don't need to pass an instance variable.
+    redirect_if_nonexistent(@recipe, "recipe") # I will refactor this later (if possible) so that I don't need to pass an instance variable.
 
     @recipe_ingredients = @recipe.recipe_ingredients
     # I think this will prevent more database queries than are necessary.
@@ -75,7 +75,7 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_nonexistent(@recipe)
+    redirect_if_nonexistent(@recipe, "recipe")
       
     redirect_if_unauthorized_user_tries_to("edit this recipe", @recipe)
     # It is unusual to pass an instance variable to a method like this.
@@ -95,7 +95,7 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_nonexistent(recipe) # Edge case
+    redirect_if_nonexistent(recipe, "recipe") # Edge case
 
     redirect_if_unauthorized_user_tries_to("edit this recipe", recipe) # Important edge case
 
@@ -148,7 +148,7 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find_by_id(params[:id])
 
-    redirect_if_nonexistent(recipe) # Edge case
+    redirect_if_nonexistent(recipe, "recipe") # Edge case
     
     redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important edge case
     
