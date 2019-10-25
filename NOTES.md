@@ -753,7 +753,6 @@ In the "create" and "edit" routes, identify the invalid ingredients in the flash
 Put the New Recipe button next to the "No recipes yet" message if the user hasn't made a recipe yet.
 Maybe change "Your recipes: No recipes yet" to "No recipes yet".
 Make a '/users' route and a users/index.erb page.
-In the "get '/users/:username'" route, redirect users to '/users' if they are logged in, but the chef doesn't exist.
 Delete the development.sqlite file (and possibly test.sqlite), then run rake db:migrate. If that works (causing the database entries to be reset with the seeds alone), then add that to the README as an option. I may instead have to reset the databases in Tux.
 Divide this NOTES.md file into two files (at least): NOTES.md and STRETCH_GOALS.md, and separate them into the appropriate sections (past versions, problems/solutions, etc).
 Idea from the "post '/recipes'" route: convert blank values to nil with #presence.
@@ -765,6 +764,7 @@ In fields that need a url or have specific required formats (like username), add
 I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
 Make a page that lists all of the recipes that contain a certain ingredient; I will need an IngredientsController for that, and I can use the #Recipe.sort_recipes class method.
 In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
+**At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
 **Refactoring goal:** In the RecipesController, change the local recipe variables to @recipe instance variables.
 That will allow me to remove an argument from the #redirect_if_unauthorized_user_tries_to helper method.
 This in turn will prevent the need to pass an instance variable into the method (which likely goes against convention, although it technically works).
