@@ -39,7 +39,7 @@ class UsersController < ApplicationController
 
     user = User.find_by(username: params[:username])
 
-    redirect_if_not_existing(user, "chef")
+    redirect_if_nonexistent(user, "chef")
 
     if user.authenticate(params[:password])
       session[:user_id] = user.id
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
 
     @user = User.find_by(username: params[:username])
     
-    redirect_if_not_existing(@user, "chef")
+    redirect_if_nonexistent(@user, "chef")
     
     @user_recipes = Recipe.sort_recipes(@user.recipes)
     erb :"users/profile"
