@@ -69,14 +69,12 @@ class UsersController < ApplicationController
     
     redirect_if_not_logged_in
 
-    if @user = User.find_by(username: params[:username])
-      @user_recipes = Recipe.sort_recipes(@user.recipes)
-      erb :"users/profile"
-    else
-      # The current_user is logged in, but @user does not exist.
-      flash[:error] = "It looks like this chef does not exist."
-      redirect to "/" # Change this to "/users" later on (stretch goal).
-    end
+    @user = User.find_by(username: params[:username])
+    
+    redirect_if_not_existing(@user, "chef")
+    
+    @user_recipes = Recipe.sort_recipes(@user.recipes)
+    erb :"users/profile"
   end
 
   # Later on, I want to render a logout.erb page that confirms the user's choice to log out.
