@@ -764,17 +764,22 @@ In fields that need a url or have specific required formats (like username), add
 I use inline styling in some of the elements (probably due to Chrome overriding my CSS); I'd like to change that with more specific CSS rules, if possible.
 Make a page that lists all of the recipes that contain a certain ingredient; I will need an IngredientsController for that, and I can use the #Recipe.sort_recipes class method.
 In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
-**At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
-**Refactoring goal:** In the RecipesController, change the local recipe variables to @recipe instance variables.
+**Important refactoring goals:** In the RecipesController, change the local recipe variables to @recipe instance variables.
 That will allow me to remove an argument from the #redirect_if_unauthorized_user_tries_to helper method.
 This in turn will prevent the need to pass an instance variable into the method (which likely goes against convention, although it technically works).
-**End of refactoring goal**
 
-**Important stretch goals:** When I think about it, I don't think it's wise to redirect unauthorized users to a recipe that they are trying to edit/delete, especially if they don't know that it exists. Maybe I should redirect them back home, away from the recipes.
+I could also move the #redirect_if_unauthorized_user_tries_to helper method into the ApplicationController; then I could use it not only for recipes, but for users, ingredients, etc. as well.
 
-I want to refactor the RecipesController in such a way that I don't have to send an instance variable to the #redirect_if_unauthorized_user_tries_to and #redirect_if_nonexistent methods.
-The first method can easily be changed, but I will have to change local variables in the patch and delete routes to instance variables. I am not sure about the second method yet.
-**End of important stretch goals**
+When I think about it, I don't think it's wise to redirect unauthorized users to a recipe that they are trying to edit/delete, especially if they don't know that it exists. Maybe I should redirect them back home, away from the recipes.
+
+In the #redirect_if_nonexistent method, I could make custom messages, depending on whether the user is trying to view, edit, or delete a nonexistent recipe.
+
+**At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
+
+I want to refactor the RecipesController and UsersController in such a way that I don't have to send an instance variable to the #redirect_if_unauthorized_user_tries_to and #redirect_if_nonexistent methods.
+(Note that the first method is only used by the RecipesController, for now.)
+That first method can easily be changed, but I will have to change local variables in the patch and delete routes to instance variables. I am not sure about the second method yet.
+**End of important refactoring goals**
 ----------------------------------------------------------
 
 **Notes, stretch goals, and corresponding code from the "patch '/recipes/:id'" route:**
