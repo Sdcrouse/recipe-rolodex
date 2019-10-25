@@ -774,6 +774,9 @@ When I think about it, I don't think it's wise to redirect unauthorized users to
 
 In the #redirect_if_nonexistent method, I could make custom messages, depending on whether the user is trying to view, edit, or delete a nonexistent recipe.
 
+**Once I learn how to do partials (or something similar),** use that to refactor the ERB files (add a partial to the layout page to display the flash messages).
+
+**I think it would be best to change local to instance variables in the patch and delete routes;** that would make it easier to **refactor more repetitive code.**
 **At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
 
 I want to refactor the RecipesController and UsersController in such a way that I don't have to send an instance variable to the #redirect_if_unauthorized_user_tries_to and #redirect_if_nonexistent methods.

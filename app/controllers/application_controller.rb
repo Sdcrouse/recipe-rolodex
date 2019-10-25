@@ -58,6 +58,6 @@ class ApplicationController < Sinatra::Base
           redirect to "/"
         end
       end
-    end
+    end # End of #redirect_if_nonexistent
   end # End of helpers
 end # End of ApplicationController
