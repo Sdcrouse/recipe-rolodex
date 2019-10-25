@@ -35,19 +35,18 @@ class UsersController < ApplicationController
 
   post '/users/login' do
     # Log the user in if the user exists and has the correct password.
-    # Otherwise, redirect them to the login page, with a flash message.
+    # Otherwise, redirect them with an error message.
 
     user = User.find_by(username: params[:username])
-    if user && user.authenticate(params[:password])
+
+    redirect_if_not_existing(user, "chef")
+
+    if user.authenticate(params[:password])
       session[:user_id] = user.id
       flash[:success] = "You have successfully logged in!"
       redirect to "/users/#{user.username}"
     else
-      if user.nil?
-        flash[:error] = "This chef does not exist."
-      else # The user exists, but the password is incorrect.
-        flash[:error] = "Invalid password. Try again."
-      end
+      flash[:error] = "Invalid password. Try again."
       redirect to "/users/login"
     end
   end
@@ -90,4 +89,4 @@ class UsersController < ApplicationController
   # post '/users/logout' do
   #   flash[:success] = "You have successfully logged out!"
   # end
-end
+end # End of UsersController
