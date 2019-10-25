@@ -39,14 +39,12 @@ class UsersController < ApplicationController
 
     user = User.find_by(username: params[:username])
 
-    redirect_if_nonexistent(user, "chef")
-
-    if user.authenticate(params[:password])
+    if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       flash[:success] = "You have successfully logged in!"
       redirect to "/users/#{user.username}"
     else
-      flash[:error] = "Invalid password. Try again."
+      flash[:error] = "Invalid username and/or password. Please try again."
       redirect to "/users/login"
     end
   end
