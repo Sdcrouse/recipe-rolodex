@@ -9,16 +9,15 @@ class UsersController < ApplicationController
   end
 
   post '/users' do
-    new_user = User.new(params)
+    @user = User.new(params)
     
-    if new_user.save
-      session[:user_id] = new_user.id # This should only happen if the user CORRECTLY signs up.
+    if @user.save
+      # This should only happen if the user CORRECTLY signs up.
       # See https://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html for how to confirm a password.
 
-      flash[:success] = "You have successfully signed up!"
-      redirect to "/users/#{new_user.username}"
+      sign_up_or_log_in_user("signed up")
     else
-      flash[:validations] = new_user.errors.full_messages
+      flash[:validations] = @user.errors.full_messages
       redirect to "/users/signup"
     end
   end
@@ -37,12 +36,10 @@ class UsersController < ApplicationController
     # Log the user in if the user exists and has the correct password.
     # Otherwise, redirect them with an error message.
 
-    user = User.find_by(username: params[:username])
+    @user = User.find_by(username: params[:username])
 
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      flash[:success] = "You have successfully logged in!"
-      redirect to "/users/#{user.username}"
+    if @user && @user.authenticate(params[:password])
+      sign_up_or_log_in_user("logged in")
     else
       flash[:error] = "Invalid username and/or password. Please try again."
       redirect to "/users/login"
@@ -73,6 +70,14 @@ class UsersController < ApplicationController
     @user_recipes = Recipe.sort_recipes(@user.recipes)
     erb :"users/profile"
   end
+
+  helpers do
+    def sign_up_or_log_in_user(action)
+      session[:user_id] = @user.id
+      flash[:success] = "You have successfully #{action}!"
+      redirect to "/users/#{@user.username}"
+    end
+  end # End of helpers
 
   # Later on, I want to render a logout.erb page that confirms the user's choice to log out.
   # That would require a get '/users/:username/logout' route (and I would need to update the corresponding <a> on the layout page).
