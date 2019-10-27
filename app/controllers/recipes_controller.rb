@@ -161,12 +161,13 @@ class RecipesController < ApplicationController
   helpers do
     def redirect_if_unauthorized_user_tries_to(action, recipe)
       # Note that the recipe will either be a local or instance variable. This will be changed later.
+      # It is assumed that the user is logged in when this is executed.
 
       if recipe.user != current_user
         # The current_user is not this recipe's author (and is thus not allowed to edit or delete it).
 
         flash[:error] = "Sorry, Chef #{current_user.username}! You are not authorized to #{action}."
-        redirect to "/recipes/#{recipe.id}"
+        redirect to "/recipes"
       end
     end
   end # End of helpers

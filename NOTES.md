@@ -770,8 +770,6 @@ This in turn will prevent the need to pass an instance variable into the method 
 
 I could also move the #redirect_if_unauthorized_user_tries_to helper method into the ApplicationController; then I could use it not only for recipes, but for users, ingredients, etc. as well.
 
-When I think about it, I don't think it's wise to redirect unauthorized users to a recipe that they are trying to edit/delete, especially if they don't know that it exists. Maybe I should redirect them back home, away from the recipes.
-
 In the #redirect_if_nonexistent method, I could make custom messages, depending on whether the user is trying to view, edit, or delete a nonexistent recipe.
 
 **Once I learn how to do partials (or something similar),** use that to refactor the ERB files (add a partial to the layout page to display the flash messages).
