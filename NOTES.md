@@ -770,11 +770,30 @@ This in turn will prevent the need to pass an instance variable into the method 
 
 I could also move the #redirect_if_unauthorized_user_tries_to helper method into the ApplicationController; then I could use it not only for recipes, but for users, ingredients, etc. as well.
 
+I should figure out whether to add this code into the #redirect_if_unauthorized_user_tries_to method:
+```
+redirect_if_not_logged_in(action)
+# This is an edge case, but it allows you to call #redirect_if_unauthorized_user_tries_to, regardless of whether the user is logged in or out.
+```
+**It would probably be better to refactor the other controller routes to call the correct methods in the correct order (through another helper method).**
+
 In the #redirect_if_nonexistent method, I could make custom messages, depending on whether the user is trying to view, edit, or delete a nonexistent recipe.
 
 **Once I learn how to do partials (or something similar),** use that to refactor the ERB files (add a partial to the layout page to display the flash messages).
 
 **I think it would be best to change local to instance variables in the patch and delete routes;** that would make it easier to **refactor more repetitive code.**
+An example of the repetitive code (from the DELETE route):
+```
+redirect_if_not_logged_in("delete a recipe") # Important edge case
+
+recipe = Recipe.find_by_id(params[:id])
+
+redirect_if_nonexistent(recipe, "recipe") # Edge case
+
+redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important edge case
+```
+**4 similar lines of code occur in other routes; this should be refactored into a helper method.**
+
 **At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
 
 I want to refactor the RecipesController and UsersController in such a way that I don't have to send an instance variable to the #redirect_if_unauthorized_user_tries_to and #redirect_if_nonexistent methods.
