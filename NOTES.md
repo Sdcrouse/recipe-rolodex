@@ -797,6 +797,7 @@ redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important
 **Update:** It's actually *three* lines of code that should be abstracted, not four; not every route uses #redirect_if_unauthorized_user_tries_to. But what do I call that method? (Remember that it will be used by BOTH the RecipesController and UsersController, and should therefore be added to the ApplicationController.) 
 This may cause a problem: Not every route uses the same message with #redirect_if_not_logged_in, so that message should be one of the new method's (optional, with default value) arguments. Maybe I need to rewrite other methods as well?
 **Maybe what I need to do is abstract away all three "redirect_if..." helper methods. That helper method can then conditionally call #redirect_if_unauthorized_user_tries_to, depending on whether the route needs it.**
+I might want to use the * splat operator in that method (not sure yet).
 
 **At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
 
