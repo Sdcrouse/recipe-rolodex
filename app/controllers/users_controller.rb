@@ -1,11 +1,8 @@
 class UsersController < ApplicationController
   get '/users/signup' do
-    if !logged_in?
-      erb :"users/signup"
-    else
-      flash[:error] = "You don't need to sign up, Chef #{current_user.username}. You're already logged in!"
-      redirect to "/users/#{current_user.username}"
-    end
+    redirect_if_logged_in_user_tries_to("sign up")
+
+    erb :"users/signup"
   end
 
   post '/users' do
@@ -23,13 +20,10 @@ class UsersController < ApplicationController
   end
 
   get '/users/login' do
-    if !logged_in?
-      flash[:login] = "You are not logged in."
-      erb :"users/login"
-    else
-      flash[:error] = "Silly chef, you're ALREADY logged in!"
-      redirect to "/users/#{current_user.username}"
-    end
+    redirect_if_logged_in_user_tries_to("log in")
+
+    flash[:login] = "You are not logged in."
+    erb :"users/login"
   end
 
   post '/users/login' do
@@ -74,6 +68,13 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       flash[:success] = "You have successfully #{action}!"
       redirect to "/users/#{@user.username}"
+    end
+
+    def redirect_if_logged_in_user_tries_to(action) # A just-for-fun edge case
+      if logged_in?
+        flash[:error] = "You don't need to #{action}, you silly chef. You're already logged in!"
+        redirect to "/users/#{current_user.username}"
+      end
     end
   end # End of helpers
 
