@@ -16,8 +16,7 @@ class Recipe < ActiveRecord::Base
   # then the #ingredients_need_names... validation is triggered, but the #recipe_should_have_at_least_one_ingredient validation is NOT triggered.
   validate :ingredients_need_names_if_amount_or_brand_are_specified
 
-  validates :name, presence: true
-  validates :instructions, presence: true
+  validates :name, :instructions, presence: true
 
   def recipe_should_have_at_least_one_ingredient # Edge case, due to "new recipe" form requiring at least one ingredient with a name.
     errors.add(:recipe, "should have at least one ingredient") if self.ingredients.blank?
