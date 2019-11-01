@@ -798,6 +798,7 @@ redirect_if_unauthorized_user_tries_to("delete this recipe", recipe) # Important
 This may cause a problem: Not every route uses the same message with #redirect_if_not_logged_in, so that message should be one of the new method's (optional, with default value) arguments. Maybe I need to rewrite other methods as well?
 **Maybe what I need to do is abstract away all three "redirect_if..." helper methods. That helper method can then conditionally call #redirect_if_unauthorized_user_tries_to, depending on whether the route needs it.**
 I might want to use the * splat operator in that method (not sure yet).
+**Further update: I shouldn't do this; it needs to be *readable!***
 
 **At some point,** I'd like to redirect users looking for nonexistent users differently in the #redirect_if_nonexistent method. If they're trying to log in with an invalid username, redirect them to "/users/login"; if they're logged in and looking for a nonexistent user, then redirect them to "/users" (after I write that route).
 
@@ -839,6 +840,7 @@ That first method can easily be changed, but I will have to change local variabl
   #Another stretch goal: change the params hash structure so that I can make better use of the #accepts_nested_attributes_for macro.
   #Better yet, change the params hash so that I can just use recipe.update(params[:recipe]). Revisit this after going through nested forms in Rails.
   #Yet another stretch goal: In the "create" and "edit" routes, identify the invalid ingredients in the flash message (Ingredient 1 needs a name, Ingredient 3 needs a name, etc.)
+  #And another stretch goal: Display ALL possible errors when updating a recipe; I currently only show the Ingredient name error, even if the user leaves other required fields blank as well (their corresponding errors show up, but only if the first ingredient has a name.)
 
 **End of notes, stretch goals, and code from "patch '/recipes/:id'"**
 
