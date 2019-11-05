@@ -113,7 +113,7 @@
     color: blue;
   }
 
-  .error-message, .important-note {
+  .error-message, .important-note, .good-news {
     color: red;
   }
 
